@@ -4,7 +4,6 @@ from httpx import AsyncClient
 from app.adapters.mgb_flood import query_flood_evidence
 from app.schemas.flood_preview import FloodPreviewRequest, FloodPreviewResponse
 
-
 router = APIRouter(tags=["investigations"])
 
 
