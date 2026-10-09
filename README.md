@@ -65,6 +65,7 @@ hazardlens/
 │       ├── schemas/     API schemas
 │       └── domain/      Domain types
 ├── web/                 Frontend (React + Vite)
+│   ├── public/          Static assets (favicon, robots.txt)
 │   └── src/
 │       ├── api/         Generated API client
 │       ├── components/  Reusable UI components

@@ -61,8 +61,10 @@ api/app/
 ### Frontend
 
 ```text
-web/src/
-├── api/            generated API client and shared types
+web/
+├── public/          static assets (favicon, robots.txt)
+└── src/
+    ├── api/            generated API client and shared types
 ├── components/     reusable UI components
 ├── features/
 │   ├── search/     place search
