@@ -45,7 +45,7 @@ To prevent conflating metadata inspection with live query reliability, every sou
 |---|---|---|
 | **Stage 1: Metadata Verified** | Layer capabilities, geometry type, coordinate system, and attribute schemas confirmed against official service metadata. | Service URL, layer ID, spatial reference WKID, published classification fields, and official attribution terms. |
 | **Stage 2: Live Request Observed** | At least one successful live HTTP request executed against the query endpoint. | Timestamp, request URL/parameters, response code, latency, and sanitized payload. |
-| **Stage 3: Repeatable Query Verified** | Consistent, reproducible responses across positive and negative test coordinates with bounded error handling. | Repeatable positive feature hit and empty query responses, with HTTP status, retry behavior, and latency under timeout limits. |
+| **Stage 3: Repeatable Query Verified** | Multiple independent live requests executed across different sessions/environments, confirming consistent response behavior and latencies without relying on cached or replayed fixtures. | Documented log of multiple live request runs with timestamps, coordinates, latencies, and confirmation that responses match expected schema and behavior. |
 | **Stage 4: Coverage & Semantics Verified** | Clear technical distinction between "inside coverage, no hazard mapped" (`NO_EVIDENCE`) and "unmapped/outside survey boundary" (`UNAVAILABLE` / `OUTSIDE_COVERAGE`). | Documented boundary extent or polygon coverage layer; verified rule that distinguishes empty query from lack of survey. |
 
 ---
@@ -54,7 +54,7 @@ To prevent conflating metadata inspection with live query reliability, every sou
 
 | Required Source Family | Official Agency & Service | Stage 1: Metadata | Stage 2: Live Request | Stage 3: Repeatable Query | Stage 4: Coverage & Empty Semantics | Current Disposition |
 |---|---|:---:|:---:|:---:|:---:|:---|
-| **Flood Susceptibility** | **MGB**<br>`GDI_Detailed_Flood_Susceptibility/FeatureServer/0` | **VERIFIED**<br>Polygon (EPSG:3857), fields `OBJECTID`, `FloodSusc` (`VHF`, `HF`, `MF`, `LF`). | **VERIFIED**<br>Central Iloilo City returned `FloodSusc: MF` (OBJECTID 41). Panay Gulf returned `features: []`. | **VERIFIED**<br>Tested via adapter parameters (`inSR=4326`, `spatialRel=intersects`). | **PENDING**<br>ArcGIS query does not publish survey boundary. Empty responses remain `UNAVAILABLE`. | **Partial**<br>Ready for preview slice; full MVP coverage rule pending. |
+| **Flood Susceptibility** | **MGB**<br>`GDI_Detailed_Flood_Susceptibility/FeatureServer/0` | **VERIFIED**<br>Polygon (EPSG:3857), fields `OBJECTID`, `FloodSusc` (`VHF`, `HF`, `MF`, `LF`). | **VERIFIED**<br>Central Iloilo City returned `FloodSusc: MF` (OBJECTID 41). Panay Gulf returned `features: []`. | **PENDING**<br>Initial live requests observed; multi-run repeatability across independent sessions/environments pending formal record. | **PENDING**<br>ArcGIS query does not publish survey boundary. Empty responses remain `UNAVAILABLE`. | **Partial**<br>Recorded fixtures exist; multi-run live repeatability record pending. |
 | **Rain-Induced Landslide Susceptibility** | **MGB**<br>`GDI_Detailed_Rain_induced_Landslide_Susceptibility/FeatureServer/0` | **VERIFIED**<br>Polygon (EPSG:3857), fields `OBJECTID`, `LndslideSusc` (`VHL`, `HL`, `ML`, `LL`, `DF`). | **PENDING**<br>Fresh live-query behavior not independently confirmed in review session. | **PENDING**<br>Repeatable positive and negative coordinates not captured. | **PENDING**<br>Boundary, de-vegetated zone, and debris-flow (`DF`) semantics unestablished. | **Metadata Only**<br>Live-source verification required. |
 | **Liquefaction Susceptibility** | **PHIVOLCS**<br>`Liquefaction_ohas/FeatureServer/0` | **PENDING**<br>Earlier metadata URL retrieval returned application error. Direct client inspection pending. | **PENDING**<br>Not verified. | **PENDING**<br>Not verified. | **PENDING**<br>Layer identity, class codes, and empty response semantics unverified. | **Blocked**<br>Endpoint accessibility & layer verification required. |
 | **Active Fault Proximity** | **PHIVOLCS**<br>`ActiveFaultGeneric` candidate (`AF_2025_asofJanuary`) | **PENDING**<br>Earlier metadata retrieval returned application error. Current active layer identity pending. | **PENDING**<br>Not verified. | **PENDING**<br>Not verified. | **PENDING**<br>Distance-band calculation, buffer units, and line proximity rules unverified. | **Blocked**<br>Endpoint accessibility & layer verification required. |
@@ -92,6 +92,9 @@ For each official source family, contributors must document a completed evidence
 - **Date of Verification:** YYYY-MM-DD
 - **Verifier:** [Name / Role]
 - **Reviewer:** [Independent Reviewer Name]
+- **Execution Mode:** [Fresh Independently Repeated Live Request | Historical Fixture Playback]
+- **Independent Confirmation Status:** [Unconfirmed in current review session | Confirmed by independent reviewer: Name]
+- **Environment & Network:** [e.g., Local shell script / CI runner / direct httpx query]
 
 #### 1. Official Identity & Contract
 - **Agency:** [e.g., Mines and Geosciences Bureau (MGB)]
@@ -103,7 +106,9 @@ For each official source family, contributors must document a completed evidence
 - **Official Attribution:** [Verbatim attribution text]
 - **Terms of Use / Policy URL:** [URL]
 
-#### 2. Live Request Evidence
+#### 2. Live Request Evidence (Fresh Live Requests Only)
+> *Note: Fixture playback or adapter unit tests do not satisfy this section.*
+- **Repetition Details:** [Number of runs, timestamps, environments tested]
 - **Test Coordinate 1 (Positive Feature Hit):**
   - Latitude, Longitude: [e.g., 10.7202, 122.5621]
   - HTTP Status: [200 OK]
@@ -123,6 +128,8 @@ For each official source family, contributors must document a completed evidence
 - **HTTP 5xx Recovery:** [Verified retry once on transient server errors]
 
 #### 4. Offline Fixture Provenance
+> *Note: Offline fixtures establish repeatable offline regression testing; they do NOT prove current live service availability.*
+- **Capture Date & Commit:** [YYYY-MM-DD, Commit SHA when recorded]
 - **Positive Fixture Path:** `api/tests/fixtures/[source]_[location]_[class].json`
 - **Empty Fixture Path:** `api/tests/fixtures/[source]_[location]_empty.json`
 - **Regression Test Coverage:** [Test function names in api/tests/]
