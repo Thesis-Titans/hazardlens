@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Project requirements and setup gates
+    url: https://github.com/Thesis-Titans/hazardlens/blob/main/docs/project-readiness-checklist.md
+    about: Review the readiness checklist and decision log before proposing changes that conflict with the SRS.
