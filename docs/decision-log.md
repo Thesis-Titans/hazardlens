@@ -1,6 +1,6 @@
 # HazardLens Decision Log
 
-**Status:** Proposed decisions for team review  
+**Status:** Project-lead working direction updated 9 October 2026; formal team approval pending  
 **Baseline:** SRS v3.1 in draft PR #9; the team must approve the baseline before it becomes canonical.  
 **Rule:** A decision is not final merely because it appears in this file. Record the decision owner, date, rationale, and affected requirements when the team agrees.
 
@@ -20,6 +20,7 @@
 | DEC-10 | Schedule | Plan in relative phases first; do not invent dates before the real deadline, availability and capacity are confirmed. | **Selected planning rule; calendar schedule open** | Whole team: confirm deadline, sprint length, class/other commitments and realistic capacity before due dates are created. |
 | DEC-11 | Official source candidates | Official metadata has been reviewed for MGB flood/landslide and PHIVOLCS liquefaction/active-fault candidate layers; the active-fault candidate page returned an application error on direct access. | **Metadata research only; live behavior unverified** | GIS/source owner + QA: use docs/source-verification-notes.md, verify the chosen exact layer and execute live test queries before integration. |
 | DEC-12 | Requirement release classification | `docs/release-scope-and-task-matrix.md` proposes a classification for every FR/NFR. FR-11–FR-13 are proposed post-MVP candidates but are still marked Core in SRS v3.1; NFR-09 remains unresolved. | **Proposed; team decision required** | Whole team: explicitly approve or reject each proposed classification. If FR-11–FR-13 move out of MVP, update SRS and traceability in the same review cycle. |
+| DEC-14 | Release classifications and dependency-aware work packages | Project lead approved `docs/release-scope-and-task-matrix.md` as the working direction on 9 Oct 2026. FR-11–FR-13 remain unresolved for the formal team baseline because SRS v3.1 currently labels them Core; NFR-09 remains unresolved pending a measurable definition. No deadline, sprint commitment or teammate availability is inferred. | **Project-lead working direction approved; team review pending** | Whole team: review the matrix, explicitly resolve FR-11–FR-13 and NFR-09, confirm capacity, then approve/update the canonical SRS and traceability. |
 | DEC-13 | Required source set and coverage semantics | The four named source families remain mandatory. A layer extent alone does not prove valid coverage; outside-coverage and fault-distance semantics need source-specific evidence. | **Working direction; team confirmation required** | GIS/source owner + QA: verify each source; team must explicitly approve any change to the required-source set. |
 
 ## How to close a decision
