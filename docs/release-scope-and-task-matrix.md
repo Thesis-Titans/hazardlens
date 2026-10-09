@@ -1,8 +1,8 @@
 # HazardLens Release Scope and Dependency-Aware Task Matrix
 
-**Status:** Proposed planning artifact for team review; not formal team approval.  
+**Status:** Project lead approved this working direction on 9 October 2026; formal team approval remains pending. This is not a claim that the whole team approved the baseline.  
 **SRS basis:** v3.1 proposed review baseline in PR #9.  
-**Scheduling basis:** Relative phases only. The actual deadline, sprint length, student availability and weekly capacity have not been confirmed.  
+**Scheduling basis:** Relative phases only. The actual deadline, sprint length, student availability and weekly capacity have not been confirmed; no calendar commitments are implied.  
 **Repository rule:** This matrix does not assert implementation completion. Close work only with linked, reproducible evidence and independent review.
 
 ## 1. Decisions and non-negotiable constraints
