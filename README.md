@@ -1,12 +1,16 @@
 # HazardLens
 
-A web application where a user picks a place in the Philippines and sees what official hazard datasets say about it: flood, landslide, liquefaction and active faults. Results appear on an interactive map and in an evidence panel, with an AI assistant that explains and answers questions about them.
+[![CI](https://github.com/Thesis-Titans/hazardlens/actions/workflows/ci.yml/badge.svg)](https://github.com/Thesis-Titans/hazardlens/actions/workflows/ci.yml)
 
-**Evidence first, AI second.** Official source data is authoritative. AI only explains and navigates it. The app never says "safe" because data is missing, and it keeps working when AI is down.
+A web application planned to help users explore what official hazard datasets report about a selected place in the Philippines, covering flood, landslide, liquefaction and active faults.
+
+**Current status:** HazardLens is an early prototype scaffold. Live hazard lookups, verified official-source integrations, investigation history, evidence panels, weather and AI features are not yet implemented. The feature lists below describe the intended project scope, not capabilities available in the current prototype.
+
+**Evidence first, AI second.** The intended design treats official source data as evidence and AI as an optional explanation layer. Missing or unavailable data must never be presented as proof of safety.
 
 ## Features
 
-### Core
+### Core (planned)
 
 - Place search and map click to select a point
 - Hazard lookup across four datasets, run in parallel
@@ -17,20 +21,22 @@ A web application where a user picks a place in the Philippines and sees what of
 - Deterministic plain-language explanation
 - Current weather card
 
-### Advanced
+### Advanced (planned)
 
 - AI explanation with structured output
 - AI chat grounded in the current investigation
 - Natural-language lookup via tool calling
 - Area investigation with polygon drawing
 
-### Stretch
+### Stretch (planned)
 
 - Map hazard overlays
 - Image input for contextual explanation
 - Additional hazard datasets (tsunami, earthquake-induced landslide)
 
 ## Datasets
+
+The following are candidate official datasets for integration; their live querying, coverage and interpretation must be verified before the application presents results.
 
 | Dataset | Agency |
 |---|---|
@@ -95,7 +101,7 @@ hazardlens/
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Thesis-Titans/hazardlens.git
 cd hazardlens
 
 # Copy environment template and configure keys if needed
@@ -126,6 +132,22 @@ npm install
 npm run dev
 ```
 
+## Team & Agile Project Management
+
+HazardLens is developed by **Thesis Titans** (West Visayas State University — BSIT Batch 2028) using lightweight Scrum and GitHub Flow.
+
+- **Organization:** [Thesis Titans](https://github.com/Thesis-Titans)
+- **Sprint Board:** [HazardLens — Sprint Board](https://github.com/orgs/Thesis-Titans/projects/1)
+- **Sprint Milestones:** [HazardLens Milestones](https://github.com/Thesis-Titans/hazardlens/milestones)
+
+### Team Tracks & Specializations
+
+| Track | Engineers | Focus & Ownership |
+|---|---|---|
+| **Data & AI Infrastructure** | `@markalvincadangin`<br>`@vincenttamano` | FastAPI, PostGIS, ArcGIS/WMS adapters, AI Grounding Engine |
+| **Interactive GIS** | `@Justin-Ardena` | MapLibre GL map viewport, vector layers, pin reverse-geocoding |
+| **Product UI/UX & QA** | `@lovelii-me`<br>`@faithbn` | Design system, comparison view, print reports, evidence card QA |
+
 ## Standards Adopted
 
 HazardLens adheres to established industry and engineering standards to keep the team aligned without bureaucracy:
@@ -152,4 +174,4 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 
 ## Disclaimer
 
-HazardLens is a web-systems technology practice project. It is **not** an official hazard assessment. Source data is retrieved from government services and displayed as published. Absence of evidence does not mean absence of hazard.
+HazardLens is a web-systems technology practice project, not an official hazard assessment. The planned application may display data from government services after integrations and source behavior are verified. The current prototype does not yet provide live hazard results. Absence of evidence does not mean absence of hazard or indicate safety.
