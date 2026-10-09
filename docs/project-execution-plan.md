@@ -198,22 +198,22 @@ Every task pairs a Lead Implementer with an Independent Peer Reviewer across our
 |:---:|---|:---:|:---:|---|
 | **T1** | MGB Flood verification | `@markalvincadangin` | `@vincenttamano` | **Gate A** |
 | **T2** | Evidence response contract | `@markalvincadangin` | `@vincenttamano` | **Gate B** |
-| **T3** | First vertical slice API & UI | `@vincenttamano` (API)<br>`@lovelii-me` (UI) | `@markalvincadangin` (API)<br>`@faithbn` (UI) | **Gate B** |
+| **T3** | First vertical slice API & UI | `@vincenttamano` (API)<br>`@Lovelly143` (UI) | `@markalvincadangin` (API)<br>`@faithbn` (UI) | **Gate B** |
 | **T4** | Deterministic explanation | `@vincenttamano` | `@markalvincadangin` | **Gate B** |
 | **T5** | MGB Landslide verification | `@markalvincadangin` | `@vincenttamano` | **Gate C** |
 | **T6** | PHIVOLCS Liquefaction verification | `@vincenttamano` | `@markalvincadangin` | **Gate C** |
 | **T7** | PHIVOLCS Active Fault verification | `@Justin-Ardena` | `@markalvincadangin` | **Gate C** |
 | **T8** | Multi-source adapter orchestration | `@vincenttamano` | `@markalvincadangin` | **Gate C** |
 | **T9** | PostGIS schema & session history | `@vincenttamano` | `@markalvincadangin` | **Gate D** |
-| **T10** | Map viewer & geocoding search | `@Justin-Ardena` (GIS)<br>`@lovelii-me` (Search UI) | `@lovelii-me` (Map)<br>`@markalvincadangin` (Proxy) | **Gate D** |
+| **T10** | Map viewer & geocoding search | `@Justin-Ardena` (GIS)<br>`@Lovelly143` (Search UI) | `@Lovelly143` (Map)<br>`@markalvincadangin` (Proxy) | **Gate D** |
 | **T11** | Weather failure isolation | `@markalvincadangin` | `@vincenttamano` | **Gate D** |
 | **T12** | API rate limits & safe diagnostics | `@vincenttamano` | `@markalvincadangin` | **Gate D** |
-| **T13** | Provenance, attribution & disclaimers | `@lovelii-me` | `@faithbn` | **Gate D** |
-| **T14** | Accessibility & browser acceptance | `@faithbn` | `@lovelii-me` | **Gate D** |
+| **T13** | Provenance, attribution & disclaimers | `@Lovelly143` | `@faithbn` | **Gate D** |
+| **T14** | Accessibility & browser acceptance | `@faithbn` | `@Lovelly143` | **Gate D** |
 | **T15** | NFR-09 compatible-source extensibility | `@markalvincadangin` | `@vincenttamano` | **Gate D** |
-| **T16** | MVP release verification & readiness | `@faithbn` & `@markalvincadangin`<br>*(Contributors: Whole Team)* | `@vincenttamano` (Backend)<br>`@lovelii-me` (Frontend) | **Gate E** |
+| **T16** | MVP release verification & readiness | `@faithbn` & `@markalvincadangin`<br>*(Contributors: Whole Team)* | `@vincenttamano` (Backend)<br>`@Lovelly143` (Frontend) | **Gate E** |
 | **T17** | Gated AI evaluation spike | `@markalvincadangin` | `@vincenttamano` | **Post-MVP** |
-| **T18** | Comparison, report & polygon area | `@lovelii-me` / `@Justin-Ardena` | `@faithbn` | **Post-MVP** |
+| **T18** | Comparison, report & polygon area | `@Lovelly143` / `@Justin-Ardena` | `@faithbn` | **Post-MVP** |
 
 ---
 
