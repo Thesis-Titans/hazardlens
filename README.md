@@ -1,5 +1,7 @@
 # HazardLens
 
+[![CI](https://github.com/Thesis-Titans/hazardlens/actions/workflows/ci.yml/badge.svg)](https://github.com/Thesis-Titans/hazardlens/actions/workflows/ci.yml)
+
 A web application where a user picks a place in the Philippines and sees what official hazard datasets say about it: flood, landslide, liquefaction and active faults. Results appear on an interactive map and in an evidence panel, with an AI assistant that explains and answers questions about them.
 
 **Evidence first, AI second.** Official source data is authoritative. AI only explains and navigates it. The app never says "safe" because data is missing, and it keeps working when AI is down.
