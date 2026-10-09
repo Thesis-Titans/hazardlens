@@ -37,3 +37,17 @@ This note separates official metadata research, captured live-response evidence,
 - PHIVOLCS older HAS_AF candidate: https://gisweb.phivolcs.dost.gov.ph/arcgis/rest/services/PHIVOLCS/HAS_AF/MapServer/0
 - PHIVOLCS Liquefaction layer metadata: https://gisweb.phivolcs.dost.gov.ph/arcgis/rest/services/PHIVOLCS/Liquefaction_ohas/FeatureServer/0
 - Public Nominatim usage policy (separate geocoding dependency): https://operations.osmfoundation.org/policies/nominatim/
+
+
+## Review 12 metadata refresh — 9 October 2026
+
+This is a documentation/metadata recheck, **not** a completed live feature-query verification.
+
+- The official MGB Detailed Flood Susceptibility layer metadata endpoint was retrieved successfully during this review. It reports polygon geometry, currentVersion 11.4, source spatial reference WKID 102100/latestWkid 3857, the `FloodSusc` field, and renderer labels for VHF, HF, MF and LF. The metadata extent is an extent, not proof of per-location data coverage. [Layer metadata](https://controlmap.mgb.gov.ph/arcgis/rest/services/GeospatialDataInventory/GDI_Detailed_Flood_Susceptibility/FeatureServer/0?f=pjson).
+- The official MGB Detailed Rain-induced Landslide Susceptibility layer metadata endpoint was retrieved successfully. It reports polygon geometry, currentVersion 11.4, source spatial reference WKID 102100/latestWkid 3857, the `LndslideSusc` field, and labels for VHL, HL, ML, LL and DF. DF is rendered as “Debris flow path/Possible accumulation zone,” so preserve that source meaning rather than force it into a simple numeric rank. [Layer metadata](https://controlmap.mgb.gov.ph/arcgis/rest/services/GeospatialDataInventory/GDI_Detailed_Rain_induced_Landslide_Susceptibility/FeatureServer/0?f=pjson).
+- The PHIVOLCS Liquefaction and ActiveFaultGeneric metadata URLs returned an “Application Error” page through the current review retrieval path. This does **not** prove the underlying services are down for API clients; their current metadata/query behavior remains unverified from this review.
+- Attempts to retrieve the MGB feature-query URLs through the available web retrieval path were rejected as inaccessible. Therefore, this review did not obtain a new live feature response for either MGB source. Do not update the fixture capture date or call the sources production-verified on this basis.
+
+### Next evidence needed
+
+Run the exact source requests from a network environment that can reach the services (e.g., a local script or CI diagnostic run with no secrets). Record request URL/parameters, HTTP status, response timestamp, latency, sanitized response, and the exact tested coordinate. Test at least one known feature-intersecting coordinate and one empty-result coordinate per polygon source; independently verify whether the empty coordinate is genuinely covered by the dataset. For PHIVOLCS, first establish that the exact current layer endpoints respond, then verify query operation and source field/code mappings. Keep these results as a separate dated evidence record rather than overwriting the earlier fixture provenance.
