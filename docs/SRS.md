@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| **Version** | 3.0 |
-| **Date** | 1 October 2026 |
+| **Version** | 3.1 |
+| **Date** | 9 October 2026 |
 | **Status** | Build baseline |
-| **Supersedes** | v2.6 |
+| **Supersedes** | v3.0 |
 | **Project type** | Web systems technology project (React, APIs, database, AI) |
 | **Team and timeline** | 5 students, about 8 weeks, with AI coding agents as a force multiplier |
 
