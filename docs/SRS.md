@@ -6,7 +6,7 @@
 |---|---|
 | **Version** | 3.1 |
 | **Date** | 9 October 2026 |
-| **Status** | Proposed review baseline — pending team approval |
+| **Status** | Merged review baseline on `main` (PR #9) — pending whole-team approval |
 | **Supersedes** | v3.0 |
 | **Project type** | Web systems technology project (React, APIs, database, AI) |
 | **Team and timeline** | 5 students, about 8 weeks, with AI coding agents as a force multiplier |
@@ -109,7 +109,7 @@ Hazard forecasting, personal risk scores, user accounts, training custom models,
 | NFR-03 | Upstream URLs come only from configuration or the dataset registry. The browser cannot supply URLs, SQL or AI tool definitions. |
 | NFR-04 | CORS allows only the app's origin. LLM keys stay on the server. |
 | NFR-05 | Sessions use a random ID in an `HttpOnly` cookie. Raw IP addresses are not stored. Investigations expire after 30 days. |
-| NFR-06 | Geocoding follows the Nominatim policy: 1 request per second, identifying User-Agent, caching, no autocomplete. Users are told not to enter home addresses. |
+| NFR-06 | Geocoding follows strict usage policies (working MVP selection Geoapify, or fallback public Nominatim): explicit user form submission only, rate limits, identifying User-Agent, server-side API key handling, result caching, and no keystroke-by-keystroke autocomplete. Clear guidance instructs users not to enter private home addresses. Coordinate entry and map click fallback shall remain functional if geocoding fails. |
 | NFR-07 | Recorded demo fixtures exist for several Iloilo points and are clearly labelled when used. |
 | NFR-08 | Every page shows source attribution and a limitation statement: maps are long-term planning data, not personal safety determinations, and absence of data does not mean safety. |
 | NFR-09 | A dataset that fits the existing normalized evidence model and a supported spatial-operation contract shall be addable by implementing one source adapter and adding registry configuration/rows, without a database schema migration. Verify this with a test/mock compatible dataset registered and queried through the normal orchestration path, with no migration. If a source's semantics cannot fit the existing model, document and review a schema change instead of forcing compatibility. |

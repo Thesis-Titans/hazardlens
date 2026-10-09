@@ -1,6 +1,6 @@
 # HazardLens Requirements Traceability
 
-**Baseline:** SRS v3.1 proposed in PR #9; confirm version before treating this matrix as canonical.  
+**Baseline:** SRS v3.1 merged on `main` (PR #9); pending formal whole-team kickoff confirmation.  
 **Status:** Initial traceability baseline, not a completion report. Project lead approved the proposed classifications as working direction on 9 October 2026; formal team approval remains pending.  
 **Rule:** “Partial” means a limited implementation exists but does not meet the whole requirement. “Not verified” means there is no sufficient reproducible evidence in the reviewed repository/CI. An issue link does not prove implementation.
 
@@ -11,7 +11,7 @@
 | Requirement | Proposed release classification | Short intent | Issue / work item | Current evidence status | Verification needed |
 |---|---|---|---|---|
 | FR-01 | MVP-required | Select location by search or map; validate and round coordinates | #3, #5, #7, #11 | **PARTIAL** — PR #11 validates/rounds coordinates for the flood preview only; place search and map selection are not delivered. | API validation tests plus map/search-to-investigation acceptance test. |
-| FR-02 | MVP-required | Persist each investigation and show session history | #1, #3 | **NOT VERIFIED** | PostGIS migration, persistence integration test, session history and expiry test. |
+| FR-02 | MVP-required | Persist each investigation and show session history | #1, #3, #13 | **NOT VERIFIED** | PostGIS migration, persistence integration test, session history and expiry test. |
 | FR-03 | MVP-required | Query active datasets concurrently under a deadline; isolate failures | #3, #6 | **NOT VERIFIED** — single-source preview is not multi-source orchestration. | Concurrent service test proving one upstream failure does not suppress other results and total deadline is bounded. |
 | FR-04 | MVP-required | Every evidence result uses exactly one of five statuses | #3, #8, #11 | **PARTIAL** — preview schema defines statuses, but the full investigation pipeline is absent. | Contract tests for all statuses and all active datasets. |
 | FR-05 | MVP-required | Return NO_EVIDENCE only after successful query inside known coverage | #2, #3, #6, #11 | **PARTIAL** — PR #11 includes a captured empty MGB response, but maps it to `UNAVAILABLE` because valid-empty/coverage semantics are not established. | Independently repeat the query; verify source coverage and valid-empty semantics; test valid empty, outside coverage, timeout and malformed response. |
@@ -19,7 +19,7 @@
 | FR-07 | MVP-required | Show agency, dataset/class definition, source date, retrieval time, origin and attribution | #2, #8, #11 | **PARTIAL** — preview carries some provenance; production evidence UI is not implemented. | API schema plus UI acceptance test for all required provenance fields. |
 | FR-08 | MVP-required | Preserve source class labels; never create universal hazard score | #8, #11 | **PARTIAL** — flood preview preserves published class labels; end-to-end UI behavior not verified. | Fixture contract tests and UI test that displays source wording without synthetic score. |
 | FR-09 | MVP-required | Preserve multiple material matches and show source disagreements | #6, #11 | **PARTIAL** — preview preserves multiple matching features; multi-source comparison not implemented. | Fixtures with multiple features/classes and two sources with differing results. |
-| FR-10 | MVP-required | Deterministic explanation based on stored class definitions | #4 | **NOT VERIFIED** | Unit tests proving explanation uses known definitions and explicitly states missing information. |
+| FR-10 | MVP-required | Deterministic explanation based on stored class definitions | #3 (Task T4) | **NOT VERIFIED** | Unit tests proving explanation uses known definitions and explicitly states missing information. |
 | FR-11 | **Post-MVP (project-lead working direction; team approval pending)** | Compare two or more past investigations without ranking | Issue #14; schema support in #1 | **DEFERRED** | Do not block MVP; if team changes scope, update SRS and this matrix together. |
 | FR-12 | **Post-MVP (project-lead working direction; team approval pending)** | Printable report with provenance, limitations and optional AI summary | Issue #14 | **DEFERRED** | Do not block MVP; if team changes scope, update SRS and this matrix together. |
 | FR-13 | **MVP-required (project-lead working direction; team approval pending)** | Current weather card separate from hazard evidence | Issue #15 | **NOT VERIFIED** | Weather result remains separate; test successful weather and provider failure without altering hazard results. |

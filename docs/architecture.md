@@ -59,7 +59,7 @@ Different external services use different protocols and data structures. Backend
                       │ PostGIS        │   │                      │
                       │                │   │ MGB / PHIVOLCS       │
                       │ investigations │   │ Open-Meteo           │
-                      │ evidence       │   │ Nominatim            │
+                      │ evidence       │   │ Geoapify / Nominatim │
                       │ AI generations │   │ Gemini / OpenRouter  │
                       │ cache          │   │ Ollama (local)       │
                       └────────────────┘   └──────────────────────┘
@@ -177,7 +177,7 @@ The four target hazard datasets are:
 | `ArcGISIdentifyAdapter` | Identify/tolerance-based retrieval, including proximity behavior | ArcGIS `/identify` |
 | `WmsFeatureInfoAdapter` | Map-only services | WMS `GetFeatureInfo` |
 | `OpenMeteoAdapter` | Weather | Open-Meteo JSON API |
-| `Geocoder` implementation | Place search | Nominatim or configured alternative |
+| `Geocoder` implementation | Place search | Geoapify (working MVP selection) or Nominatim alternative |
 
 The target source configuration is:
 
