@@ -187,7 +187,7 @@ For every release candidate, record: commit SHA; environment/setup; migration re
 
 ## 10. Immediate next actions
 
-1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register and schema reconciliation); approve or request corrections before treating them as the team baseline.
+1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register, schema reconciliation and official source verification notes); approve or request corrections before treating them as the team baseline.
 2. Confirm sprint capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
 3. GIS/backend owner verifies one source end-to-end and supplies a reviewed fixture plus source contract.
 4. Backend/frontend pair implements the first vertical slice against the shared contract; QA adds acceptance tests for match, valid empty result, unavailable source, unsupported source and invalid coordinates.
