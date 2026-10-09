@@ -1,7 +1,7 @@
 # HazardLens Decision Log
 
 **Status:** Project-lead working direction updated 9 October 2026; formal team approval pending  
-**Baseline:** SRS v3.1 in draft PR #9; the team must approve the baseline before it becomes canonical.  
+**Baseline:** SRS v3.1 merged on `main` via PR #9; formal whole-team approval remains pending.  
 **Rule:** A decision is not final merely because it appears in this file. Record the decision owner, date, rationale, and affected requirements when the team agrees.
 
 ## Decision register
