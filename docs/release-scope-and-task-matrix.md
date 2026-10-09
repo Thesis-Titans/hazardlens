@@ -8,11 +8,11 @@
 ## 1. Decisions and non-negotiable constraints
 
 1. The four required MVP source families are MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction and PHIVOLCS active faults. A substitute requires an explicit team-approved scope change.
-2. The first end-to-end slice should prove one verified source → normalized API → evidence UI → deterministic offline tests. Add persistence if the team decides FR-02 is part of that first slice; FR-02 is still proposed MVP-required in this matrix.
+2. The first end-to-end slice should prove one verified source → normalized API → evidence UI → deterministic offline tests. Persistence/history is not required in that first slice, but FR-02 remains required before MVP release, including session ownership, expiry/deletion and persistence tests.
 3. All four required sources must be integrated and verified before MVP sign-off.
 4. An empty response is not automatically `NO_EVIDENCE`; source errors/timeouts are not `NO_EVIDENCE`. `OUTSIDE_COVERAGE` requires a documented, source-specific coverage rule. Do not infer coverage from a layer extent alone.
 5. The 14-entity logical schema must be reviewed as a whole, but the first physical migration should include only entities needed by the approved workflow.
-6. The deterministic explanation path must work without AI. AI, weather, reporting, comparison and polygon investigation do not begin merely because their issues exist.
+6. The deterministic explanation path must work without AI. Weather is in the MVP but must remain separate from hazard evidence and fail independently. Comparison, reporting and polygon investigation are post-MVP. AI work starts only after the first evidence slice and all four required sources are verified.
 7. No calendar due dates, final assignments or claims of capacity until the team confirms the real deadline, commitments, and reviewer availability.
 
 ## 2. Requirement classification proposal
@@ -24,7 +24,7 @@
 | Requirement | Proposed classification | Rationale / release condition |
 |---|---|---|
 | FR-01 Location selection | MVP-required | Search/map/coordinate input contract; coordinate fallback must remain usable if geocoding fails. |
-| FR-02 Investigation history | MVP-required | Currently Core; requires session ownership, expiry/deletion and persistence tests. If team changes this, approve the scope change explicitly. |
+| FR-02 Investigation history | MVP-required; after first vertical slice | First slice may be source → API → evidence UI without persistence. Before MVP release, implement persistence, same-session ownership, expiry/deletion and tests. |
 | FR-03 Concurrent source queries | MVP-required | Core four-source workflow and independent source failure handling. |
 | FR-04 Five evidence statuses | MVP-required | Required evidence contract. |
 | FR-05 Valid empty-result semantics | MVP-required | Prevents failed/unknown queries from appearing hazard-free. |
@@ -33,17 +33,17 @@
 | FR-08 Preserve source classifications | MVP-required | No invented universal score or safety ranking. |
 | FR-09 Multiple matches and disagreements | MVP-required | Preserve material results and source disagreement. |
 | FR-10 Deterministic explanation | MVP-required | Evidence explanation must not depend on an AI provider. |
-| FR-11 Compare saved investigations | Proposed post-MVP; team approval required | SRS currently marks Core. Defer only through explicit approval and SRS/traceability update. |
-| FR-12 Printable evidence report | Proposed post-MVP; team approval required | SRS currently marks Core. Defer only through explicit approval and SRS/traceability update. |
-| FR-13 Current weather | Proposed post-MVP; team approval required | SRS currently marks Core. Defer only through explicit approval and SRS/traceability update. |
+| FR-11 Compare saved investigations | Post-MVP (project-lead working direction; team approval pending) | Do not block MVP. |
+| FR-12 Printable evidence report | Post-MVP (project-lead working direction; team approval pending) | Do not block MVP. |
+| FR-13 Current weather | MVP-required (project-lead working direction; team approval pending) | Include FR-21 failure isolation; weather failure cannot change hazard results. |
 | FR-14 Evidence UI independent of map/geocoder | MVP-required | The primary evidence workflow must still work when map tiles or geocoding fail. |
 | FR-15 AI explanation | Proposed post-MVP | Start after the deterministic evidence slice passes and AI scope is approved. |
 | FR-16 Evidence-grounded AI chat | Proposed post-MVP | Requires refusal, grounding and adversarial tests. |
 | FR-17 Natural-language tool calling | Proposed post-MVP | Adds bounded orchestration and tool-security risks. |
 | FR-18 AI output provenance | Proposed post-MVP | Required if AI is approved; not a reason to include AI in MVP. |
 | FR-19 AI provider fallback | Proposed post-MVP | Applies when AI is in scope; deterministic explanation remains core. |
-| FR-20 Polygon/area investigation | Proposed post-MVP | Requires source capability, geometry validation and configurable limits. |
-| FR-21 Weather failure isolation | Proposed post-MVP, tied to FR-13 | If weather is approved into MVP, its independent failure handling becomes MVP-required too. |
+| FR-20 Polygon/area investigation | Post-MVP (project-lead working direction; team approval pending) | Requires source capability, geometry validation and configurable limits. |
+| FR-21 Weather failure isolation | MVP-required, paired with FR-13 | Weather provider failure returns `UNAVAILABLE` without failing, altering or suppressing hazard results. |
 
 ### Non-functional requirements
 
@@ -57,7 +57,7 @@
 | NFR-06 Geocoding policy | MVP-required | Provider choice remains unresolved; verify its actual terms. If public Nominatim is chosen, implement its current policy and no autocomplete. |
 | NFR-07 Recorded demo fixtures | MVP-required | Recorded fixtures must be reproducible and visibly labelled when used. |
 | NFR-08 Attribution/limitations | MVP-required | Avoid implying that missing data means safety or that the app is an official assessment. |
-| NFR-09 Dataset extensibility without schema changes | Unresolved | Clarify measurable meaning; do not build a generic plug-in framework just to satisfy ambiguous wording. |
+| NFR-09 Dataset extensibility without schema changes | MVP-required; project-lead working definition, team approval pending | A compatible source fits existing normalized fields and supported spatial operations, and can be enabled by one adapter plus registry config/rows without a migration. Verify with a registered test/mock dataset and normal orchestration test. Sources that need new semantics require an explicit schema review; do not force compatibility. |
 | NFR-10 Pinned dependencies/shared API contract | MVP-required | Clean-install and generated-contract workflow must be reproducible. |
 | NFR-11 No HazardHunterPH scraping/embedding/framing | MVP-required | Compliance boundary; verify through code/config review. |
 | NFR-12 Session ownership/access isolation | MVP-required if persistence is in scope | Test cross-session read/write denial without leaking existence. |
@@ -68,7 +68,7 @@
 | NFR-17 Browser/responsive support | MVP-required | Test agreed browser versions and common mobile viewports. |
 | NFR-18 Privacy-safe diagnostics | MVP-required | Useful request/source/status/latency/error diagnostics without raw IPs or secrets. |
 
-**Cross-dependency:** If FR-02 remains MVP-required, NFR-05 and NFR-12 cannot be postponed independently of history. If FR-13 is kept in MVP, FR-21 must be included too. If AI is excluded, FR-15–FR-19 and NFR-14–NFR-15 must not block the core release.
+**Cross-dependency:** FR-02 remains MVP-required but may follow the first source → API → UI slice; NFR-05 and NFR-12 must ship with persistence/history before MVP release. FR-13 is MVP-required, so FR-21 failure isolation is also required. AI FR-15–FR-19 and NFR-14–NFR-15 remain gated until the first evidence slice and all four required sources are verified. FR-11, FR-12 and FR-20 are post-MVP in the project-lead working direction; team approval remains pending.
 
 ## 3. Dependency-aware work packages
 
@@ -126,8 +126,8 @@ The order allows source research and schema review to run in parallel, but integ
 ## 6. Team review agenda (30–45 minutes)
 
 1. Confirm the four-source non-substitution rule.
-2. Review requirement classifications, with explicit decisions for FR-11, FR-12, FR-13 and NFR-09.
-3. Confirm whether persistence is required in the first vertical slice and retain FR-02 only with its security/lifecycle dependencies.
+2. Review the project-lead working classifications: FR-11/FR-12/FR-20 post-MVP; FR-13/FR-21 MVP-required; AI gated; NFR-09 adapter/registry acceptance test. Explicitly confirm or request changes.
+3. Confirm the sequencing decision: source → API → evidence UI first, then persistence/history; FR-02 and its security/lifecycle dependencies remain required before MVP release.
 4. Confirm official-source verification owners and independent QA.
 5. Confirm actual deadline, rubric, member availability and weekly capacity.
 6. Verify branch protection/review enforcement and agree the clean-checkout verifier.
