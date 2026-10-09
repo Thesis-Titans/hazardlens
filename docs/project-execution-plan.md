@@ -1,6 +1,6 @@
 # HazardLens Project Execution Plan
 
-**Status:** Proposed for team review  
+**Status:** Project-lead working direction approved on 9 October 2026; formal team review and baseline approval pending  
 **Repository baseline:** `main` at the time this plan was prepared  
 **Planning basis:** Proposed SRS/architecture/verification documents under review; [release scope and dependency-aware task matrix](release-scope-and-task-matrix.md); GitHub issues #1–#8 and planning/readiness gate #12  
 **Scope:** Requirements alignment, delivery sequencing, team delegation, verification and sprint control
