@@ -13,18 +13,19 @@ HazardLens currently has a React/Vite/TypeScript frontend scaffold, a FastAPI ap
 
 **Recovery objective:** deliver one small, reliable, end-to-end hazard investigation vertical slice first. Expand only after the source query, result semantics, API contract, UI rendering and offline tests all work together.
 
-## 2. Decisions required before implementation
+## 2. Decisions captured for planning; team sign-off still required
 
-These are blocking product-contract questions. Record the agreed answer in the SRS and update related issues before coding against either interpretation.
+The user selected option A for each of the seven setup decisions. These choices now guide the draft plan, but they are **not evidence of agreement by all five students**. Keep PR #9 in draft until the team reviews and records approval or requested changes.
 
-| ID | Decision | Why it blocks work | Required resolution |
+| ID | Selected direction | What is settled for the working plan | What remains open |
 |---|---|---|---|
-| D-01 | What is the canonical SRS version? | The checked-in SRS revision history records v3.1 dated 9 Oct 2026, but the front matter and architecture/verification headers still said v3.0. | Reconciled in this branch: SRS front matter, architecture and verification headers now identify v3.1. Issue #1 uses the exact §4.6 table names and all 14 listed tables. This is a documentation reconciliation; project lead/reviewer must still approve the PR before it becomes the team baseline. |
-| D-02 | What is the canonical schema? | Issue #1 lists `hazard_dataset` but the SRS data model uses `dataset`; the issue also omits SRS entities such as `location` and `comparison_investigation`. | Reconcile every table, key, relationship, retention rule and deletion behavior against the approved SRS before creating migrations. |
-| D-03 | What place-search provider and interaction are allowed? | Issue #7 proposes Nominatim autocomplete, while the SRS NFR-06 prohibits Nominatim autocomplete. | Choose a policy-compliant provider/interaction, document attribution, rate limits, caching and fallback. Do not implement Nominatim autocomplete against the public service. |
-| D-04 | Which exact source layers and query semantics are supported in MVP? | Source services can differ in geometry type, SRID, attributes, date/provenance and supported query operations. | Approve one exact layer per MVP hazard, source URL, layer ID, geometry/query method, classification field, source date and attribution. |
-| D-05 | What must `/v1/health` mean? | SRS expects dependency/source health while current code returns a static application status. | Define liveness versus readiness and dependency checks; keep health checks bounded and do not let a failed optional hazard provider imply the whole app is dead. |
-| D-06 | What is in Sprint 1? | Current issue set includes database, source verification, vertical slice and an AI spike, which risks splitting a five-person team before a working core exists. | Make the evidence-backed vertical slice the sprint goal; defer optional AI provider work unless the core goal is already on track. |
+| D-01 | SRS baseline | PR #9 aligns the SRS front matter and architecture/verification headers to v3.1. | Team approval of the SRS and PR #9. |
+| D-02 | Full logical schema, incremental implementation | Review the complete 14-table logical inventory and relationships, but add tables/migrations incrementally when the MVP vertical slice needs them. | Column types, nullability, indexes, constraints, uniqueness, delete/retention rules and the exact first migration still need review. |
+| D-03 | Explicit place search plus coordinate fallback | No keystroke-by-keystroke autocomplete against public Nominatim. Keep coordinate entry/map selection usable if search is unavailable; if public Nominatim is chosen, obey its request identification, rate limit, caching and attribution rules. | Team must confirm the provider and final UX. |
+| D-04 | Verify each official source before integration | Each source must have a documented layer/service contract and reproducible verification. Recorded fixtures may temporarily unblock deterministic development only when clearly labelled as recorded data. | Live query behavior, coverage and empty-result semantics remain source-specific verification tasks. |
+| D-05 | Separate liveness and readiness | Liveness reports whether the API process is running; readiness reports whether the app can serve its intended core contract. Optional external source health is reported separately and must not make the process appear dead. | Backend owner must propose bounded checks and tests; team reviews contract. |
+| D-06 | Vertical slice before breadth | Complete one verified source → API → database as required → evidence UI slice first; then integrate every required core hazard source before MVP sign-off. Defer AI and advanced features. | Team confirms sprint scope and acceptance evidence. |
+| D-07 | Relative phases before calendar dates | Keep the schedule in phases and decision gates until the real deadline and team capacity are confirmed. | Team must confirm project deadline, availability, sprint length and ownership before assigning dates. |
 
 ## 3. Delivery principles
 
@@ -39,23 +40,25 @@ These are blocking product-contract questions. Record the agreed answer in the S
 
 ## 4. Proposed delivery sequence
 
-Use the existing two-week milestones as planning boundaries, but confirm dates and capacity with the team. If the milestone dates are already unrealistic, re-plan openly rather than silently carrying unfinished work.
+Use relative phases and decision gates first. Do not assign or imply calendar dates from the current milestone labels. Confirm the actual project deadline, each student's availability, the sprint length and dependency-aware capacity with the team before creating or revising due dates. If the agreed timeline is unrealistic, reduce optional scope before weakening source verification, tests or review.
 
-### Phase 0 — Align contracts and unblock the team (first 1–2 working days)
+### Phase 0 — Align contracts and unblock the team (relative phase; duration to confirm)
 
 **Goal:** prevent parallel work from implementing conflicting specifications.
 
-- Resolve D-01 through D-06.
-- Review the initial matrix in `docs/requirements-traceability.md`; resolve any requirement without an owning issue or acceptance evidence, and update it as work changes.
-- Confirm one accountable owner and a separate reviewer for every active issue.
-- Add issue dependencies and mark work that cannot start until the source/schema/geocoding decisions are resolved.
-- Confirm local setup and a reproducible CI baseline.
+- Review the proposed SRS v3.1 and all governance artifacts; the user's selections are a planning baseline, not team approval.
+- Review the complete 14-table logical schema, but implement only the tables needed by the first vertical slice; add later tables in follow-up migrations as their workflows enter scope.
+- Verify each official source before integrating it. Fixtures may be used as clearly labelled recorded-data fallbacks, never as proof of live availability.
+- Choose a compliant place-search provider/interaction. Keep manual coordinate entry and map selection independent of the geocoder.
+- Specify separate liveness and readiness endpoints/contracts; report optional upstream-source health independently.
+- Confirm one accountable owner and a different reviewer for each active issue; add issue dependencies.
+- Run the documented setup and CI checks. A green scaffold CI run is not a clean-checkout or PostGIS migration result.
 
-**Exit criteria:** approved SRS baseline; reconciled schema and source contracts; no unresolved contradiction in the next sprint's acceptance criteria; owners and reviewers recorded.
+**Exit criteria:** team-approved SRS and first-slice acceptance criteria; source and schema contracts reviewed enough for the first slice; known blockers, owners and reviewers recorded.
 
-### Sprint 1 — One verified vertical slice
+### Phase 1 — One verified vertical slice
 
-**Sprint Goal:** A user submits coordinates and receives a truthful, normalized evidence card for one verified official hazard layer, including correct behavior for a match, a valid empty result, an upstream failure and invalid input.
+**Phase goal:** A user submits coordinates and receives a truthful, normalized evidence card for one verified official hazard layer, including correct behavior for a match, a valid empty result, an upstream failure and invalid input. Include only the database tables and persistence required by the approved slice; do not force all 14 logical entities into the first migration.
 
 **In scope**
 - Verify and document one suitable official source and its exact query semantics.
@@ -81,18 +84,19 @@ Use the existing two-week milestones as planning boundaries, but confirm dates a
 
 **Exit criteria:** a reviewer can clone the branch, run documented commands, execute tests and reproduce the slice from fixtures. A live endpoint check is recorded separately from deterministic offline tests.
 
-### Sprint 2 — Expand the verified core
+### Phase 2 — Complete required MVP source coverage
 
-**Sprint Goal:** Add the remaining MVP source adapters and map-based coordinate selection without weakening status semantics or provenance.
+**Phase goal:** Integrate every required core hazard source (MGB flood, MGB rain-induced landslide, PHIVOLCS liquefaction and PHIVOLCS active fault) only after each source's exact layer, spatial operation, coverage behavior, class/date fields, attribution and failure semantics are verified. Keep source fixtures clearly labelled as recorded fallback data.
 
-- Add sources only after the source contract and fixture are reviewed.
+- Add each source only after its contract is reviewed and its live query behavior has been separately verified; mock tests alone are not source verification.
 - Use the correct spatial operation per geometry and service (point/polygon containment, identify, or documented distance rule).
 - Add interactive map click selection and coordinate-input synchronization.
-- Implement place search only after D-03 is resolved.
-- Add session/history persistence only after schema and privacy/retention rules are approved.
+- Implement explicit place search only after provider/UX confirmation; preserve manual coordinate fallback.
+- Add session/history persistence only after its schema and privacy/retention rules are approved, implementing the logical schema incrementally.
 - Add per-source timeout and failure isolation; one failed provider must not erase successful results from others.
+- If a source cannot be verified, report UNAVAILABLE or UNSUPPORTED as appropriate and document the blocker; never reinterpret uncertainty as no hazard.
 
-**Exit criteria:** all MVP source adapters have fixture-based contract tests; map selection drives the same API contract as coordinate input; provider failure is isolated; evidence provenance is visible.
+**Exit criteria:** all four core source integrations have reviewed contracts and fixture-based tests; live verification records are distinct from offline tests; map selection drives the same API contract as coordinate input; provider failure is isolated; evidence provenance is visible. The MVP is not signed off while any required source is represented only by unverified live behavior or unlabelled fixtures.
 
 ### Sprint 3 — Reliability and user workflows
 
