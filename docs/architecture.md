@@ -185,7 +185,7 @@ The target source configuration is:
 |---|---|---|
 | Flood | MGB detailed flood | GeoRiskPH flood WMS |
 | Rain-induced landslide | MGB detailed landslide | GeoRiskPH landslide WMS |
-| Liquefaction | GeoRiskPH liquefaction | Identify on same service |
+| Liquefaction | PHIVOLCS liquefaction service (exact layer pending verification) | GeoRiskPH liquefaction WMS (exploratory only; not a substitute without team-approved scope change) |
 | Active fault | PHIVOLCS ActiveFault identify | GeoRiskPH ActiveFault WMS |
 
 The four listed datasets are mandatory for the proposed MVP: MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction, and PHIVOLCS active faults. Do not substitute tsunami, earthquake-induced landslide, or another dataset to satisfy the four-source count without an explicit team-approved scope change recorded in the decision log and SRS. If a required source cannot be verified or integrated, record the blocker and its evidence; do not silently redefine the required-source set.
