@@ -19,8 +19,8 @@
 | FR-09 | Preserve multiple material matches and show source disagreements | #6, #11 | **PARTIAL** — preview preserves multiple matching features; multi-source comparison not implemented. | Fixtures with multiple features/classes and two sources with differing results. |
 | FR-10 | Deterministic explanation based on stored class definitions | #4 | **NOT VERIFIED** | Unit tests proving explanation uses known definitions and explicitly states missing information. |
 | FR-11 | Compare two or more past investigations without ranking | Issue #14; schema support in #1 | **NOT VERIFIED** | Tracked in #14; test same-session authorization and non-ranking comparison UI. |
-| FR-12 | Printable report with provenance, limitations and optional AI summary | Issue #15 | **NOT VERIFIED** | Tracked in #14; verify print output, disclaimer, source attribution and no fabricated findings. |
-| FR-13 | Current weather card separate from hazard evidence | Issue #17 | **NOT VERIFIED** | Tracked in #15; weather failure must not alter hazard result. |
+| FR-12 | Printable report with provenance, limitations and optional AI summary | Issue #14 | **NOT VERIFIED** | Tracked in #14; verify print output, disclaimer, source attribution and no fabricated findings. |
+| FR-13 | Current weather card separate from hazard evidence | Issue #15 | **NOT VERIFIED** | Tracked in #15; weather failure must not alter hazard result. |
 | FR-14 | Evidence panel works without map tiles or geocoder | #3, #8 | **NOT VERIFIED** | Frontend/API integration test with map/geocoder disabled. |
 | FR-15 | AI explanation consumes structured evidence and validates output schema | #4 | **DEFERRED** | Start only after core evidence slice is verified; malformed output tests and deterministic fallback. |
 | FR-16 | AI chat grounded in current investigation; refuses unsupported facts | #4 | **DEFERRED** | Grounding tests including missing evidence and out-of-context questions. |
@@ -28,7 +28,7 @@
 | FR-18 | Label AI output and store provider/model/prompt version/evidence hash/time | #4, #1 | **DEFERRED** | Provenance persistence and generated-content UI tests. |
 | FR-19 | AI provider failure falls back; core evidence remains usable | #4 | **DEFERRED** | Simulate quota, timeout, transport and invalid-output failure. |
 | FR-20 | Validate simple area polygons and configurable limits | Issue #16; schema support proposed in #1 | **NOT VERIFIED** | Tracked in #16; geometry validity, self-intersection, vertex and area-limit tests. |
-| FR-21 | Weather failure returns UNAVAILABLE without changing hazard investigation | Issue #17 | **NOT VERIFIED** | Weather adapter failure integration test. |
+| FR-21 | Weather failure returns UNAVAILABLE without changing hazard investigation | Issue #15 | **NOT VERIFIED** | Weather adapter failure integration test. |
 
 ## Non-functional requirements
 
@@ -46,12 +46,12 @@
 | NFR-10 | Dependencies pinned; API contract generated/shared with frontend | #1, #3 | **NOT VERIFIED** | Verify lockfile strategy and generated API type workflow against a clean install. |
 | NFR-11 | Do not scrape, embed or frame HazardHunterPH | Issue #12 / code review gate | **NOT VERIFIED** | Code/config review confirms no scraping, embedding or framing. |
 | NFR-12 | Session can access only its own investigations/comparisons | #1 | **NOT VERIFIED** | Cross-session authorization tests for every read/write path. |
-| NFR-13 | Configurable rate limits on expensive public endpoints; HTTP 429 on limit | Backlog gap | **NOT VERIFIED** | Tracked in #17; concurrency/rate-limit tests and documented defaults. |
+| NFR-13 | Configurable rate limits on expensive public endpoints; HTTP 429 on limit | Issue #17 | **NOT VERIFIED** | Tracked in #17; concurrency/rate-limit tests and documented defaults. |
 | NFR-14 | AI calls have timeouts and fallback on provider/format failure | #4 | **DEFERRED** | Provider tests after evidence slice; bounded timeout/fallback tests. |
 | NFR-15 | External/user text cannot override AI rules or tools | #4 | **DEFERRED** | Prompt-injection tests using untrusted source attributes and user text. |
 | NFR-16 | Keyboard access, focus, labels, status messaging; target WCAG 2.2 AA where practical | #18 | **NOT VERIFIED** | Keyboard-only review, automated accessibility scan and manual contrast/focus review. |
 | NFR-17 | Support latest two major Chrome/Edge/Firefox and common mobile viewports | #18 | **NOT VERIFIED** | Browser/device matrix and responsive acceptance checks. |
-| NFR-18 | Structured diagnostic logs without raw IPs | Backlog gap | **NOT VERIFIED** | Log-schema tests and review that identifiers/diagnostics omit raw IPs and secrets. |
+| NFR-18 | Structured diagnostic logs without raw IPs | Issue #17 | **NOT VERIFIED** | Log-schema tests and review that identifiers/diagnostics omit raw IPs and secrets. |
 
 ## Traceability maintenance
 
