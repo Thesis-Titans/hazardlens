@@ -70,9 +70,21 @@ async def test_found_result_matches_srs_contract_and_preserves_features() -> Non
     assert result["latency_ms"] >= 0
     assert result["source_date"]["basis"] == "metadata_not_provided"
     assert result["matches"] == [
-        {"class_code": "HF", "class_label": "High Susceptibility to Flooding", "distance_band_m": None},
-        {"class_code": "HF", "class_label": "High Susceptibility to Flooding", "distance_band_m": None},
-        {"class_code": "VHF", "class_label": "Very High Susceptibility to Flooding", "distance_band_m": None},
+        {
+            "class_code": "HF",
+            "class_label": "High Susceptibility to Flooding",
+            "distance_band_m": None,
+        },
+        {
+            "class_code": "HF",
+            "class_label": "High Susceptibility to Flooding",
+            "distance_band_m": None,
+        },
+        {
+            "class_code": "VHF",
+            "class_label": "Very High Susceptibility to Flooding",
+            "distance_band_m": None,
+        },
     ]
     assert len(result["raw"]["features"]) == 3
     fake_client.get.assert_awaited_once()
