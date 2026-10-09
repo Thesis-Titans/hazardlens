@@ -1,7 +1,7 @@
 # HazardLens Code Owners
-# Area-based reviewers (avoids requesting all 5 team members on every PR).
+# Area-based team reviewers under the Thesis-Titans organization.
 # Branch protection requires 1 approving review from any teammate.
 
-/api/   @markalvincadangin @vincenttamano
-/web/   @lovelii-me @Justin-Ardena @faithbn
-/docs/  @markalvincadangin
+/api/   @Thesis-Titans/backend @markalvincadangin @vincenttamano
+/web/   @Thesis-Titans/frontend @lovelii-me @Justin-Ardena @faithbn
+/docs/  @Thesis-Titans/backend @markalvincadangin
