@@ -1,12 +1,14 @@
 # HazardLens
 
-A web application where a user picks a place in the Philippines and sees what official hazard datasets say about it: flood, landslide, liquefaction and active faults. Results appear on an interactive map and in an evidence panel, with an AI assistant that explains and answers questions about them.
+A web application planned to help users explore what official hazard datasets report about a selected place in the Philippines, covering flood, landslide, liquefaction and active faults.
 
-**Evidence first, AI second.** Official source data is authoritative. AI only explains and navigates it. The app never says "safe" because data is missing, and it keeps working when AI is down.
+**Current status:** HazardLens is an early prototype scaffold. Live hazard lookups, verified official-source integrations, investigation history, evidence panels, weather and AI features are not yet implemented. The feature lists below describe the intended project scope, not capabilities available in the current prototype.
+
+**Evidence first, AI second.** The intended design treats official source data as evidence and AI as an optional explanation layer. Missing or unavailable data must never be presented as proof of safety.
 
 ## Features
 
-### Core
+### Core (planned)
 
 - Place search and map click to select a point
 - Hazard lookup across four datasets, run in parallel
@@ -17,20 +19,22 @@ A web application where a user picks a place in the Philippines and sees what of
 - Deterministic plain-language explanation
 - Current weather card
 
-### Advanced
+### Advanced (planned)
 
 - AI explanation with structured output
 - AI chat grounded in the current investigation
 - Natural-language lookup via tool calling
 - Area investigation with polygon drawing
 
-### Stretch
+### Stretch (planned)
 
 - Map hazard overlays
 - Image input for contextual explanation
 - Additional hazard datasets (tsunami, earthquake-induced landslide)
 
 ## Datasets
+
+The following are candidate official datasets for integration; their live querying, coverage and interpretation must be verified before the application presents results.
 
 | Dataset | Agency |
 |---|---|
@@ -152,4 +156,4 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 
 ## Disclaimer
 
-HazardLens is a web-systems technology practice project. It is **not** an official hazard assessment. Source data is retrieved from government services and displayed as published. Absence of evidence does not mean absence of hazard.
+HazardLens is a web-systems technology practice project, not an official hazard assessment. The planned application may display data from government services after integrations and source behavior are verified. The current prototype does not yet provide live hazard results. Absence of evidence does not mean absence of hazard or indicate safety.
