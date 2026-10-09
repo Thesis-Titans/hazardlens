@@ -1,7 +1,7 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
 import httpx
+from fastapi import APIRouter, Depends
 
 from app.adapters.mgb_flood import query_flood_evidence
 from app.schemas.flood_preview import FloodPreviewRequest, FloodPreviewResponse
