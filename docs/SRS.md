@@ -6,7 +6,7 @@
 |---|---|
 | **Version** | 3.1 |
 | **Date** | 9 October 2026 |
-| **Status** | Build baseline |
+| **Status** | Proposed review baseline — pending team approval |
 | **Supersedes** | v3.0 |
 | **Project type** | Web systems technology project (React, APIs, database, AI) |
 | **Team and timeline** | 5 students, about 8 weeks, with AI coding agents as a force multiplier |
@@ -67,6 +67,8 @@ Hazard forecasting, personal risk scores, user accounts, training custom models,
 | **Stretch** | Tsunami and earthquake-induced landslide datasets |
 
 **Datasets (core four):** MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction, PHIVOLCS active fault.
+
+> **Release-scope review note (pending team decision):** The Core/Advanced labels above reflect the current SRS proposal and are not silently changed by the planning matrix. The proposed MVP candidate keeps FR-01–FR-10 and FR-14 as MVP-required; FR-11, FR-12 and FR-13 are proposed post-MVP only if the team explicitly approves that scope change. FR-15–FR-19 and FR-20–FR-21 are proposed post-MVP candidates. See `docs/release-scope-and-task-matrix.md`. Until the team decides, the current SRS Core classification for FR-11–FR-13 remains unresolved, not approved as deferred.
 
 ---
 
