@@ -22,11 +22,10 @@ async def query_flood_evidence(
     client: httpx.AsyncClient,
 ) -> FloodEvidenceResult:
     started_at = perf_counter()
-    retrieved_at = datetime.now(UTC)
     params = {
         "f": "json",
         "where": "1=1",
-        "geometry": (f'{{"x":{longitude},"y":{latitude},"spatialReference":{{"wkid":4326}}}}'),
+        "geometry": f'{{"x":{longitude},"y":{latitude},"spatialReference":{{"wkid":4326}}}}',
         "geometryType": "esriGeometryPoint",
         "inSR": "4326",
         "spatialRel": "esriSpatialRelIntersects",
@@ -56,7 +55,30 @@ async def query_flood_evidence(
         if not isinstance(features, list):
             raise TypeError("The MGB response did not include a features array.")
 
+        retrieved_at = datetime.now(UTC)
         latency_ms = round((perf_counter() - started_at) * 1000)
+        exceeded_limit = payload.get("exceededTransferLimit") is True
+        # A full page may be truncated even when the service omits its flag.
+        potentially_truncated = exceeded_limit or len(features) >= MAX_MATCHES
+        if potentially_truncated:
+            return FloodEvidenceResult(
+                source_url=settings.mgb_flood_query_url,
+                status=EvidenceStatus.UNAVAILABLE,
+                matches=[],
+                retrieved_at=retrieved_at,
+                latency_ms=latency_ms,
+                raw={
+                    "returned_feature_count": len(features),
+                    "exceeded_transfer_limit": exceeded_limit,
+                    "result_limit": MAX_MATCHES,
+                },
+                message=(
+                    "The MGB source returned a result set at the query limit or indicated "
+                    "truncation. Results may be incomplete, so no partial hazard result "
+                    "is presented. No hazard conclusion can be drawn."
+                ),
+            )
+
         if not features:
             return FloodEvidenceResult(
                 source_url=settings.mgb_flood_query_url,
@@ -73,7 +95,7 @@ async def query_flood_evidence(
 
         matches: list[FloodMatch] = []
         raw_features: list[dict[str, Any]] = []
-        for feature in features[:MAX_MATCHES]:
+        for feature in features:
             if not isinstance(feature, dict):
                 raise TypeError("The MGB response contained a malformed feature.")
             attributes = feature.get("attributes")
@@ -110,7 +132,7 @@ async def query_flood_evidence(
             source_url=settings.mgb_flood_query_url,
             status=EvidenceStatus.UNAVAILABLE,
             matches=[],
-            retrieved_at=retrieved_at,
+            retrieved_at=datetime.now(UTC),
             latency_ms=round((perf_counter() - started_at) * 1000),
             raw={},
             message="The MGB flood source timed out. No hazard conclusion can be drawn.",
@@ -120,7 +142,7 @@ async def query_flood_evidence(
             source_url=settings.mgb_flood_query_url,
             status=EvidenceStatus.UNAVAILABLE,
             matches=[],
-            retrieved_at=retrieved_at,
+            retrieved_at=datetime.now(UTC),
             latency_ms=round((perf_counter() - started_at) * 1000),
             raw={},
             message="The MGB flood source could not provide a valid response.",
