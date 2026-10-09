@@ -2,14 +2,14 @@
 
 **Status:** Proposed for team review  
 **Repository baseline:** `main` at the time this plan was prepared  
-**Planning basis:** Current SRS, architecture and verification documents; existing GitHub issues #1–#8  
+**Planning basis:** SRS/architecture/verification documents under review; GitHub issues #1–#8 and planning/readiness gate #12  
 **Scope:** Requirements alignment, delivery sequencing, team delegation, verification and sprint control
 
 > This plan is a working agreement proposal, not evidence that any feature is implemented. Do not mark requirements complete until the implementation and its verification evidence are present.
 
 ## 1. Current baseline and recovery objective
 
-HazardLens currently has a React/Vite/TypeScript frontend scaffold, a FastAPI application with a health endpoint, and CI checks. The main application journey—select a place, query official hazard sources, normalize results, and render evidence—must be treated as **not delivered until proven by code and tests**. The landing page must not imply that real hazard lookups or grounded AI are working while those capabilities remain unimplemented.
+HazardLens has a React/Vite/TypeScript frontend scaffold, a FastAPI application, and CI checks. Draft PR #11 adds a limited MGB flood preview API/adapter, status normalization and regression tests. Its latest reported CI run for commit `873fabf` passed backend lint/format and 11 tests plus frontend lint, TypeScript and production build. PR #11 also adds two captured response fixtures from live endpoint queries (Central Iloilo returned one `MF` feature; offshore Panay Gulf returned an empty `features` array). The tests replay those fixtures with a mocked HTTP client; they are not live-network verification. The full investigation journey—location selection, multi-source orchestration, persistence and evidence UI—must still be treated as **not delivered until proven by code and tests**. The empty fixture remains `UNAVAILABLE` pending source-specific coverage semantics. The landing page must not imply that the full hazard investigation or grounded AI is working while those capabilities remain unimplemented.
 
 **Recovery objective:** deliver one small, reliable, end-to-end hazard investigation vertical slice first. Expand only after the source query, result semantics, API contract, UI rendering and offline tests all work together.
 
@@ -98,9 +98,9 @@ Use relative phases and decision gates first. Do not assign or imply calendar da
 
 **Exit criteria:** all four core source integrations have reviewed contracts and fixture-based tests; live verification records are distinct from offline tests; map selection drives the same API contract as coordinate input; provider failure is isolated; evidence provenance is visible. The MVP is not signed off while any required source is represented only by unverified live behavior or unlabelled fixtures.
 
-### Sprint 3 — Reliability and user workflows
+### Phase 3 — Reliability and user workflows
 
-**Sprint Goal:** make investigation history and core evidence workflows dependable.
+**Phase goal:** make investigation history and core evidence workflows dependable.
 
 - Add anonymous session isolation, expiry and deletion behavior if confirmed in the approved SRS.
 - Add comparison and printable report only after stored investigation contracts are tested.
@@ -109,9 +109,9 @@ Use relative phases and decision gates first. Do not assign or imply calendar da
 
 **Exit criteria:** session isolation and expiry tests pass; error handling and operational limits are documented; user-facing workflows work without AI.
 
-### Sprint 4 — Optional AI and release hardening
+### Phase 4 — Optional AI and release hardening
 
-**Sprint Goal:** add only the AI capability that can be safely grounded in already verified evidence, then prepare a defensible demo/release.
+**Phase goal:** add only the AI capability that can be safely grounded in already verified evidence, then prepare a defensible demo/release.
 
 - Run a bounded provider spike only after core evidence retrieval is stable.
 - Use a strict tool allow-list, validated structured outputs, timeouts, bounded retry and deterministic fallback.
@@ -188,9 +188,9 @@ For every release candidate, record: commit SHA; environment/setup; migration re
 ## 10. Immediate next actions
 
 1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register, schema reconciliation and official source verification notes); approve or request corrections before treating them as the team baseline.
-2. Confirm sprint capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
-3. GIS/backend owner verifies one source end-to-end and supplies a reviewed fixture plus source contract.
-4. Backend/frontend pair implements the first vertical slice against the shared contract; QA adds acceptance tests for match, valid empty result, unavailable source, unsupported source and invalid coordinates.
-5. Review the newly tracked backlog items #13–#18, confirm their dependencies and sprint placement, and assign owners/reviewers only after capacity is agreed; keep AI and other advanced features deferred until the core slice passes.
+2. Confirm the SRS baseline, sprint/phase capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
+3. Update the source-verification record to reflect PR #11's two captured MGB response fixtures while keeping repeatability, coverage and valid-empty semantics explicitly unverified.
+4. Review PR #11 as a limited preview slice; do not treat its mocked fixture tests as live-source verification or as delivery of the full investigation workflow.
+5. Review the backlog items #13–#18, confirm dependencies and phase placement, and assign owners/reviewers only after capacity is agreed; keep AI and other advanced features deferred until the core evidence slice passes.
 
 **Project status after this plan:** planning artifact proposed; no feature is marked complete by this document. The next status update must be based on merged code and verification evidence, not this plan alone.
