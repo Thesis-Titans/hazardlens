@@ -1,5 +1,7 @@
 # HazardLens
 
+[![CI](https://github.com/Thesis-Titans/hazardlens/actions/workflows/ci.yml/badge.svg)](https://github.com/Thesis-Titans/hazardlens/actions/workflows/ci.yml)
+
 A web application planned to help users explore what official hazard datasets report about a selected place in the Philippines, covering flood, landslide, liquefaction and active faults.
 
 **Current status:** HazardLens is an early prototype scaffold. Live hazard lookups, verified official-source integrations, investigation history, evidence panels, weather and AI features are not yet implemented. The feature lists below describe the intended project scope, not capabilities available in the current prototype.
@@ -99,7 +101,7 @@ hazardlens/
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Thesis-Titans/hazardlens.git
 cd hazardlens
 
 # Copy environment template and configure keys if needed
@@ -129,6 +131,22 @@ cd web
 npm install
 npm run dev
 ```
+
+## Team & Agile Project Management
+
+HazardLens is developed by **Thesis Titans** (West Visayas State University — BSIT Batch 2028) using lightweight Scrum and GitHub Flow.
+
+- **Organization:** [Thesis Titans](https://github.com/Thesis-Titans)
+- **Sprint Board:** [HazardLens — Sprint Board](https://github.com/orgs/Thesis-Titans/projects/1)
+- **Sprint Milestones:** [HazardLens Milestones](https://github.com/Thesis-Titans/hazardlens/milestones)
+
+### Team Tracks & Specializations
+
+| Track | Engineers | Focus & Ownership |
+|---|---|---|
+| **Data & AI Infrastructure** | `@markalvincadangin`<br>`@vincenttamano` | FastAPI, PostGIS, ArcGIS/WMS adapters, AI Grounding Engine |
+| **Interactive GIS** | `@Justin-Ardena` | MapLibre GL map viewport, vector layers, pin reverse-geocoding |
+| **Product UI/UX & QA** | `@lovelii-me`<br>`@faithbn` | Design system, comparison view, print reports, evidence card QA |
 
 ## Standards Adopted
 
