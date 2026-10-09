@@ -37,6 +37,7 @@ async def request_with_fake_client(fake_client: object, payload: dict) -> httpx.
     finally:
         app.dependency_overrides.pop(get_http_client, None)
 
+
 @pytest.mark.asyncio
 async def test_found_result_matches_srs_contract_and_preserves_features() -> None:
     fake_client = AsyncMock()
@@ -88,6 +89,7 @@ async def test_found_result_matches_srs_contract_and_preserves_features() -> Non
     assert len(result["raw"]["features"]) == 3
     fake_client.get.assert_awaited_once()
 
+
 @pytest.mark.asyncio
 async def test_empty_response_with_unverified_coverage_is_unavailable() -> None:
     fake_client = AsyncMock()
@@ -103,6 +105,7 @@ async def test_empty_response_with_unverified_coverage_is_unavailable() -> None:
     assert result["status"] == "UNAVAILABLE"
     assert result["matches"] == []
     assert "coverage" in result["message"]
+
 
 @pytest.mark.asyncio
 async def test_upstream_timeout_is_unavailable_and_retried_once() -> None:
@@ -123,6 +126,7 @@ async def test_upstream_timeout_is_unavailable_and_retried_once() -> None:
     assert result["matches"] == []
     assert fake_client.get.await_count == 2
 
+
 @pytest.mark.asyncio
 async def test_upstream_server_error_is_retried_once() -> None:
     fake_client = AsyncMock()
@@ -141,6 +145,7 @@ async def test_upstream_server_error_is_retried_once() -> None:
     assert result["status"] == "FOUND"
     assert fake_client.get.await_count == 2
 
+
 @pytest.mark.asyncio
 async def test_malformed_upstream_payload_is_unavailable() -> None:
     fake_client = AsyncMock()
@@ -156,6 +161,7 @@ async def test_malformed_upstream_payload_is_unavailable() -> None:
     assert result["status"] == "UNAVAILABLE"
     assert result["matches"] == []
 
+
 @pytest.mark.asyncio
 async def test_invalid_coordinates_are_rejected_before_upstream_call() -> None:
     fake_client = AsyncMock()
@@ -168,6 +174,7 @@ async def test_invalid_coordinates_are_rejected_before_upstream_call() -> None:
 
     assert response.status_code == 422
     fake_client.get.assert_not_awaited()
+
 
 @pytest.mark.asyncio
 async def test_upstream_truncation_flag_returns_unavailable_without_partial_matches() -> None:
@@ -191,14 +198,14 @@ async def test_upstream_truncation_flag_returns_unavailable_without_partial_matc
     assert result["raw"]["exceeded_transfer_limit"] is True
     assert "incomplete" in result["message"]
 
+
 @pytest.mark.asyncio
 async def test_full_query_page_is_not_presented_as_complete() -> None:
     fake_client = AsyncMock()
     fake_client.get.return_value = FakeResponse(
         {
             "features": [
-                {"attributes": {"OBJECTID": index, "FloodSusc": "HF"}}
-                for index in range(20)
+                {"attributes": {"OBJECTID": index, "FloodSusc": "HF"}} for index in range(20)
             ]
         }
     )
