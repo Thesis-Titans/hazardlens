@@ -21,27 +21,34 @@ async def query_flood_evidence(
 ) -> FloodEvidenceResult:
     retrieved_at = datetime.now(UTC)
     try:
-        response = await client.get(
-            settings.mgb_flood_query_url,
-            params={
-                "f": "json",
-                "where": "1=1",
-                "geometry": (
-                    '{"x":'
-                    f"{longitude}"
-                    ',"y":'
-                    f"{latitude}"
-                    ',"spatialReference":{"wkid":4326}}'
-                ),
-                "geometryType": "esriGeometryPoint",
-                "inSR": "4326",
-                "spatialRel": "esriSpatialRelIntersects",
-                "outFields": "OBJECTID,FloodSusc",
-                "returnGeometry": "false",
-            },
-        )
-        response.raise_for_status()
-        payload: Any = response.json()
+        params = {
+            "f": "json",
+            "where": "1=1",
+            "geometry": (
+                '{"x":'
+                f"{longitude}"
+                ',"y":'
+                f"{latitude}"
+                ',"spatialReference":{"wkid":4326}}'
+            ),
+            "geometryType": "esriGeometryPoint",
+            "inSR": "4326",
+            "spatialRel": "esriSpatialRelIntersects",
+            "outFields": "OBJECTID,FloodSusc",
+            "returnGeometry": "false",
+        }
+        for attempt in range(2):
+            try:
+                response = await client.get(settings.mgb_flood_query_url, params=params)
+            except (TimeoutError, httpx.TimeoutException):
+                if attempt == 0:
+                    continue
+                raise
+            if response.status_code >= 500 and attempt == 0:
+                continue
+            response.raise_for_status()
+            payload: Any = response.json()
+            break
         if not isinstance(payload, dict) or "error" in payload:
             raise ValueError("The MGB service returned an invalid or error payload.")
 
