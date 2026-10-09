@@ -54,7 +54,7 @@
 | NFR-03 Trusted upstream URLs | MVP-required | Prevent client-controlled arbitrary URL/SQL/tool inputs. |
 | NFR-04 CORS and secret handling | MVP-required | Verify deployment-origin policy and server-side secret storage. |
 | NFR-05 Anonymous session privacy/expiry | MVP-required if FR-02 remains MVP | Session cookie, no raw IP storage and 30-day expiry/deletion behavior must be tested. |
-| NFR-06 Geocoding policy | MVP-required | Provider choice remains unresolved; verify its actual terms. If public Nominatim is chosen, implement its current policy and no autocomplete. |
+| NFR-06 Geocoding policy | MVP-required | Geoapify is the project-lead working selection, subject to team confirmation and verification of current terms, quota, attribution, and server-side key restrictions. If public Nominatim is used as fallback/alternative, enforce max 1 request/second, identifying User-Agent, and caching. No keystroke autocomplete; coordinate/map fallback must remain functional. |
 | NFR-07 Recorded demo fixtures | MVP-required | Recorded fixtures must be reproducible and visibly labelled when used. |
 | NFR-08 Attribution/limitations | MVP-required | Avoid implying that missing data means safety or that the app is an official assessment. |
 | NFR-09 Dataset extensibility without schema changes | MVP-required; project-lead working definition, team approval pending | A compatible source fits existing normalized fields and supported spatial operations, and can be enabled by one adapter plus registry config/rows without a migration. Verify with a registered test/mock dataset and normal orchestration test. Sources that need new semantics require an explicit schema review; do not force compatibility. |

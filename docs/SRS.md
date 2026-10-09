@@ -9,7 +9,7 @@
 | **Status** | Merged review baseline on `main` (PR #9) — pending whole-team approval |
 | **Supersedes** | v3.0 |
 | **Project type** | Web systems technology project (React, APIs, database, AI) |
-| **Team and timeline** | 5 students, about 8 weeks, with AI coding agents as a force multiplier |
+| **Team and timeline** | 5 students, initial planning assumption of ~8 weeks (academic timeframe; actual schedule and sprint capacity pending team kickoff confirmation), with AI coding agents as a force multiplier |
 
 ---
 
@@ -24,7 +24,7 @@ HazardLens is a web app where a user picks a place in the Philippines and sees w
 1. Deliver a polished, modern product that looks like a real app, not a data viewer.
 2. Show solid web engineering: React frontend, REST API, relational database with geospatial support, external API integration, and resilience when those APIs fail.
 3. Deliver advanced AI features that use free services: evidence explanation, evidence-grounded chat, and natural-language lookup through tool calling.
-4. Stay buildable by five students in eight weeks.
+4. Stay buildable by five students within an estimated eight-week academic timeframe, without assuming unverified full-time capacity.
 
 ### 1.3 Core principle
 
@@ -37,7 +37,7 @@ Hazard forecasting, personal risk scores, user accounts, training custom models,
 ### 1.5 Constraints and assumptions
 
 - The project is a web-systems technology practice project, not a research study.
-- The implementation target is five students over about eight weeks, using AI coding agents as a development force multiplier.
+- The implementation target is five students over an assumed academic period of approximately eight weeks, using AI coding agents as a development force multiplier. Exact schedule, sprint boundaries, and student availability must be confirmed at team kickoff before calendar commitments are made.
 - Free or zero-cost services are preferred for development and demonstration. External free-tier quotas, model availability and service terms may change.
 - Government hazard services are external dependencies and may be slow, unavailable, modified or removed without notice.
 - No authentication is required for the MVP. Anonymous sessions are sufficient for history and comparisons.
