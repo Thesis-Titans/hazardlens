@@ -10,28 +10,27 @@ A web application planned to help users explore what official hazard datasets re
 
 ## Features
 
-### Core (planned)
+### MVP Core (Release Scope — Gates A through E)
 
-- Place search and map click to select a point
-- Hazard lookup across four datasets, run in parallel
-- Evidence panel with clear states: found, no evidence, outside coverage, unavailable, unsupported
-- Anonymous investigation history (no login required)
-- Side-by-side comparison of past investigations
-- Printable evidence report
-- Deterministic plain-language explanation
-- Current weather card
+- Point location selection via Philippine place search and map click fallback (FR-01, FR-14)
+- Concurrent point hazard query across four official datasets with failure isolation (FR-03, FR-05, FR-06)
+- Transparent evidence panel with 5 strict statuses, exact published labels, and provenance (FR-04, FR-07, FR-08, FR-09)
+- Deterministic plain-language explanation without LLM reliance (FR-10)
+- Anonymous session persistence and 30-day investigation history (FR-02)
+- Current weather card with bounded timeout and independent failure isolation (FR-13, FR-21)
+- Security & compliance: No HazardHunterPH scraping, rate limits, HttpOnly cookies, WCAG 2.2 AA accessibility (NFR-04, NFR-05, NFR-11, NFR-13, NFR-16)
 
-### Advanced (planned)
+### Post-MVP (Deferred Scope — Working Direction)
 
-- AI explanation with structured output
-- AI chat grounded in the current investigation
-- Natural-language lookup via tool calling
-- Area investigation with polygon drawing
+- Side-by-side comparison of past investigations without synthetic scoring (FR-11 / Issue #14)
+- Printable hazard briefing summary with attribution and watermarking (FR-12 / Issue #14)
+- Simple area investigation with polygon validation and capability gates (FR-20 / Issue #16)
+- Gated AI explanations, grounded chat, and tool calling (FR-15–FR-19 / Issue #4; strictly gated behind Gates B & C)
 
-### Stretch (planned)
+### Stretch Goals (Future Exploration)
 
-- Map hazard overlays
-- Image input for contextual explanation
+- Map hazard layer vector/raster overlays
+- Multimodal image input for contextual explanation
 - Additional hazard datasets (tsunami, earthquake-induced landslide)
 
 ## Datasets
