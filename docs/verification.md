@@ -68,7 +68,7 @@ Record the exact coordinates used.
 
 ### 3.3 Fault proximity
 
-Test the active-fault source at multiple tolerances/bounding distances.
+Explore the active-fault source at several test distances to characterize the source operation. These distances are exploratory test cases, not approved user-facing thresholds or evidence of a scientifically validated risk buffer. Document the source method, units, geometry/CRS handling and rationale before selecting any user-visible distance bands.
 
 | Test | Tolerance / band | Result | Status |
 |---|---:|---|---|
@@ -145,7 +145,7 @@ Verify that:
 | One upstream HTTP 5xx | Other evidence still returned | NOT_STARTED |
 | Successful empty result | `NO_EVIDENCE` with empty `matches: []` | NOT_STARTED |
 | Upstream failure | `UNAVAILABLE` with empty `matches: []` | NOT_STARTED |
-| Outside source extent | `OUTSIDE_COVERAGE` with empty `matches: []` | NOT_STARTED |
+| Documented source-specific outside-coverage case | `OUTSIDE_COVERAGE` only when an independently justified coverage rule establishes it; otherwise keep the result blocked/unavailable pending semantics | NOT_STARTED |
 | Unsupported operation | `UNSUPPORTED` with empty `matches: []` | NOT_STARTED |
 | Deterministic explanation | Plain-language summary built from class definitions | NOT_STARTED |
 | Deterministic explanation without AI | Explanation renders when AI is unavailable | NOT_STARTED |
