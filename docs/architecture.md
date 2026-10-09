@@ -1,7 +1,7 @@
 # HazardLens — Technical Architecture
 
 **Project:** HazardLens  
-**Baseline:** SRS v3.0  
+**Baseline:** SRS v3.1  
 **Project type:** Web systems technology project  
 **Team:** 5 students  
 **Target timeline:** About 8 weeks
