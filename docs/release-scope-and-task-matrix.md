@@ -17,7 +17,7 @@
 
 ## 2. Requirement classification proposal
 
-“Proposed post-MVP” is a recommendation, not removal from the SRS. FR-11–FR-13 are currently labelled Core in SRS v3.1; changing them to post-MVP requires explicit team approval. Until that decision is recorded, treat their release status as **unresolved** and do not silently defer them.
+“Post-MVP” classifications below record the project lead's working direction, not formal team approval. FR-11/FR-12 are selected post-MVP, while FR-13/FR-21 remain MVP-required. The team must confirm or request changes before this becomes the canonical baseline; until then, do not claim whole-team approval.
 
 ### Functional requirements
 
@@ -76,7 +76,7 @@ Effort sizes below are relative planning estimates only. Confidence is low until
 
 | WP | Scope / existing issue(s) | Depends on | Deliverable and measurable exit criteria | Suggested accountable track (confirm with team) | Relative effort / confidence |
 |---|---|---|---|---|---|
-| WP-0 Governance and scope gate (#12, PR #9) | Baseline, requirement classifications, policy and release boundary | None | Team records approval/changes; SRS status is explicit; unresolved FR-11–FR-13 decision recorded; repo rules and course constraints have evidence/owners. | Project lead + whole team | M / low |
+| WP-0 Governance and scope gate (#12, PR #9) | Baseline, requirement classifications, policy and release boundary | None | Team records approval/changes to the proposed classifications; SRS status is explicit; remaining governance decisions, repository rules and course constraints have evidence/owners. | Project lead + whole team | M / low |
 | WP-1 Source verification (#2) | Verify four official sources independently | WP-0 scope direction; source access | For each source: official URL and exact layer ID, geometry/SRID, relevant class/date fields, query operation, attribution, timestamped live test, empty/error behavior, coverage basis, sanitized fixture and repeatable tests. No substitute source silently added. | GIS/source track + independent QA | L / low |
 | WP-2 Logical schema and first migration plan (#1, NFR-09 clarification in #19) | Reconcile all 14 logical entities; choose first physical migration boundary | WP-0; FR-02 decision; WP-1 source metadata where relevant | Relationship/retention/deletion rules, geometry types/SRID/indexes and constraints documented; migration scope is justified by approved workflow; clean-database migration test passes. | Database track + independent reviewer | M–L / low |
 | WP-3 First end-to-end slice (#3, PR #11) | One verified source → normalized API → evidence UI | WP-1 selected source; API/evidence contract; WP-2 if persistence is in slice | A coordinate investigation renders evidence with source/class/status/provenance; source failure is isolated; recorded fixture mode is labelled; tests reproduce offline. No claim that this completes all four-source MVP. | Backend + frontend tracks, named reviewer distinct from author | L / low |
@@ -85,7 +85,7 @@ Effort sizes below are relative planning estimates only. Confidence is low until
 | WP-6 Location input and resilient UI (#7, #8) | Search provider, coordinate/map fallback, evidence panel | WP-0 provider decision; WP-3 API contract | Search selection or coordinate fallback reaches investigation; evidence renders when geocoder/map tiles fail; all five statuses and provenance are accessible and accurately worded. | Frontend + backend track + QA | M / low |
 | WP-7 Cross-cutting reliability/security (#17) | Rate limits, diagnostics, URL restrictions, CORS and secret review | API routes/contracts; deployment assumptions | Test below/at/above limits, HTTP 429, source timeouts, safe logs, allowed origins and no client-controlled upstream URLs. | Backend track + independent reviewer | M / low |
 | WP-8 Release verification (#18 + #12 + #20) | Accessibility/browser checks, clean setup, release traceability | WP-3 through WP-7; approved release scope | Clean-checkout commands recorded; CI results tied to commit; browser/viewport matrix run; keyboard/focus/status checks recorded; each MVP requirement links to evidence or explicit blocker. | QA + one backend and one frontend teammate | M / low |
-| WP-9 Conditional post-MVP work (#4, #14–#16) | AI, comparison/report, weather, polygon | Explicit scope decision; core slice/release gate; relevant dependencies | Each feature has a separate approved scope, owner, reviewer, measurable criteria and failure tests before implementation starts. | To be decided after capacity review | Variable / low |
+| WP-9 Conditional post-MVP work (#4, #14, #16) | AI, comparison/report, polygon | First evidence slice and all four required sources verified for AI; team review of post-MVP scope | Each feature has approved scope, owner, reviewer, measurable criteria and failure tests before implementation starts. Weather is MVP scope and must have FR-21 failure isolation. | To be decided after capacity review | Variable / low |
 
 ### Suggested execution order
 
@@ -102,13 +102,13 @@ The order allows source research and schema review to run in parallel, but integ
 ## 4. GitHub backlog hygiene
 
 - Keep issue #12 open until its acceptance criteria are evidenced and the team has reviewed the proposed baseline.
-- Keep PR #9 and PR #11 as drafts while their respective review gates remain open.
+- Keep PR #9 ready for review and unmerged; PR #11 remains a draft while its technical review gates are open.
 - Remove the Sprint 1 scheduling signal from issue #4 while AI is deferred; keep the issue open as a gated post-MVP candidate.
 - Do not add assignees, reviewers, milestones or due dates merely to make the board look complete. Confirm capacity first.
 - Confirm issue #3 has one accountable owner, explicit contributors and an independent reviewer; the existing body proposes multiple roles but does not confirm availability.
 - Assign issues #7 and #8 only after the API contract, geocoder provider and UI responsibilities are confirmed.
 - If FR-02 stays MVP-required, issue #13 needs an owner and reviewer during team planning; it cannot be silently left out of the release.
-- Decide FR-11–FR-13 before moving #14/#15 to a later phase. Their current SRS Core label is a real conflict, not a cosmetic backlog issue.
+- Ask the whole team to confirm the project-lead classifications before treating the SRS as canonical or changing implementation milestones for #14/#15.
 
 ## 5. Evidence gaps that remain open
 
@@ -121,7 +121,7 @@ The order allows source research and schema review to run in parallel, but integ
 | Branch/review enforcement | Integration could not confirm protection state. | Repository administrator verifies active rules and required checks. |
 | Clean-checkout setup | Not independently reproduced in this review. | Teammate records OS, commands, migration result, API/frontend startup and commit. |
 | Requirement classifications | Proposed, not team-approved. | Explicit team decision; update SRS and traceability in same review cycle. |
-| NFR-09 | Ambiguous. | Rewrite as a measurable requirement or explicitly remove/replace it through approval. |
+| NFR-09 | Working definition recorded; verification pending. | Register a compatible test/mock dataset through one adapter and registry configuration/rows, query it through normal orchestration, and verify no schema migration is required. |
 
 ## 6. Team review agenda (30–45 minutes)
 
