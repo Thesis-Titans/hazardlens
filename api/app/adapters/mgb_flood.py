@@ -24,13 +24,7 @@ async def query_flood_evidence(
         params = {
             "f": "json",
             "where": "1=1",
-            "geometry": (
-                '{"x":'
-                f"{longitude}"
-                ',"y":'
-                f"{latitude}"
-                ',"spatialReference":{"wkid":4326}}'
-            ),
+            "geometry": (f'{{"x":{longitude},"y":{latitude},"spatialReference":{{"wkid":4326}}}}'),
             "geometryType": "esriGeometryPoint",
             "inSR": "4326",
             "spatialRel": "esriSpatialRelIntersects",
@@ -86,9 +80,7 @@ async def query_flood_evidence(
                 )
             )
 
-        unique_matches = {
-            (match.class_code, match.class_label): match for match in matches
-        }
+        unique_matches = {(match.class_code, match.class_label): match for match in matches}
         ordered_matches = [
             unique_matches[key] for key in sorted(unique_matches, key=lambda item: item[0])
         ]
