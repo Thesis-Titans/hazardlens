@@ -6,7 +6,7 @@
 
 ## Exit gate
 
-The project setup/organization phase (Gate 0) is complete when the team has explicitly approved scope and decision owners, the SRS/schema/source contracts are internally consistent, the backlog is traceable, team responsibilities and reviewers are confirmed, GitHub enforcement is checked, and clean-checkout setup is reproducible. Additional feature implementation work is strictly paused until Gate 0 closes.
+The project setup/organization phase (Gate 0, Issue #12) is complete when the team has explicitly approved scope and decision owners, the SRS/schema/source contracts are internally consistent, the backlog is traceable, team responsibilities and reviewers are confirmed, GitHub enforcement is checked, and clean-checkout setup is reproducible. Additional feature implementation work is strictly paused until Gate 0 closes. Gate 0 is a governance prerequisite, not a delivery task in T1–T18; T16 is reserved for Gate E release verification (Issue #20). Issue #1 is an architectural foundation for Gate D persistence and does not block the stateless Gate B slice.
 
 ## Checklist
 
