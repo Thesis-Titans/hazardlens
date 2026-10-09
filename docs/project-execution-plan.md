@@ -2,7 +2,7 @@
 
 **Status:** Proposed for team review  
 **Repository baseline:** `main` at the time this plan was prepared  
-**Planning basis:** SRS/architecture/verification documents under review; GitHub issues #1–#8 and planning/readiness gate #12  
+**Planning basis:** Proposed SRS/architecture/verification documents under review; [release scope and dependency-aware task matrix](release-scope-and-task-matrix.md); GitHub issues #1–#8 and planning/readiness gate #12  
 **Scope:** Requirements alignment, delivery sequencing, team delegation, verification and sprint control
 
 > This plan is a working agreement proposal, not evidence that any feature is implemented. Do not mark requirements complete until the implementation and its verification evidence are present.
@@ -189,8 +189,8 @@ For every release candidate, record: commit SHA; environment/setup; migration re
 
 ## 10. Immediate next actions
 
-1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register, schema reconciliation and official source verification notes); approve or request corrections before treating them as the team baseline.
-2. Confirm the SRS baseline, sprint/phase capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
+1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register, schema reconciliation, official source verification notes and `docs/release-scope-and-task-matrix.md`); approve or request corrections before treating them as the team baseline.
+2. Confirm the SRS baseline, requirement classifications (especially FR-11–FR-13 and NFR-09), sprint/phase capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
 3. Update the source-verification record to reflect PR #11's two captured MGB response fixtures while keeping repeatability, coverage and valid-empty semantics explicitly unverified.
 4. Review PR #11 as a limited preview slice; do not treat its mocked fixture tests as live-source verification or as delivery of the full investigation workflow.
 5. Review the backlog items #13–#18, confirm dependencies and phase placement, and assign owners/reviewers only after capacity is agreed; keep AI and other advanced features deferred until the core evidence slice passes.
