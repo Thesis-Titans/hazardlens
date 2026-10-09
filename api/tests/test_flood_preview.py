@@ -9,8 +9,6 @@ from app.routers.flood_preview import get_http_client
 
 
 class FakeResponse:
-    status_code = 200
-
     def __init__(self, payload: dict, status_code: int = 200) -> None:
         self.payload = payload
         self.status_code = status_code
@@ -41,7 +39,7 @@ async def request_with_fake_client(fake_client: object, payload: dict) -> httpx.
 
 
 @pytest.mark.asyncio
-async def test_found_result_preserves_source_classification_and_rounds_coordinates() -> None:
+async def test_found_result_matches_srs_contract_and_preserves_features() -> None:
     fake_client = AsyncMock()
     fake_client.get.return_value = FakeResponse(
         {
@@ -62,13 +60,21 @@ async def test_found_result_preserves_source_classification_and_rounds_coordinat
     body = response.json()
     assert body["latitude"] == 10.72023
     assert body["longitude"] == 122.56215
-    result = body["results"][0]
-    assert result["status"] == "FOUND"
-    assert result["matches"] == [
-        {"class_code": "HF", "class_label": "High Susceptibility to Flooding"},
-        {"class_code": "VHF", "class_label": "Very High Susceptibility to Flooding"},
-    ]
     assert "not a complete multi-hazard investigation" in body["limitation"]
+    result = body["results"][0]
+    assert result["dataset_key"] == "flood"
+    assert result["source_key"] == "mgb_detailed_flood"
+    assert result["status"] == "FOUND"
+    assert result["result_type"] == "containment"
+    assert result["origin"] == "live"
+    assert result["latency_ms"] >= 0
+    assert result["source_date"]["basis"] == "metadata_not_provided"
+    assert result["matches"] == [
+        {"class_code": "HF", "class_label": "High Susceptibility to Flooding", "distance_band_m": None},
+        {"class_code": "HF", "class_label": "High Susceptibility to Flooding", "distance_band_m": None},
+        {"class_code": "VHF", "class_label": "Very High Susceptibility to Flooding", "distance_band_m": None},
+    ]
+    assert len(result["raw"]["features"]) == 3
     fake_client.get.assert_awaited_once()
 
 
@@ -90,7 +96,7 @@ async def test_empty_response_with_unverified_coverage_is_unavailable() -> None:
 
 
 @pytest.mark.asyncio
-async def test_upstream_timeout_is_unavailable_not_no_evidence() -> None:
+async def test_upstream_timeout_is_unavailable_and_retried_once() -> None:
     fake_client = AsyncMock()
     fake_client.get.side_effect = [
         httpx.ReadTimeout("upstream timeout"),
@@ -114,7 +120,7 @@ async def test_upstream_server_error_is_retried_once() -> None:
     fake_client = AsyncMock()
     fake_client.get.side_effect = [
         FakeResponse({"error": "temporarily unavailable"}, status_code=503),
-        FakeResponse({"features": [{"attributes": {"FloodSusc": "HF"}}]}),
+        FakeResponse({"features": [{"attributes": {"FloodSusc": "HF", "OBJECTID": 1}}]}),
     ]
 
     response = await request_with_fake_client(
