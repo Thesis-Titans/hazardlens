@@ -221,9 +221,13 @@ All hazard adapters return the same normalized structure.
   "source_key": "mgb_detailed_flood",
   "status": "FOUND",
   "result_type": "containment",
-  "class_code": "HF",
-  "class_label": "High Susceptibility",
-  "distance_band_m": null,
+  "matches": [
+    {
+      "class_code": "HF",
+      "class_label": "High Susceptibility",
+      "distance_band_m": null
+    }
+  ],
   "source_date": {
     "text": "as of July 2018",
     "basis": "service_statement"
@@ -247,8 +251,9 @@ All hazard adapters return the same normalized structure.
 
 Source classifications remain source-scoped and are shown as published. The application does not convert them into a universal safety or hazard score.
 
-When multiple features match at a location (per FR-09), all matching features are returned in the evidence results with their respective classifications and provenance.
-
+- **Status Invariant:** `FOUND` requires a non-empty `matches` array (capped at 20). Every other status requires an empty `matches: []` array.
+- **Deterministic Match Order:** Matches are sorted by `class_code`, then `distance_band_m` ascending, guaranteeing deterministic hash inputs for AI caching.
+- **Multi-Feature and Multi-Source (FR-09):** Multiple feature matches within a source populate `matches[]`. Multiple candidate sources for a dataset generate separate `evidence_result` objects.
 
 ## 10. Database Architecture
 
@@ -260,12 +265,15 @@ dataset
    └──< dataset_source >── data_source
             │
             └──< hazard_class
-
-session
-   │
+                    ▲
+                    │ (FK)
+session             │
+   │                │
    └──< investigation >── location / selection geometry
             │
-            ├──< evidence_result >── dataset_source / hazard_class
+            ├──< evidence_result >── dataset_source
+            │         │
+            │         └──< evidence_match ──┘
             ├──< weather_snapshot
             └──< ai_generation
 
@@ -276,22 +284,23 @@ saved_comparison
    └──< comparison_investigation >── investigation
 ```
 
-### Database responsibilities
+### Database responsibilities and lifecycle
 
 PostgreSQL/PostGIS stores:
 
-- anonymous sessions;
+- anonymous sessions (with `ON DELETE CASCADE` down to investigations and child records);
 - selected investigation locations and area geometry;
 - investigation records;
-- normalized evidence snapshots;
-- source and dataset registry information;
-- hazard-class definitions;
-- weather snapshots;
-- AI generation metadata/output;
-- geocoding cache;
-- saved comparison definitions.
+- evidence query results and child `evidence_match` records linked to source `hazard_class`;
+- short-term weather snapshots;
+- cached AI generations;
+- geocoding results;
+- saved comparison records.
+
+**Cache reuse:** Hazard and weather caching reuses the existing `evidence_result` and `weather_snapshot` tables using coordinate and timestamp TTL checks, eliminating the need for separate cache tables or Redis.
 
 The application does not require a national copy of the government hazard geometries.
+
 
 ## 11. Caching
 

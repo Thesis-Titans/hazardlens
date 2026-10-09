@@ -17,8 +17,8 @@ Closes #
 ## Testing
 
 - [ ] Backend tests (`pytest`)
-- [ ] Frontend tests (`npm run test` / lint & typecheck)
-- [ ] Build passed (`npm run build`)
+- [ ] Frontend quality checks (`npm run lint`, `npx tsc --noEmit`)
+- [ ] Production build (`npm run build`)
 - [ ] Manual verification in browser / Postman
 
 ## Screenshots / Visuals (if applicable)

@@ -199,9 +199,13 @@ Three access methods cover all datasets. Each adapter returns the same normalize
   "source_key": "mgb_detailed_flood",
   "status": "FOUND",
   "result_type": "containment",
-  "class_code": "HF",
-  "class_label": "High Susceptibility",
-  "distance_band_m": null,
+  "matches": [
+    {
+      "class_code": "HF",
+      "class_label": "High Susceptibility",
+      "distance_band_m": null
+    }
+  ],
   "source_date": { "text": "as of July 2018", "basis": "service_statement" },
   "retrieved_at": "2026-10-01T03:12:44Z",
   "origin": "live",
@@ -210,9 +214,11 @@ Three access methods cover all datasets. Each adapter returns the same normalize
 }
 ```
 
-The service's coverage extent is stored per source. A point outside it returns `OUTSIDE_COVERAGE` without a network call. Source dates are stored as text plus a basis, because the services publish dates as integers or free text.
-
-Per FR-09, when a location intersects multiple features (such as overlapping hazard zones or multiple nearby fault traces within tolerance), all matching features are preserved and returned in the evidence result set. Conflicting sources are both displayed with their respective provenance.
+A single evidence result represents the query evaluation for one dataset source.
+- **Invariant:** `FOUND` requires a non-empty `matches` array (up to a configurable cap, default 20). All other statuses (`NO_EVIDENCE`, `OUTSIDE_COVERAGE`, `UNAVAILABLE`, `UNSUPPORTED`) require an empty `matches: []` array.
+- **Deterministic ordering:** Matches are ordered deterministically (first by `class_code`, then by `distance_band_m` ascending) to ensure stable evidence hashes for AI prompt caching.
+- **Coverage extent:** The service's coverage extent is stored per source. A point outside it returns `OUTSIDE_COVERAGE` without a network call. Source dates are stored as text plus a basis, because services publish dates as integers or free text.
+- **Multiple matches & sources (FR-09):** When a location intersects multiple features within a dataset source (such as multiple nearby fault traces), all matching features are preserved in `matches[]`. When multiple candidate sources are queried or disagree, each source produces its own distinct `EvidenceResult`.
 
 ### 4.6 Data model
 
@@ -220,25 +226,26 @@ Per FR-09, when a location intersects multiple features (such as overlapping haz
 |---|---|
 | `dataset` | key, name, description |
 | `data_source` | agency, attribution, terms_url |
-| `dataset_source` | dataset, source, access_path, base_url, layer, extent, priority, active, last_checked |
-| `hazard_class` | dataset_source, code, label, definition_text |
+| `dataset_source` | dataset (FK), source (FK), access_path, base_url, layer, extent, priority, active, last_checked |
+| `hazard_class` | dataset_source (FK), code, label, definition_text |
 | `location` | geography point, snapped lat and lon |
 | `session` | id, created_at, expires_at |
-| `investigation` | location nullable, session, selection_type (`POINT`/`AREA`), geometry, created_at, duration_ms |
-| `evidence_result` | investigation, dataset, source, status, class, distance_band, source_date_text, retrieved_at, origin, latency_ms, raw (jsonb) |
-| `weather_snapshot` | investigation, temperature, humidity, precipitation, wind, valid_time |
-| `ai_generation` | investigation, kind, provider, model, prompt_version, evidence_hash, output, created_at |
+| `investigation` | location nullable, session (FK ON DELETE CASCADE), selection_type (`POINT`/`AREA`), geometry, created_at, duration_ms |
+| `evidence_result` | investigation (FK ON DELETE CASCADE), dataset_source (FK), status, source_date_text, retrieved_at, origin, latency_ms, raw (jsonb) |
+| `evidence_match` | evidence_result (FK ON DELETE CASCADE), hazard_class (FK), distance_band_m |
+| `weather_snapshot` | investigation (FK ON DELETE CASCADE), temperature, humidity, precipitation, wind, valid_time |
+| `ai_generation` | investigation (FK ON DELETE CASCADE), kind, provider, model, prompt_version, evidence_hash, output, created_at |
 | `geocode_cache` | normalized_query, response, expires_at |
-| `saved_comparison` | session, name, created_at |
-| `comparison_investigation` | comparison, investigation, position |
+| `saved_comparison` | session (FK ON DELETE CASCADE), name, created_at |
+| `comparison_investigation` | comparison (FK ON DELETE CASCADE), investigation (FK ON DELETE CASCADE), position |
 
 For an area investigation, `investigation.geometry` stores the user-drawn polygon as the canonical selection geometry. `selection_type` identifies whether the geometry represents a point or area. The polygon is validated before upstream queries. The initial implementation limit is configurable; the default maximum is 100 vertices.
 
 ### 4.7 Caching and lifecycle
 
-Hazard results are cached by dataset and rounded coordinate for 24 hours (this can be extended after agency permission). Weather is cached for 15 minutes. Geocoding is cached for 30 days. Cache reuse is exact-key only, because a nearby point may sit in a different polygon.
+Hazard results are cached by dataset and rounded coordinate for 24 hours (this can be extended after agency permission). Weather is cached for 15 minutes. Geocoding is cached for 30 days. Cache reuse is exact-key only, because a nearby point may sit in a different polygon. Hazard and weather cache lookups reuse existing `evidence_result` and `weather_snapshot` records within their active TTL windows, requiring no dedicated cache tables or external Redis store.
 
-**Data lifecycle (NFR-05):** Session data and geocode cache records expire after 30 days. Cleanup is handled via an in-process scheduled task or startup hook in FastAPI that deletes records where `expires_at < NOW()`, avoiding external worker infrastructure such as Celery or Redis.
+**Data lifecycle (NFR-05):** Session data and geocode cache records expire after 30 days. Cleanup is handled via an in-process scheduled task or startup hook in FastAPI that deletes records where `expires_at < NOW()`, triggering `ON DELETE CASCADE` across child investigation and evidence records without external worker infrastructure.
 
 ### 4.8 API
 
@@ -246,11 +253,11 @@ Hazard results are cached by dataset and rounded coordinate for 24 hours (this c
 |---|---|---|---|
 | POST | `/v1/investigations` | Create a point or area investigation | `investigations.py` |
 | GET | `/v1/investigations` | Session history | `investigations.py` |
-| GET | `/v1/investigations/{id}` | One investigation with evidence | `investigations.py` |
+| GET | `/v1/investigations/{investigation_id}` | One investigation with evidence | `investigations.py` |
 | POST | `/v1/comparisons` | Compare investigation ids and create saved comparison | `comparison.py` |
 | GET | `/v1/comparisons` | List saved comparisons for current session | `comparison.py` |
-| GET | `/v1/comparisons/{id}` | Retrieve saved comparison details | `comparison.py` |
-| GET | `/v1/investigations/{id}/report` | Report data | `reports.py` |
+| GET | `/v1/comparisons/{comparison_id}` | Retrieve saved comparison details | `comparison.py` |
+| GET | `/v1/investigations/{investigation_id}/report` | Report data | `reports.py` |
 | GET | `/v1/geocode?q=` | Cached place search | `locations.py` |
 | GET | `/v1/datasets` | Sources, dates, coverage | `datasets.py` |
 | POST | `/v1/ai/explain` | AI explanation for an investigation | `ai.py` |
@@ -490,6 +497,7 @@ Classes stay source-scoped and are never merged.
 
 | Version | Date | Summary |
 |---|---|---|
+| 3.1 | 9 Oct 2026 | Upgraded normalized evidence result to include `matches[]` array with configurable cap and deterministic sorting for AI hashing; added child table `evidence_match` to preserve relational FK integrity with `hazard_class`; specified `ON DELETE CASCADE` on session relationships; documented cache reuse of evidence/weather tables; unified path parameters to snake_case (`{investigation_id}`, `{comparison_id}`). |
 | 3.0 | 1 Oct 2026 | Build baseline updated in place. Preserved the condensed v3.0 structure while tightening spatial operations, area-investigation storage, session isolation, rate limiting, AI provider/tool contracts, prompt-injection handling, accessibility, browser support, logging, API contracts and advanced-feature acceptance criteria. |
 | 2.6 | 1 Oct 2026 | Reframed as a web-systems project, added PostGIS, AI sections |
 | 2.5 | 1 Oct 2026 | Standard SRS layout |

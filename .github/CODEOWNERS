@@ -1,2 +1,7 @@
-# Default reviewers for all files in HazardLens
-* @markalvincadangin @vincenttamano @lovelii-me @Justin-Ardena @faithbn
+# HazardLens Code Owners
+# Area-based reviewers (avoids requesting all 5 team members on every PR).
+# Branch protection requires 1 approving review from any teammate.
+
+/api/   @markalvincadangin @vincenttamano
+/web/   @lovelii-me @Justin-Ardena @faithbn
+/docs/  @markalvincadangin

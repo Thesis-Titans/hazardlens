@@ -422,7 +422,7 @@ pytest
 # Frontend
 cd web
 npm run lint
-npm run typecheck
+npx tsc --noEmit
 npm run build
 ```
 

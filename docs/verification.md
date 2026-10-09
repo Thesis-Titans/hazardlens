@@ -123,11 +123,13 @@ Verify that:
 
 - every investigation belongs to a valid session;
 - every evidence result belongs to a valid investigation;
+- child `evidence_match` records reference valid `evidence_result` and `hazard_class` rows;
+- session deletion triggers `ON DELETE CASCADE` down to child investigations and evidence records;
 - dataset/source relationships are valid;
 - hazard classes remain source-scoped;
 - an investigation stores the original selection geometry;
 - AI generations reference the investigation and evidence hash correctly;
-- expired session data follows the configured retention policy.
+- expired session data follows the configured 30-day retention policy.
 
 ## 6. Backend Verification
 
@@ -141,10 +143,10 @@ Verify that:
 | Four datasets run concurrently | Results returned under shared deadline | NOT_STARTED |
 | One upstream timeout | Other evidence still returned | NOT_STARTED |
 | One upstream HTTP 5xx | Other evidence still returned | NOT_STARTED |
-| Successful empty result | `NO_EVIDENCE` | NOT_STARTED |
-| Upstream failure | `UNAVAILABLE` | NOT_STARTED |
-| Outside source extent | `OUTSIDE_COVERAGE` | NOT_STARTED |
-| Unsupported operation | `UNSUPPORTED` | NOT_STARTED |
+| Successful empty result | `NO_EVIDENCE` with empty `matches: []` | NOT_STARTED |
+| Upstream failure | `UNAVAILABLE` with empty `matches: []` | NOT_STARTED |
+| Outside source extent | `OUTSIDE_COVERAGE` with empty `matches: []` | NOT_STARTED |
+| Unsupported operation | `UNSUPPORTED` with empty `matches: []` | NOT_STARTED |
 | Deterministic explanation | Plain-language summary built from class definitions | NOT_STARTED |
 | Deterministic explanation without AI | Explanation renders when AI is unavailable | NOT_STARTED |
 
@@ -152,6 +154,9 @@ Verify that:
 
 Verify that:
 
+- `FOUND` status always carries a non-empty `matches` array (capped at 20);
+- non-found statuses (`NO_EVIDENCE`, `OUTSIDE_COVERAGE`, `UNAVAILABLE`, `UNSUPPORTED`) always carry an empty `matches: []` array;
+- matches are deterministically sorted (by `class_code`, then `distance_band_m` ascending) for stable evidence hashing;
 - source classifications are displayed exactly as published;
 - multiple material matches are preserved;
 - source disagreement is not hidden by automatic selection;
