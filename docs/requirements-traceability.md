@@ -1,10 +1,10 @@
 # HazardLens Requirements Traceability
 
 **Baseline:** SRS v3.1 proposed in PR #9; confirm version before treating this matrix as canonical.  
-**Status:** Initial traceability baseline, not a completion report.  
+**Status:** Initial traceability baseline, not a completion report. Project lead approved the proposed classifications as working direction on 9 October 2026; formal team approval remains pending.  
 **Rule:** “Partial” means a limited implementation exists but does not meet the whole requirement. “Not verified” means there is no sufficient reproducible evidence in the reviewed repository/CI. An issue link does not prove implementation.
 
-> **Classification rule:** These are proposed classifications for team review, not formal approval. Any requirement currently marked Core in the SRS and proposed for post-MVP (FR-11–FR-13) must remain unresolved until the team explicitly approves a scope change. “Proposed post-MVP” is not a completed or removed requirement. NFR-09 remains unresolved pending a concrete, testable interpretation.
+> **Classification rule:** These classifications are approved as the project lead's working direction, not as formal whole-team approval. Any requirement currently marked Core in the SRS and proposed for post-MVP (FR-11–FR-13) must remain unresolved until the team explicitly approves a scope change. “Proposed post-MVP” is not a completed or removed requirement. NFR-09 remains unresolved pending a concrete, testable interpretation.
 
 ## Functional requirements
 
