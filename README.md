@@ -149,6 +149,12 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 - [Software Requirements Specification](docs/SRS.md)
 - [Technical Architecture](docs/architecture.md)
 - [Verification Record](docs/verification.md)
+- [Project Execution Plan](docs/project-execution-plan.md)
+- [Project Setup Readiness Checklist](docs/project-readiness-checklist.md)
+- [Requirements Traceability](docs/requirements-traceability.md)
+- [Decision Log](docs/decision-log.md)
+- [Risk Register](docs/risk-register.md)
+- [Database Schema Reconciliation](docs/schema-reconciliation.md)
 
 ## Disclaimer
 
