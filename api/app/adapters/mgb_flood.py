@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from time import perf_counter
 from typing import Any
 
 import httpx
@@ -12,6 +13,7 @@ CLASS_LABELS = {
     "MF": "Moderate Susceptibility to Flooding",
     "LF": "Low Susceptibility to Flooding",
 }
+MAX_MATCHES = 20
 
 
 async def query_flood_evidence(
@@ -19,18 +21,21 @@ async def query_flood_evidence(
     longitude: float,
     client: httpx.AsyncClient,
 ) -> FloodEvidenceResult:
+    started_at = perf_counter()
     retrieved_at = datetime.now(UTC)
+    params = {
+        "f": "json",
+        "where": "1=1",
+        "geometry": (f'{{"x":{longitude},"y":{latitude},"spatialReference":{{"wkid":4326}}}}'),
+        "geometryType": "esriGeometryPoint",
+        "inSR": "4326",
+        "spatialRel": "esriSpatialRelIntersects",
+        "outFields": "OBJECTID,FloodSusc",
+        "returnGeometry": "false",
+        "resultRecordCount": MAX_MATCHES,
+    }
     try:
-        params = {
-            "f": "json",
-            "where": "1=1",
-            "geometry": (f'{{"x":{longitude},"y":{latitude},"spatialReference":{{"wkid":4326}}}}'),
-            "geometryType": "esriGeometryPoint",
-            "inSR": "4326",
-            "spatialRel": "esriSpatialRelIntersects",
-            "outFields": "OBJECTID,FloodSusc",
-            "returnGeometry": "false",
-        }
+        payload: Any = None
         for attempt in range(2):
             try:
                 response = await client.get(settings.mgb_flood_query_url, params=params)
@@ -41,8 +46,9 @@ async def query_flood_evidence(
             if response.status_code >= 500 and attempt == 0:
                 continue
             response.raise_for_status()
-            payload: Any = response.json()
+            payload = response.json()
             break
+
         if not isinstance(payload, dict) or "error" in payload:
             raise ValueError("The MGB service returned an invalid or error payload.")
 
@@ -50,20 +56,24 @@ async def query_flood_evidence(
         if not isinstance(features, list):
             raise TypeError("The MGB response did not include a features array.")
 
+        latency_ms = round((perf_counter() - started_at) * 1000)
         if not features:
             return FloodEvidenceResult(
                 source_url=settings.mgb_flood_query_url,
                 status=EvidenceStatus.UNAVAILABLE,
                 matches=[],
                 retrieved_at=retrieved_at,
+                latency_ms=latency_ms,
+                raw={"feature_count": 0},
                 message=(
-                    "The query returned no features, but source coverage at this point has not "
-                    "been independently confirmed. No hazard conclusion can be drawn."
+                    "The source query returned no features, but coverage at this point has "
+                    "not been established. No hazard conclusion can be drawn."
                 ),
             )
 
         matches: list[FloodMatch] = []
-        for feature in features:
+        raw_features: list[dict[str, Any]] = []
+        for feature in features[:MAX_MATCHES]:
             if not isinstance(feature, dict):
                 raise TypeError("The MGB response contained a malformed feature.")
             attributes = feature.get("attributes")
@@ -79,16 +89,21 @@ async def query_flood_evidence(
                     class_label=CLASS_LABELS.get(code, code),
                 )
             )
+            raw_features.append(
+                {
+                    "OBJECTID": attributes.get("OBJECTID"),
+                    "FloodSusc": code,
+                }
+            )
 
-        unique_matches = {(match.class_code, match.class_label): match for match in matches}
-        ordered_matches = [
-            unique_matches[key] for key in sorted(unique_matches, key=lambda item: item[0])
-        ]
+        matches.sort(key=lambda match: (match.class_code, match.distance_band_m or 0))
         return FloodEvidenceResult(
             source_url=settings.mgb_flood_query_url,
             status=EvidenceStatus.FOUND,
-            matches=ordered_matches,
+            matches=matches,
             retrieved_at=retrieved_at,
+            latency_ms=latency_ms,
+            raw={"features": raw_features, "returned_feature_count": len(features)},
         )
     except (TimeoutError, httpx.TimeoutException):
         return FloodEvidenceResult(
@@ -96,6 +111,8 @@ async def query_flood_evidence(
             status=EvidenceStatus.UNAVAILABLE,
             matches=[],
             retrieved_at=retrieved_at,
+            latency_ms=round((perf_counter() - started_at) * 1000),
+            raw={},
             message="The MGB flood source timed out. No hazard conclusion can be drawn.",
         )
     except (httpx.HTTPError, ValueError, TypeError, KeyError):
@@ -104,5 +121,7 @@ async def query_flood_evidence(
             status=EvidenceStatus.UNAVAILABLE,
             matches=[],
             retrieved_at=retrieved_at,
+            latency_ms=round((perf_counter() - started_at) * 1000),
+            raw={},
             message="The MGB flood source could not provide a valid response.",
         )
