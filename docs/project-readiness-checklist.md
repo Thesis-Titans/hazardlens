@@ -45,3 +45,9 @@ The project setup/organization phase is complete when the team has explicitly ap
 - Use `PARTIAL` when only a limited slice has been verified.
 - Use `NOT VERIFIED` rather than guessing.
 - Revisit this checklist at the start of each sprint and whenever the SRS or source contract changes.
+
+
+## Additional tracked gates
+
+- [ ] Resolve NFR-09 through [issue #19](https://github.com/Thesis-Titans/hazardlens/issues/19) and keep the requirement, SRS, traceability and decision log consistent.
+- [ ] Complete the clean-checkout and repository-rule evidence in [issue #20](https://github.com/Thesis-Titans/hazardlens/issues/20); a CI pass alone does not satisfy this gate.
