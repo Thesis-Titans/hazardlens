@@ -187,6 +187,6 @@ For every release candidate, record: commit SHA; environment/setup; migration re
 2. Confirm sprint capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
 3. GIS/backend owner verifies one source end-to-end and supplies a reviewed fixture plus source contract.
 4. Backend/frontend pair implements the first vertical slice against the shared contract; QA adds acceptance tests for match, valid empty result, unavailable source, unsupported source and invalid coordinates.
-5. Reconcile the remaining traceability gaps into focused issues before committing to sprint scope; keep AI and other advanced features deferred until the core slice passes.
+5. Review the newly tracked backlog items #13–#18, confirm their dependencies and sprint placement, and assign owners/reviewers only after capacity is agreed; keep AI and other advanced features deferred until the core slice passes.
 
 **Project status after this plan:** planning artifact proposed; no feature is marked complete by this document. The next status update must be based on merged code and verification evidence, not this plan alone.
