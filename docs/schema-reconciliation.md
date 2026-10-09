@@ -1,8 +1,8 @@
 # HazardLens Database Schema Reconciliation
 
 **Baseline:** SRS v3.1, §4.6 and §4.7  
-**Status:** Proposed implementation contract; requires project-lead and reviewer approval before migrations are treated as canonical.  
-**Purpose:** Resolve the mismatch between the SRS data model and GitHub issue #1 before writing SQLAlchemy models or Alembic migrations.
+**Status:** Proposed logical design for team review; the full inventory must be reconciled before implementation, but physical tables and migrations are to be implemented incrementally as MVP workflows require.  
+**Purpose:** Resolve the mismatch between the SRS data model and GitHub issue #1 before writing SQLAlchemy models or Alembic migrations. The inventory is not a requirement to create all 14 tables in the first migration.
 
 ## 1. Naming decision
 
@@ -52,18 +52,23 @@ Use the exact table names in SRS §4.6. In particular, the canonical dataset tab
 
 ## 5. Implementation gates
 
-Before migration merge, tests must prove:
+Before each migration merge, tests must prove the acceptance criteria for the tables and relationships introduced by that migration:
 
-- clean PostGIS database: `alembic upgrade head`;
-- downgrade: `alembic downgrade base`;
-- geometry columns have the intended SRID and types;
-- all 14 tables and expected foreign keys exist;
-- session expiry cascade removes only that session's investigations/comparisons and dependent records;
-- deleting an evidence result removes its matches;
-- comparison membership cannot point to nonexistent investigations;
-- evidence status/match invariants are enforced at the service boundary;
-- one session cannot read another session's investigation by guessing an identifier.
+- clean PostGIS database can run alembic upgrade head from the documented baseline;
+- the migration downgrade/recovery strategy is documented and tested;
+- introduced geometry columns have the intended types and SRID;
+- foreign keys, nullability, uniqueness, indexes and deletion behavior match the reviewed physical schema decision;
+- where session-owned tables are introduced, expiry/cascade tests remove only that session's records;
+- where evidence results/matches are introduced, status/match invariants are enforced at the service boundary and covered by tests;
+- where comparison tables are introduced, membership cannot point to nonexistent investigations and deletion leaves no dangling join rows;
+- where session access is introduced, one session cannot read another session's investigation by guessing an identifier.
 
-## 6. Deliberately not decided here
+The **logical design review** must account for all 14 SRS entities and their relationships before schema work is treated as planned. That does not mean all 14 physical tables must exist in the first migration. The first migration should contain only the minimal reviewed tables required by the agreed vertical slice; later tables should arrive with the feature/workflow that needs them and with corresponding tests.
+
+## 6. Incremental implementation rule
+
+Review the entire logical model once for consistency, privacy, retention and cross-entity relationships. Then stage implementation by actual MVP dependency. Do not add unused tables just to satisfy an inventory count, and do not omit a logical entity silently: record its planned phase and the issue that will introduce it. The first vertical slice may use a small subset of the logical model.
+
+## 7. Deliberately not decided here
 
 The SRS table list does not fully specify every SQL type, index, default, uniqueness rule, nullable column, source-registry update policy, or whether historical evidence should be restricted from deletion when registry rows are retired. The implementation PR must document these details as a schema decision and receive review. Do not infer a canonical design solely from the short column lists in §4.6.
