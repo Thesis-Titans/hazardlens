@@ -24,7 +24,7 @@ The project lead selected option A for each of the seven setup decisions. These 
 | D-03 | Explicit place search plus coordinate fallback | No keystroke-by-keystroke autocomplete against public Nominatim. Keep coordinate entry/map selection usable if search is unavailable; if public Nominatim is chosen, obey its request identification, rate limit, caching and attribution rules. | Team must confirm the provider and final UX. |
 | D-04 | Verify each official source before integration | Each source must have a documented layer/service contract and reproducible verification. Recorded fixtures may temporarily unblock deterministic development only when clearly labelled as recorded data. | Live query behavior, coverage and empty-result semantics remain source-specific verification tasks. |
 | D-05 | Separate liveness and readiness | Liveness reports whether the API process is running; readiness reports whether the app can serve its intended core contract. Optional external source health is reported separately and must not make the process appear dead. | Backend owner must propose bounded checks and tests; team reviews contract. |
-| D-06 | Vertical slice before breadth | Complete one verified source → API → database as required → evidence UI slice first; then integrate every required core hazard source before MVP sign-off. Defer AI and advanced features. | Team confirms sprint scope and acceptance evidence. |
+| D-06 | Vertical slice before breadth | Complete one verified source → API → evidence UI slice first; persistence/history can follow, but FR-02 must be delivered before MVP sign-off. Integrate all four required hazard sources before MVP sign-off. AI begins only after the first slice and all four sources are verified. | Team confirms sprint scope and acceptance evidence. |
 | D-07 | Relative phases before calendar dates | Keep the schedule in phases and decision gates until the real deadline and team capacity are confirmed. | Team must confirm project deadline, availability, sprint length and ownership before assigning dates. |
 
 ## 3. Delivery principles
@@ -71,7 +71,7 @@ Use relative phases and decision gates first. Do not assign or imply calendar da
 - Keep the database scope to the approved minimum needed for the slice; create migrations only after D-02 is resolved.
 
 **Defer unless the goal is already met**
-- Multi-provider AI, natural-language tool calling, weather, polygon analysis, comparison/reporting and extra source coverage.
+- Multi-provider AI and natural-language tool calling until the first evidence slice and all four required sources are verified; polygon analysis, comparison and reporting are post-MVP. Weather remains an MVP feature, implemented with independent failure isolation after the core evidence path is stable.
 - Broad UI polish that does not unblock or verify the slice.
 
 **Acceptance tests**
@@ -104,8 +104,9 @@ Use relative phases and decision gates first. Do not assign or imply calendar da
 
 **Phase goal:** make investigation history and core evidence workflows dependable.
 
-- Add anonymous session isolation, expiry and deletion behavior if confirmed in the approved SRS.
-- Add comparison and printable report only after stored investigation contracts are tested.
+- Add anonymous session persistence, isolation, expiry and deletion before MVP release; these do not need to block the first source → API → UI slice.
+- Comparison and printable report are post-MVP in the project-lead working direction.
+- Implement the MVP weather card separately from hazard evidence, including FR-21 `UNAVAILABLE` behavior and a test proving weather failure does not alter hazard results.
 - Add cache behavior, rate limiting, structured diagnostics and security checks appropriate to the deployment.
 - Verify responsive layout and accessibility against the stated target.
 
@@ -190,9 +191,9 @@ For every release candidate, record: commit SHA; environment/setup; migration re
 ## 10. Immediate next actions
 
 1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register, schema reconciliation, official source verification notes and `docs/release-scope-and-task-matrix.md`); approve or request corrections before treating them as the team baseline.
-2. Confirm the SRS baseline, requirement classifications (especially FR-11–FR-13 and NFR-09), sprint/phase capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
+2. Ask the whole team to review the project-lead scope decisions recorded in `docs/decision-log.md` (FR-11/12/20 post-MVP; FR-13/21 MVP-required; AI gate; FR-02 sequencing; NFR-09 definition), then confirm or request changes. Keep formal team approval pending until recorded.
 3. Update the source-verification record to reflect PR #11's two captured MGB response fixtures while keeping repeatability, coverage and valid-empty semantics explicitly unverified.
 4. Review PR #11 as a limited preview slice; do not treat its mocked fixture tests as live-source verification or as delivery of the full investigation workflow.
-5. Review the backlog items #13–#18, confirm dependencies and phase placement, and assign owners/reviewers only after capacity is agreed; keep AI and other advanced features deferred until the core evidence slice passes.
+5. Review backlog items #13–#19, confirm dependencies and phase placement, and assign owners/reviewers only after capacity is agreed; keep AI gated until the first evidence slice and all four required sources are verified.
 
 **Project status after this plan:** planning artifact proposed; no feature is marked complete by this document. The next status update must be based on merged code and verification evidence, not this plan alone.
