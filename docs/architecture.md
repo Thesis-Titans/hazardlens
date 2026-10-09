@@ -4,7 +4,7 @@
 **Baseline:** SRS v3.1  
 **Project type:** Web systems technology project  
 **Team:** 5 students  
-**Target timeline:** About 8 weeks
+**Planning timeframe:** Initial academic assumption of approximately 8 weeks; calendar dates, sprint boundaries, and member capacity remain unconfirmed pending team kickoff
 
 ## 1. Purpose
 
@@ -59,7 +59,7 @@ Different external services use different protocols and data structures. Backend
                       │ PostGIS        │   │                      │
                       │                │   │ MGB / PHIVOLCS       │
                       │ investigations │   │ Open-Meteo           │
-                      │ evidence       │   │ Nominatim            │
+                      │ evidence       │   │ Geoapify / Nominatim │
                       │ AI generations │   │ Gemini / OpenRouter  │
                       │ cache          │   │ Ollama (local)       │
                       └────────────────┘   └──────────────────────┘
@@ -80,7 +80,7 @@ Different external services use different protocols and data structures. Backend
 | AI | Gemini, OpenRouter, Ollama | Optional explanation, chat and tool calling |
 | Packaging | Docker Compose | Local development and reproducible setup |
 
-Exact dependency versions are pinned during Week 1 after checking the current official releases.
+Exact dependency versions are pinned during the initial setup phase after checking current official releases; timing is set during team kickoff.
 
 ## 5. Frontend Architecture
 
@@ -177,7 +177,7 @@ The four target hazard datasets are:
 | `ArcGISIdentifyAdapter` | Identify/tolerance-based retrieval, including proximity behavior | ArcGIS `/identify` |
 | `WmsFeatureInfoAdapter` | Map-only services | WMS `GetFeatureInfo` |
 | `OpenMeteoAdapter` | Weather | Open-Meteo JSON API |
-| `Geocoder` implementation | Place search | Nominatim or configured alternative |
+| `Geocoder` implementation | Place search | Geoapify (working MVP selection) or Nominatim alternative |
 
 The target source configuration is:
 
@@ -185,7 +185,7 @@ The target source configuration is:
 |---|---|---|
 | Flood | MGB detailed flood | GeoRiskPH flood WMS |
 | Rain-induced landslide | MGB detailed landslide | GeoRiskPH landslide WMS |
-| Liquefaction | GeoRiskPH liquefaction | Identify on same service |
+| Liquefaction | PHIVOLCS liquefaction service (exact layer pending verification) | GeoRiskPH liquefaction WMS (exploratory only; not a substitute without team-approved scope change) |
 | Active fault | PHIVOLCS ActiveFault identify | GeoRiskPH ActiveFault WMS |
 
 The four listed datasets are mandatory for the proposed MVP: MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction, and PHIVOLCS active faults. Do not substitute tsunami, earthquake-induced landslide, or another dataset to satisfy the four-source count without an explicit team-approved scope change recorded in the decision log and SRS. If a required source cannot be verified or integrated, record the blocker and its evidence; do not silently redefine the required-source set.
@@ -360,7 +360,7 @@ Demo:         Gemini → OpenRouter → Ollama
 Last fallback: deterministic explanation
 ```
 
-Provider/model availability is checked during Week 1.
+Provider/model availability is checked during the initial setup phase, with timing set during team kickoff.
 
 ### Tool access
 
@@ -413,4 +413,4 @@ HazardLens does not require:
 - a national hazard-data warehouse;
 - a separate AI-agent framework.
 
-These are excluded because they do not provide enough value for the project's 5-person, 8-week scope.
+These are excluded because they do not provide enough value for the project's five-person team under the current approximate eight-week academic planning assumption; actual schedule and capacity remain subject to team confirmation.
