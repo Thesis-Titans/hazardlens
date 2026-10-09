@@ -1,4 +1,3 @@
-import asyncio
 from datetime import UTC, datetime
 from typing import Any
 
@@ -48,7 +47,7 @@ async def query_flood_evidence(
 
         features = payload.get("features")
         if not isinstance(features, list):
-            raise ValueError("The MGB response did not include a features array.")
+            raise TypeError("The MGB response did not include a features array.")
 
         if not features:
             return FloodEvidenceResult(
@@ -62,10 +61,10 @@ async def query_flood_evidence(
         matches: list[FloodMatch] = []
         for feature in features:
             if not isinstance(feature, dict):
-                raise ValueError("The MGB response contained a malformed feature.")
+                raise TypeError("The MGB response contained a malformed feature.")
             attributes = feature.get("attributes")
             if not isinstance(attributes, dict):
-                raise ValueError("The MGB response contained malformed feature attributes.")
+                raise TypeError("The MGB response contained malformed feature attributes.")
             raw_code = attributes.get("FloodSusc")
             if not isinstance(raw_code, str) or not raw_code.strip():
                 raise ValueError("A matching feature did not include its FloodSusc classification.")
@@ -89,7 +88,7 @@ async def query_flood_evidence(
             matches=ordered_matches,
             retrieved_at=retrieved_at,
         )
-    except (httpx.TimeoutException, asyncio.TimeoutError):
+    except (TimeoutError, httpx.TimeoutException):
         return FloodEvidenceResult(
             source_url=settings.mgb_flood_query_url,
             status=EvidenceStatus.UNAVAILABLE,
