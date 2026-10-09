@@ -4,7 +4,7 @@
 **Baseline:** SRS v3.1  
 **Project type:** Web systems technology project  
 **Team:** 5 students  
-**Target timeline:** About 8 weeks
+**Planning timeframe:** Initial academic assumption of approximately 8 weeks; calendar dates, sprint boundaries, and member capacity remain unconfirmed pending team kickoff
 
 ## 1. Purpose
 
@@ -80,7 +80,7 @@ Different external services use different protocols and data structures. Backend
 | AI | Gemini, OpenRouter, Ollama | Optional explanation, chat and tool calling |
 | Packaging | Docker Compose | Local development and reproducible setup |
 
-Exact dependency versions are pinned during Week 1 after checking the current official releases.
+Exact dependency versions are pinned during the initial setup phase after checking current official releases; timing is set during team kickoff.
 
 ## 5. Frontend Architecture
 
@@ -360,7 +360,7 @@ Demo:         Gemini → OpenRouter → Ollama
 Last fallback: deterministic explanation
 ```
 
-Provider/model availability is checked during Week 1.
+Provider/model availability is checked during the initial setup phase, with timing set during team kickoff.
 
 ### Tool access
 
@@ -413,4 +413,4 @@ HazardLens does not require:
 - a national hazard-data warehouse;
 - a separate AI-agent framework.
 
-These are excluded because they do not provide enough value for the project's 5-person, 8-week scope.
+These are excluded because they do not provide enough value for the project's five-person team under the current approximate eight-week academic planning assumption; actual schedule and capacity remain subject to team confirmation.
