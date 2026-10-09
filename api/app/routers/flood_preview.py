@@ -1,5 +1,3 @@
-from typing import Annotated
-
 from fastapi import APIRouter, Depends
 from httpx import AsyncClient
 
@@ -15,10 +13,13 @@ async def get_http_client():
         yield client
 
 
+HTTP_CLIENT_DEPENDENCY = Depends(get_http_client)
+
+
 @router.post("/v1/preview/flood", response_model=FloodPreviewResponse)
 async def preview_flood_investigation(
     request: FloodPreviewRequest,
-    client: Annotated[AsyncClient, Depends(get_http_client)],
+    client: AsyncClient = HTTP_CLIENT_DEPENDENCY,
 ) -> FloodPreviewResponse:
     result = await query_flood_evidence(request.latitude, request.longitude, client)
     return FloodPreviewResponse(
