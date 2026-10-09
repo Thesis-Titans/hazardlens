@@ -1,7 +1,7 @@
 # HazardLens — Technical Verification Record
 
 **Project:** HazardLens  
-**Baseline:** SRS v3.0  
+**Baseline:** SRS v3.1  
 **Purpose:** Record technical verification of external services, application behavior, database setup, AI providers and release readiness.
 
 ## 1. Verification Principles
