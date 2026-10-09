@@ -174,3 +174,52 @@ async def test_invalid_coordinates_are_rejected_before_upstream_call() -> None:
 
     assert response.status_code == 422
     fake_client.get.assert_not_awaited()
+
+
+
+@pytest.mark.asyncio
+async def test_upstream_truncation_flag_returns_unavailable_without_partial_matches() -> None:
+    fake_client = AsyncMock()
+    fake_client.get.return_value = FakeResponse(
+        {
+            "features": [{"attributes": {"OBJECTID": 1, "FloodSusc": "HF"}}],
+            "exceededTransferLimit": True,
+        }
+    )
+
+    response = await request_with_fake_client(
+        fake_client,
+        {"latitude": 10.72, "longitude": 122.56},
+    )
+
+    assert response.status_code == 200
+    result = response.json()["results"][0]
+    assert result["status"] == "UNAVAILABLE"
+    assert result["matches"] == []
+    assert result["raw"]["exceeded_transfer_limit"] is True
+    assert "incomplete" in result["message"]
+
+
+@pytest.mark.asyncio
+async def test_full_query_page_is_not_presented_as_complete() -> None:
+    fake_client = AsyncMock()
+    fake_client.get.return_value = FakeResponse(
+        {
+            "features": [
+                {"attributes": {"OBJECTID": index, "FloodSusc": "HF"}}
+                for index in range(20)
+            ]
+        }
+    )
+
+    response = await request_with_fake_client(
+        fake_client,
+        {"latitude": 10.72, "longitude": 122.56},
+    )
+
+    assert response.status_code == 200
+    result = response.json()["results"][0]
+    assert result["status"] == "UNAVAILABLE"
+    assert result["matches"] == []
+    assert result["raw"]["returned_feature_count"] == 20
+    assert result["raw"]["result_limit"] == 20
