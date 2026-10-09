@@ -1,7 +1,7 @@
 # HazardLens — Technical Verification Record
 
 **Project:** HazardLens  
-**Baseline:** SRS v3.0  
+**Baseline:** SRS v3.1  
 **Purpose:** Record technical verification of external services, application behavior, database setup, AI providers and release readiness.
 
 ## 1. Verification Principles
@@ -28,6 +28,8 @@ For every failed or blocked item, record the reason and next action.
 ## 3. Week 1 Technical Verification
 
 ### 3.1 Hazard source connectivity
+
+The four required source families are MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction and PHIVOLCS active faults. Rows labelled “backup” below are only candidate secondary access paths/comparison layers; they do **not** replace verification of the named required source or count as a substitute source family. Any change to the required set needs explicit team approval.
 
 | Check | Target | Status | Evidence / notes |
 |---|---|---|---|
@@ -68,7 +70,7 @@ Record the exact coordinates used.
 
 ### 3.3 Fault proximity
 
-Test the active-fault source at multiple tolerances/bounding distances.
+Explore the active-fault source at several test distances to characterize the source operation. These distances are exploratory test cases, not approved user-facing thresholds or evidence of a scientifically validated risk buffer. Document the source method, units, geometry/CRS handling and rationale before selecting any user-visible distance bands.
 
 | Test | Tolerance / band | Result | Status |
 |---|---:|---|---|
@@ -88,7 +90,7 @@ Confirm whether the MGB detailed flood layer is materially different from the Ge
 | Point 1 | | | | |
 | Point 2 | | | | |
 
-The purpose is to decide whether both should remain in the source strategy or whether the backup is effectively the same dataset.
+The purpose is to understand whether the secondary layer is materially independent and useful for comparison/redundancy. This comparison does not authorize GeoRiskPH to replace the required MGB flood source. Any source-set change requires explicit team approval.
 
 ## 4. Supporting Service Verification
 
@@ -145,7 +147,7 @@ Verify that:
 | One upstream HTTP 5xx | Other evidence still returned | NOT_STARTED |
 | Successful empty result | `NO_EVIDENCE` with empty `matches: []` | NOT_STARTED |
 | Upstream failure | `UNAVAILABLE` with empty `matches: []` | NOT_STARTED |
-| Outside source extent | `OUTSIDE_COVERAGE` with empty `matches: []` | NOT_STARTED |
+| Documented source-specific outside-coverage case | `OUTSIDE_COVERAGE` only when an independently justified coverage rule establishes it; otherwise keep the result blocked/unavailable pending semantics | NOT_STARTED |
 | Unsupported operation | `UNSUPPORTED` with empty `matches: []` | NOT_STARTED |
 | Deterministic explanation | Plain-language summary built from class definitions | NOT_STARTED |
 | Deterministic explanation without AI | Explanation renders when AI is unavailable | NOT_STARTED |
@@ -347,26 +349,35 @@ expected normalized result
 
 Recorded data must be clearly labelled in the application when used.
 
-## 16. Final Release Checklist
+## 16. Release Verification Gates
 
-Before demonstration/release:
+The release gate follows the team-approved requirement classifications in `docs/release-scope-and-task-matrix.md`. Until the team approves that matrix, FR-11–FR-13 remain unresolved because SRS v3.1 currently labels them Core. Do not use the conditional checklist below to silently remove a current Core requirement from scope.
 
-- [ ] Four working hazard datasets have been verified.
-- [ ] Each source has a tested adapter and at least one saved fixture.
-- [ ] All evidence statuses have test coverage.
-- [ ] Database migrations work from a clean environment.
-- [ ] Session isolation is tested.
-- [ ] Comparison works without ranking locations.
-- [ ] Report prints correctly.
-- [ ] AI explanation works on at least one free provider.
-- [ ] AI fallback works.
-- [ ] Tool-calling loop is bounded and allow-listed.
-- [ ] AI cannot alter authoritative evidence.
-- [ ] Weather failure does not break hazard results.
-- [ ] Core application works when AI is unavailable.
-- [ ] Loading, empty, unavailable and unsupported states are polished.
-- [ ] Dependencies are pinned.
-- [ ] Docker Compose works from a clean machine.
+### 16.1 Candidate MVP gate
+
+- [ ] All four required hazard source families have verified adapters and reproducible source records/fixtures.
+- [ ] Every evidence status has contract tests; empty, outside-coverage, unavailable and unsupported cases follow verified source-specific semantics.
+- [ ] Source classifications, multiple matches, disagreements, provenance and limitations are preserved.
+- [ ] The deterministic explanation works without an AI provider.
+- [ ] Database migrations work from a clean environment if persistence is in the approved MVP.
+- [ ] Session ownership, expiry and deletion are tested if FR-02 remains MVP-required.
+- [ ] Evidence UI works when map tiles or geocoding are unavailable.
+- [ ] Rate limits, URL restrictions, CORS, secret handling and privacy-safe diagnostics are verified.
+- [ ] Accessibility and supported-browser checks are recorded.
+- [ ] Clean-checkout setup, pinned dependencies, build/tests and release limitations are documented.
+- [ ] Every approved MVP requirement is traceable to reproducible evidence or an explicitly accepted blocker.
+
+### 16.2 Conditional gates — only if the team keeps these features in the release
+
+- [ ] Comparison works without ranking locations (FR-11).
+- [ ] Print report includes provenance and limitations (FR-12).
+- [ ] Weather failure does not alter hazard results (FR-13 and FR-21).
+- [ ] AI explanation, grounded chat, bounded tool calling, provenance and fallback pass the applicable tests (FR-15–FR-19 and NFR-14–NFR-15).
+- [ ] Polygon validation and source capability gates pass (FR-20).
+
+### 16.3 Not a release criterion by itself
+
+A green CI run, a successful metadata-page load, or replaying a recorded fixture does not prove current source availability, valid coverage semantics, or a complete end-to-end user workflow. Record exactly what was tested and what remains unverified.
 
 ## 17. Week 1 Decision Record
 

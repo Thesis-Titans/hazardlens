@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| **Version** | 3.0 |
-| **Date** | 1 October 2026 |
-| **Status** | Build baseline |
-| **Supersedes** | v2.6 |
+| **Version** | 3.1 |
+| **Date** | 9 October 2026 |
+| **Status** | Proposed review baseline — pending team approval |
+| **Supersedes** | v3.0 |
 | **Project type** | Web systems technology project (React, APIs, database, AI) |
 | **Team and timeline** | 5 students, about 8 weeks, with AI coding agents as a force multiplier |
 
@@ -54,10 +54,10 @@ Hazard forecasting, personal risk scores, user accounts, training custom models,
 | **Core** | Hazard lookup across four datasets, run in parallel, each with source, class, date and status |
 | **Core** | Evidence panel with clear states for found, no evidence, outside coverage, unavailable, unsupported |
 | **Core** | Anonymous investigation history stored in PostgreSQL |
-| **Core** | Compare two or more past investigations side by side |
-| **Core** | Printable evidence report (print-styled page, save as PDF from the browser) |
+| **Post-MVP** | Compare two or more past investigations side by side (FR-11) |
+| **Post-MVP** | Printable evidence report (print-styled page, save as PDF from the browser) (FR-12) |
 | **Core** | Deterministic plain-language explanation built from source class definitions |
-| **Core** | Current weather card (separate from hazard evidence) |
+| **Core** | Current weather card (separate from hazard evidence; weather failure must not affect hazard results) |
 | **Advanced** | AI explanation of the investigation, with structured output |
 | **Advanced** | AI chat grounded in the current investigation ("What does this class mean?") |
 | **Advanced** | Natural-language lookup: "Is there a fault near Jaro, Iloilo?" The AI calls approved backend tools to search the place and fetch evidence |
@@ -67,6 +67,8 @@ Hazard forecasting, personal risk scores, user accounts, training custom models,
 | **Stretch** | Tsunami and earthquake-induced landslide datasets |
 
 **Datasets (core four):** MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction, PHIVOLCS active fault.
+
+> **Release-scope decision record (9 October 2026):** The project lead selected the working scope: FR-11 comparison and FR-12 printable report are post-MVP; FR-13 weather remains in MVP with FR-21 failure isolation; FR-20 polygon/area investigation is post-MVP; AI FR-15–FR-19 starts only after the first evidence vertical slice and all four required hazard sources are verified. The first vertical slice proves source → API → evidence UI; FR-02 persistence/history must still be delivered and verified before MVP release. NFR-09 means a compatible dataset can be added through one adapter plus registry configuration/rows without a schema migration; incompatible data semantics may require an explicitly reviewed schema change. These are project-lead working decisions, **not formal whole-team approval**. SRS remains a proposed review baseline until the team confirms the scope. See `docs/release-scope-and-task-matrix.md` and `docs/decision-log.md`.
 
 ---
 
@@ -96,7 +98,7 @@ Hazard forecasting, personal risk scores, user accounts, training custom models,
 | FR-18 | Every AI output is visually labelled as generated and stores provider, model, prompt version, evidence hash and time. |
 | FR-19 | If AI fails or hits quota, the app falls back to the next provider, then to the deterministic explanation. Core evidence never depends on AI. |
 | FR-20 | An area investigation shall accept a valid simple polygon within the supported study area. Invalid, self-intersecting, empty or excessively large polygons shall be rejected with a controlled validation error. The implementation shall use a configurable vertex and area limit. |
-| FR-21 | If the weather service fails, the app shall show an `UNAVAILABLE` weather state without failing, altering or suppressing the hazard investigation. |
+| FR-21 | If the weather service fails, the app shall show an `UNAVAILABLE` weather state without failing, altering or suppressing the hazard investigation. This is required for the MVP because FR-13 is included. |
 
 ### 3.2 Non-functional
 
@@ -110,7 +112,7 @@ Hazard forecasting, personal risk scores, user accounts, training custom models,
 | NFR-06 | Geocoding follows the Nominatim policy: 1 request per second, identifying User-Agent, caching, no autocomplete. Users are told not to enter home addresses. |
 | NFR-07 | Recorded demo fixtures exist for several Iloilo points and are clearly labelled when used. |
 | NFR-08 | Every page shows source attribution and a limitation statement: maps are long-term planning data, not personal safety determinations, and absence of data does not mean safety. |
-| NFR-09 | A new dataset needs one small adapter plus registry rows, with no schema change. |
+| NFR-09 | A dataset that fits the existing normalized evidence model and a supported spatial-operation contract shall be addable by implementing one source adapter and adding registry configuration/rows, without a database schema migration. Verify this with a test/mock compatible dataset registered and queried through the normal orchestration path, with no migration. If a source's semantics cannot fit the existing model, document and review a schema change instead of forcing compatibility. |
 | NFR-10 | Dependencies are pinned in lockfiles. The API contract is generated from the backend and shared with the frontend. |
 | NFR-11 | HazardHunterPH is not scraped, embedded or framed. |
 | NFR-12 | A session shall access only investigations and comparisons associated with that session. An investigation identifier alone shall not grant access to another session's data. |
