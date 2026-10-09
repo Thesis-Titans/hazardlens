@@ -52,10 +52,13 @@ async def query_flood_evidence(
         if not features:
             return FloodEvidenceResult(
                 source_url=settings.mgb_flood_query_url,
-                status=EvidenceStatus.NO_EVIDENCE,
+                status=EvidenceStatus.UNAVAILABLE,
                 matches=[],
                 retrieved_at=retrieved_at,
-                message="The source query succeeded but returned no matching flood features.",
+                message=(
+                    "The query returned no features, but source coverage at this point has not "
+                    "been independently confirmed. No hazard conclusion can be drawn."
+                ),
             )
 
         matches: list[FloodMatch] = []
