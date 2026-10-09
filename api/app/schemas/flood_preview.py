@@ -51,9 +51,7 @@ class FloodEvidenceResult(BaseModel):
     raw: dict = Field(default_factory=dict)
     source_url: str
     agency: str = "Mines and Geosciences Bureau (MGB)"
-    attribution: str = (
-        "Source: Mines and Geosciences Bureau (MGB), Detailed Flood Susceptibility."
-    )
+    attribution: str = "Source: Mines and Geosciences Bureau (MGB), Detailed Flood Susceptibility."
     message: str | None = None
 
 
