@@ -101,14 +101,12 @@ The order allows source research and schema review to run in parallel, but integ
 
 ## 4. GitHub backlog hygiene
 
-- Keep issue #12 open until its acceptance criteria are evidenced and the team has reviewed the proposed baseline.
-- Keep PR #9 ready for review and unmerged; PR #11 remains a draft while its technical review gates are open.
-- Remove the Sprint 1 scheduling signal from issue #4 while AI is deferred; keep the issue open as a gated post-MVP candidate.
-- Do not add assignees, reviewers, milestones or due dates merely to make the board look complete. Confirm capacity first.
-- Confirm issue #3 has one accountable owner, explicit contributors and an independent reviewer; the existing body proposes multiple roles but does not confirm availability.
-- Assign issues #7 and #8 only after the API contract, geocoder provider and UI responsibilities are confirmed.
-- If FR-02 stays MVP-required, issue #13 needs an owner and reviewer during team planning; it cannot be silently left out of the release.
-- Ask the whole team to confirm the project-lead classifications before treating the SRS as canonical or changing implementation milestones for #14/#15.
+- Keep issue #12 open as the Gate 0 planning and governance gate until whole-team review is complete and organization invites are accepted.
+- PR #9 (SRS v3.1 baseline) and PR #11 (MGB flood preview slice) are merged into `main`; live-source repeatability and coverage remain pending under Gate A and Issue #2.
+- Issue #4 is moved to Gate E & Post-MVP milestone with label `post-mvp`; AI execution remains strictly gated behind Gates B and C.
+- Milestones are organized by Delivery Gates (Gates A–E) without arbitrary calendar deadlines.
+- Every backlog issue (#1–#8, #12–#20) is standardized with Section 8 structure, explicit lead implementers, and independent reviewers (`Author != Reviewer`).
+- Pre-execution gate is strictly enforced: no feature implementation code is written until Gate 0 is fully closed.
 
 ## 5. Evidence gaps that remain open
 

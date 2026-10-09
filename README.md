@@ -179,6 +179,7 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 - [Risk Register](docs/risk-register.md)
 - [Database Schema Reconciliation](docs/schema-reconciliation.md)
 - [Official Source Verification Notes](docs/source-verification-notes.md)
+- [Official Source Verification Evidence Matrix](docs/source-verification-evidence-matrix.md)
 
 ## Disclaimer
 

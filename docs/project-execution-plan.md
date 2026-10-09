@@ -1,199 +1,268 @@
 # HazardLens Project Execution Plan
 
 **Status:** Project-lead working direction approved on 9 October 2026; formal team review and baseline approval pending  
-**Repository baseline:** `main` at the time this plan was prepared  
-**Planning basis:** Proposed SRS/architecture/verification documents under review; [release scope and dependency-aware task matrix](release-scope-and-task-matrix.md); GitHub issues #1–#8 and planning/readiness gate #12  
-**Scope:** Requirements alignment, delivery sequencing, team delegation, verification and sprint control
+**Repository baseline:** `main` (incorporating PR #11 MGB flood preview slice and SRS v3.1)  
+**Planning basis:** SRS v3.1; [Release Scope and Task Matrix](release-scope-and-task-matrix.md); [Source Verification Evidence Matrix](source-verification-evidence-matrix.md); GitHub issues #1–#8 and #12–#20  
+**Scope:** Requirements alignment, delivery sequencing, team delegation, verification, and milestone gates  
 
-> This plan is a working agreement proposal, not evidence that any feature is implemented. Do not mark requirements complete until the implementation and its verification evidence are present.
+> **Evidence Grounding Rule:** This plan is a working agreement proposal, not evidence that any feature is implemented. Do not mark requirements complete until the implementation and its verifiable acceptance evidence are present.
 
-## 1. Current baseline and recovery objective
+---
 
-HazardLens has a React/Vite/TypeScript frontend scaffold, a FastAPI application, and CI checks. Draft PR #11 adds a limited MGB flood preview API/adapter, status normalization and regression tests. Its latest reported CI run for commit `873fabf` passed backend lint/format and 11 tests plus frontend lint, TypeScript and production build. PR #11 also adds two captured response fixtures from live endpoint queries (Central Iloilo returned one `MF` feature; offshore Panay Gulf returned an empty `features` array). The tests replay those fixtures with a mocked HTTP client; they are not live-network verification. The full investigation journey—location selection, multi-source orchestration, persistence and evidence UI—must still be treated as **not delivered until proven by code and tests**. The empty fixture remains `UNAVAILABLE` pending source-specific coverage semantics. The landing page must not imply that the full hazard investigation or grounded AI is working while those capabilities remain unimplemented.
+## 1. Current Baseline and Recovery Objective
 
-**Recovery objective:** deliver one small, reliable, end-to-end hazard investigation vertical slice first. Expand only after the source query, result semantics, API contract, UI rendering and offline tests all work together.
+HazardLens has a React/Vite/TypeScript frontend scaffold, a FastAPI application, PostGIS Docker configuration, and verified CI checks. PR #11 added a bounded MGB flood preview API/adapter, status normalization, truncation safeguards, and offline fixture regression tests on `main`.
 
-## 2. Decisions captured for planning; team sign-off still required
+While the flood preview adapter and mocked fixtures are in place, live-source repeatability and coverage boundaries remain pending under Gate A and Issue #2. The full investigation journey—location selection, multi-source orchestration, persistence, session isolation, and evidence UI—remains to be delivered and proven by code and tests.
 
-The project lead selected option A for each of the seven setup decisions. These choices guide the working plan, but are **not evidence of agreement by all five students**. PR #9 has been marked ready for review and remains open/unmerged; the team must review it and record approval or requested changes before treating the SRS as the team baseline.
+**Recovery objective:** Deliver one small, reliable, end-to-end hazard investigation vertical slice first (Gate B). Expand to multi-source orchestration (Gate C) and complete MVP workflows (Gate D) only after the source queries, result semantics, API contracts, UI rendering, and offline tests all work together.
 
-| ID | Selected direction | What is settled for the working plan | What remains open |
-|---|---|---|---|
-| D-01 | SRS baseline | PR #9 aligns the SRS front matter and architecture/verification headers to v3.1. | Team approval of the SRS and PR #9. |
-| D-02 | Full logical schema, incremental implementation | Review the complete 14-table logical inventory and relationships, but add tables/migrations incrementally when the MVP vertical slice needs them. | Column types, nullability, indexes, constraints, uniqueness, delete/retention rules and the exact first migration still need review. |
-| D-03 | Geoapify place search plus coordinate/map fallback | Use explicit user-submitted search rather than keystroke-by-keystroke autocomplete against public Nominatim. Geoapify is the project lead's working MVP provider selection. Verify current quota, required Geoapify/OpenStreetMap attribution and API-key restrictions; manual coordinate entry and map selection must still work if geocoding is unavailable. | Team confirmation, provider configuration and fallback tests remain required. |
-| D-04 | Verify each official source before integration | Each source must have a documented layer/service contract and reproducible verification. Recorded fixtures may temporarily unblock deterministic development only when clearly labelled as recorded data. | Live query behavior, coverage and empty-result semantics remain source-specific verification tasks. |
-| D-05 | Separate liveness, readiness and upstream status | `GET /health/live` checks only that the process is running and makes no dependency calls. `GET /health/ready` performs bounded checks of required internal dependencies and returns 503 if a required dependency prevents the core contract. MGB, PHIVOLCS and weather-provider status is tracked separately; upstream outages do not make liveness fail. Responses must not expose secrets or stack traces. | Backend owner documents response schemas/status codes and tests internal-dependency failures, upstream isolation and secret-safe responses; team confirmation pending. |
-| D-06 | Vertical slice before breadth | Complete one verified source → API → evidence UI slice first; persistence/history can follow, but FR-02 must be delivered before MVP sign-off. Integrate all four required hazard sources before MVP sign-off. AI begins only after the first slice and all four sources are verified. | Team confirms sprint scope and acceptance evidence. |
-| D-07 | Relative phases before calendar dates | Keep the schedule in phases and decision gates until the real deadline and team capacity are confirmed. | Team must confirm project deadline, availability, sprint length and ownership before assigning dates. |
+---
 
-## 3. Delivery principles
+## 2. Working Scope Boundary
 
-1. **Evidence before AI:** hazard facts and classifications come from official sources. AI is optional explanation/navigation, never the authority.
-2. **One end-to-end slice before breadth:** first make one verified source work through API → normalized result → UI → tests.
-3. **Unknown is not safe:** distinguish `FOUND`, `NO_EVIDENCE`, `OUTSIDE_COVERAGE`, `UNAVAILABLE` and `UNSUPPORTED`. A timeout or source failure must never become `NO_EVIDENCE`.
-4. **No invented source semantics:** use source-supported spatial operations. Do not apply point-in-polygon to line data or infer hazard probability from mere proximity without a documented rule.
-5. **Deterministic core, optional integrations:** the core investigation must work without AI, geocoding or weather.
-6. **Small reviewed changes:** one issue per branch where practical; pull requests must describe evidence, tests, risks and limitations.
-7. **Honest status reporting:** distinguish implemented, tested, blocked, deferred and not started. CI passing on the scaffold is not feature verification.
-8. **No unsupported completion claims:** never close an issue based solely on code being written; require acceptance criteria and reproducible evidence.
+| Scope Area | Working Direction |
+|---|---|
+| **First Delivery Slice** | One verified source (MGB Flood) → normalized API result → evidence UI card (Gates A & B). |
+| **Required MVP Hazard Sources** | MGB flood, MGB rain-induced landslide, PHIVOLCS liquefaction, PHIVOLCS active faults (Gate C). |
+| **MVP Workflows after First Slice** | Multi-source orchestration, session history/persistence, place search & map fallback, weather with failure isolation, rate limits, and accessibility (Gate D). |
+| **AI Integration** | Gated until the first slice and all four sources are verified; final release placement requires whole-team confirmation (Post-MVP / Gate E). |
+| **Post-MVP Candidates** | FR-11 comparison, FR-12 printable report, FR-20 polygon/area investigation. |
+| **Extensibility (NFR-09)** | A compatible new dataset must be addable through one adapter and registry configuration without a schema migration, demonstrated through normal orchestration. |
 
-## 4. Proposed delivery sequence
+---
 
-Use relative phases and decision gates first. Do not assign or imply calendar dates from the current milestone labels. Confirm the actual project deadline, each student's availability, the sprint length and dependency-aware capacity with the team before creating or revising due dates. If the agreed timeline is unrealistic, reduce optional scope before weakening source verification, tests or review.
+## 3. Delivery Principles
 
-**Known workflow mismatch to resolve at team planning:** issue #4 no longer has a Sprint 1 label, but it remains assigned to the existing Sprint 1 milestone even though this plan defers AI/provider work until after the core evidence slice is verified. Do not start the AI spike on the strength of the current milestone alone. At kickoff, confirm the sequence and move the issue to an approved later milestone if the team agrees; do not invent a replacement date.
+1. **Evidence before AI:** Hazard facts and classifications come from official sources. AI is an optional explanation layer, never the authority.
+2. **One end-to-end slice before breadth:** First make one verified source work through API → normalized result → UI → tests.
+3. **Unknown is not safe:** Distinguish `FOUND`, `NO_EVIDENCE`, `OUTSIDE_COVERAGE`, `UNAVAILABLE`, and `UNSUPPORTED`. A timeout or source error must never become `NO_EVIDENCE`.
+4. **No invented source semantics:** Use source-supported spatial operations. Do not apply point-in-polygon to line data or infer hazard probability from mere proximity without a documented rule.
+5. **Deterministic core, optional integrations:** The core investigation must work without AI, geocoding, or weather.
+6. **Small reviewed changes:** One issue per branch where practical; pull requests must describe evidence, tests, risks, and limitations.
+7. **Honest status reporting:** Distinguish implemented, tested, blocked, deferred, and not started. CI passing on fixtures is not live-source verification.
+8. **No unsupported completion claims:** Never close an issue based solely on code being written; require acceptance criteria and reproducible evidence.
 
-### Phase 0 — Align contracts and unblock the team (relative phase; duration to confirm)
+---
 
-**Goal:** prevent parallel work from implementing conflicting specifications.
+## 4. Delivery Sequence and Exit Criteria
 
-- Review the proposed SRS v3.1 and all governance artifacts; the user's selections are a planning baseline, not team approval.
-- Review the complete 14-table logical schema, but implement only the tables needed by the first vertical slice; add later tables in follow-up migrations as their workflows enter scope.
-- Verify each official source before integrating it. Fixtures may be used as clearly labelled recorded-data fallbacks, never as proof of live availability.
-- Choose a compliant place-search provider/interaction. Keep manual coordinate entry and map selection independent of the geocoder.
-- Specify separate liveness and readiness endpoints/contracts; report optional upstream-source health independently.
-- Confirm one accountable owner and a different reviewer for each active issue; add issue dependencies.
-- Run the documented setup and CI checks. A green scaffold CI run is not a clean-checkout or PostGIS migration result.
+Delivery is organized into six dependency-ordered gates rather than premature calendar dates:
 
-**Exit criteria:** team-approved SRS and first-slice acceptance criteria; source and schema contracts reviewed enough for the first slice; known blockers, owners and reviewers recorded.
+```
+[ Gate 0: Planning, Governance & Delegation Baseline ]
+                       │
+                       ▼
+[ Gate A: First-Source Verification & Contract ]
+                       │
+                       ▼
+[ Gate B: First End-to-End Evidence Slice ]
+                       │
+                       ▼
+[ Gate C: Verify Complete Required Source Set ]
+                       │
+                       ▼
+[ Gate D: Complete Remaining MVP Workflows & Safeguards ]
+                       │
+                       ▼
+[ Gate E: MVP Acceptance & Gated Extensions ]
+```
 
-### Phase 1 — One verified vertical slice
+### Gate 0 — Planning, Governance and Delegation Baseline
+Establish the shared delivery baseline, standardize all backlog issues, settle team invitations and role delegations, and ensure no implementation begins without clear acceptance criteria and independent reviewer pairings.
 
-**Phase goal:** A user submits coordinates and receives a truthful, normalized evidence card for one verified official hazard layer, including correct behavior for a match, a valid empty result, an upstream failure and invalid input. Include only the database tables and persistence required by the approved slice; do not force all 14 logical entities into the first migration.
+**Exit criteria:**
+- Polished project execution plan, task matrix, and traceability baseline are accepted.
+- All 17 active backlog issues are formatted using the Section 8 standard structure with explicit lead implementers and independent reviewers (`Author != Reviewer`).
+- Pending organization invitations are accepted so GitHub native assignees match the delegation matrix.
+- Verification commands (`ruff`, `pytest`, `eslint`, `tsc`, `vite build`) pass hermetically on `main`.
+- **Zero feature implementation code is executed until Gate 0 is formally closed.**
 
-**In scope**
-- Verify and document one suitable official source and its exact query semantics.
-- Define Pydantic request/response schemas and the five evidence statuses.
-- Implement the smallest adapter/service/API path for that source.
-- Render the API response in the frontend with source attribution and honest status text.
-- Capture sanitized representative fixtures and test offline.
-- Keep the database scope to the approved minimum needed for the slice; create migrations only after D-02 is resolved.
+### Gate A — First-Source Verification and Contract
+Verify the chosen first source (MGB Flood Susceptibility) for the intended point-query operation, record request/response evidence, and establish how the application represents matches, empty results, errors, and truncation.
 
-**Defer unless the goal is already met**
-- Multi-provider AI and natural-language tool calling until the first evidence slice and all four required sources are verified; polygon analysis, comparison and reporting are post-MVP. Weather remains an MVP feature, implemented with independent failure isolation after the core evidence path is stable.
-- Broad UI polish that does not unblock or verify the slice.
+**Exit criteria:**
+- Exact service and layer identity, geometry, CRS, query parameters, fields, and class definitions are recorded in `docs/source-verification-evidence-matrix.md`.
+- Fresh request evidence includes timestamp, parameters, HTTP status, latency, and sanitized response.
+- Query behavior is independently repeated across test sessions.
+- Empty-result and coverage semantics are either verified or conservatively represented as `UNAVAILABLE`.
+- Deterministic tests cover success, empty response, timeout, malformed payload, and truncation.
 
-**Acceptance tests**
-- Valid coordinates + fixture representing a source match → `FOUND` and the source classification is preserved.
-- Valid coordinates + valid empty source response within supported coverage → `NO_EVIDENCE`.
-- Timeout, network error, malformed payload or 5xx → `UNAVAILABLE`.
-- Coordinates outside the declared supported area → `OUTSIDE_COVERAGE`, but only where coverage can be justified.
-- Invalid latitude/longitude → validation error; no upstream call.
-- Unsupported hazard/source → `UNSUPPORTED`.
-- UI never labels missing/failed evidence as “safe”; agency, source/layer and relevant provenance are shown.
-- Backend tests run without network access; CI passes.
+### Gate B — First End-to-End Evidence Slice
+Complete the first usable workflow through the API and UI using the verified source contract from Gate A, keeping the slice small enough to test end-to-end.
 
-**Exit criteria:** a reviewer can clone the branch, run documented commands, execute tests and reproduce the slice from fixtures. A live endpoint check is recorded separately from deterministic offline tests.
+**Exit criteria:**
+- Coordinates can be submitted through the initial input path.
+- API returns a documented, normalized evidence contract matching SRS v3.1.
+- Frontend UI renders the source result, original classification, provenance, and limitations.
+- All five evidence states are handled without conflating source failure with a negative finding.
+- Deterministic plain-language explanation works without AI.
+- Recorded fixtures are labelled honestly; core test suite runs completely offline.
+- End-to-end workflow and failure cases have reproducible verification evidence.
+- *Persistence is not required for this first slice.*
 
-### Phase 2 — Complete required MVP source coverage
+### Gate C — Verify Complete Required Source Set
+Independently verify and integrate all four mandatory source families through the agreed orchestration and normalization contract.
 
-**Phase goal:** Integrate every required core hazard source (MGB flood, MGB rain-induced landslide, PHIVOLCS liquefaction and PHIVOLCS active fault) only after each source's exact layer, spatial operation, coverage behavior, class/date fields, attribution and failure semantics are verified. Keep source fixtures clearly labelled as recorded fallback data.
+**Exit criteria:**
+- MGB flood and rain-induced landslide layers are verified.
+- PHIVOLCS liquefaction and active-fault layers are verified.
+- Each source has evidence for geometry, CRS, fields, classification, spatial operation, attribution, source-date limitations, and failure behavior.
+- Source-specific coverage and empty-result semantics are documented; no unsupported coverage claims are made.
+- One source's failure does not suppress valid findings from other sources.
+- Multiple matches and differing source classifications are preserved rather than reduced to a synthetic universal score.
+- Integration tests exercise successful and failed source combinations.
 
-- Add each source only after its contract is reviewed and its live query behavior has been separately verified; mock tests alone are not source verification.
-- Use the correct spatial operation per geometry and service (point/polygon containment, identify, or documented distance rule).
-- Add interactive map click selection and coordinate-input synchronization.
-- Implement explicit place search only after provider/UX confirmation; preserve manual coordinate fallback.
-- Add session/history persistence only after its schema and privacy/retention rules are approved, implementing the logical schema incrementally.
-- Add per-source timeout and failure isolation; one failed provider must not erase successful results from others.
-- If a source cannot be verified, report UNAVAILABLE or UNSUPPORTED as appropriate and document the blocker; never reinterpret uncertainty as no hazard.
+### Gate D — Complete Remaining MVP Workflows and Safeguards
+Deliver required product behavior that was intentionally excluded from the first slice.
 
-**Exit criteria:** all four core source integrations have reviewed contracts and fixture-based tests; live verification records are distinct from offline tests; map selection drives the same API contract as coordinate input; provider failure is isolated; evidence provenance is visible. The MVP is not signed off while any required source is represented only by unverified live behavior or unlabelled fixtures.
+**Exit criteria:**
+- Investigation history and anonymous session isolation work with required persistence, 30-day retention, and cross-session access denial.
+- Place search and map/coordinate fallback support the agreed location workflow without public Nominatim autocomplete.
+- Weather is displayed separately from hazard evidence, with bounded timeout and failure isolation.
+- API rate limits (HTTP 429) and privacy-safe diagnostics (no raw IPs or secrets) are verified.
+- Attribution and planning-data disclaimers are present throughout the relevant UI.
+- Accessibility (keyboard, screen reader announcements) and supported-browser checks have recorded results.
+- NFR-09 passes a compatible mock-dataset test through normal orchestration without a schema migration.
+- Required PostGIS migrations and session-isolation behavior have automated verification.
 
-### Phase 3 — Reliability and user workflows
+### Gate E — MVP Acceptance and Gated Extensions
+Confirm that the implementation matches team-approved requirements and that all MVP acceptance evidence is traceable.
 
-**Phase goal:** make investigation history and core evidence workflows dependable.
+**Exit criteria:**
+- Every MVP requirement maps to a completed task and reproducible acceptance evidence in `docs/requirements-traceability.md`.
+- Clean-checkout setup, migrations, frontend/backend startup, and CI pass hermetically.
+- Source provenance, known gaps, and limitations are documented accurately.
+- Whole team reviews release readiness and explicitly accepts remaining risks.
+- AI work starts only after Gates B and C pass, with final release placement confirmed by the team.
+- Comparison/reporting and polygon investigation remain deferred unless the team explicitly changes scope.
 
-- Add anonymous session persistence, isolation, expiry and deletion before MVP release; these do not need to block the first source → API → UI slice.
-- Comparison and printable report are post-MVP in the project-lead working direction.
-- Use Open-Meteo as the project lead's working MVP weather-provider selection, subject to confirming current non-commercial-use terms, quota and attribution. Weather is supporting context, never hazard evidence. Start with a configurable 3-second request timeout; on timeout, provider error or malformed payload, return weather-specific `UNAVAILABLE` without changing hazard results. Test success, timeout, malformed payload and isolated failure.
-- Add cache behavior, rate limiting, structured diagnostics and security checks appropriate to the deployment.
-- Verify responsive layout and accessibility against the stated target.
+---
 
-**Exit criteria:** session isolation and expiry tests pass; error handling and operational limits are documented; user-facing workflows work without AI.
+## 5. Evidence and Status Rules Across All Phases
 
-### Phase 4 — Optional AI and release hardening
-
-**Phase goal:** add only the AI capability that can be safely grounded in already verified evidence, then prepare a defensible demo/release.
-
-- Run a bounded provider spike only after core evidence retrieval is stable.
-- Use a strict tool allow-list, validated structured outputs, timeouts, bounded retry and deterministic fallback.
-- Keep API keys server-side; do not expose prompts or credentials in client code/logs.
-- Test prompt injection, unsupported questions, provider outage and malformed output.
-- Freeze the demo dataset/fixtures and document limitations, setup, known issues and release verification.
-
-**Exit criteria:** AI can fail without breaking the core; generated content is clearly identified and traceable to retrieved evidence; release checklist and demo path are reproducible.
-
-## 5. Team responsibilities
-
-Use the current issue delegation as a starting point, not a substitute for explicit team agreement. One person is accountable for delivery of an issue; another person reviews it. Everyone should review work outside their main area at least occasionally.
-
-| Role | Proposed accountability | Expected outputs |
+| Result Status | Permitted Interpretation | Invariant Rule |
 |---|---|---|
-| Project lead / architecture — Mark | SRS decisions, API/schema contracts, scope, risk/dependency tracking, PR review and release decisions | Approved decisions, traceability, accepted PRs, accurate project status |
-| GIS/source + backend — Vincent | Official-source verification, adapter contracts, fixture capture, backend integration | Source records, adapters, error semantics, contract tests |
-| Frontend + QA — Faith | Evidence states and UI integration, test cases, acceptance verification | UI behavior, test checklist, reproducible acceptance evidence |
-| Interactive GIS — Justin | Map and coordinate selection after the API contract stabilizes | Map interaction, coordinate synchronization, map-related tests |
-| UI styling — Lovelii | Accessible visual system, evidence-card presentation, search UI after provider decision | Responsive components, status styling, accessibility checks |
+| **`FOUND`** | A relevant feature was returned and validated. | Preserves official source classifications verbatim (`VHF`, `HF`, `MF`, `LF`, etc.). Never maps to a universal score. |
+| **`NO_EVIDENCE`** | The query succeeded within verified survey coverage and returned no relevant features. | **Valid only inside verified coverage.** Errors, timeouts, and unmapped areas must never become `NO_EVIDENCE`. |
+| **`OUTSIDE_COVERAGE`** | A defensible source-supported coverage rule establishes that the location is outside the covered area. | Cannot be inferred from a broad service bounding box alone. |
+| **`UNAVAILABLE`** | The source failed, timed out, returned malformed/truncated data, or the empty result cannot be interpreted reliably. | Upstream outages, 5xx errors, timeouts, or unverified survey boundaries default to `UNAVAILABLE`. |
+| **`UNSUPPORTED`** | The requested operation cannot be performed by that source or is not supported by the implementation. | Applied when geometry operations (e.g. area polygon) are not supported by the layer. |
 
-**Capacity rule:** if a person is assigned both implementation and review of the same change, nominate a different reviewer. Do not assign every open issue to the project lead simply because the lead created it. Confirm current availability before treating this table as a final assignment.
+---
 
-## 6. Issue hygiene and GitHub workflow
+## 6. Product Task Breakdown (T1–T18)
 
-Every implementation issue must include:
+| Task | Deliverable / Task Scope | Depends On | Completion Evidence | Target Gate | Mapped Issue |
+|:---:|---|:---:|---|:---:|:---:|
+| **T1** | Verify first source (MGB Flood) and document live contract | Source selection | Complete request record, repeatability evidence, documented result semantics, offline fixtures | **Gate A** | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** |
+| **T2** | Finalize first-slice API and evidence response contract | T1 | Reviewed Pydantic schema, status definitions, provenance fields, and contract tests | **Gate B** | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** |
+| **T3** | Implement first investigation endpoint and evidence UI | T2 | Reproducible end-to-end test from coordinate input to rendered evidence card | **Gate B** | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** |
+| **T4** | Implement deterministic explanations and honest empty states | T2–T3 | Unit/UI tests proving explanations require no AI and do not invent findings | **Gate B** | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** |
+| **T5** | Verify MGB rain-induced landslide source | T1 procedure | Complete source evidence record, live query verification, and source-specific fixtures | **Gate C** | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** |
+| **T6** | Verify PHIVOLCS liquefaction source | T1 procedure | Exact layer identity, live query record, classifications, coverage, and failure semantics | **Gate C** | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** |
+| **T7** | Verify PHIVOLCS active-fault source | T1 procedure | Exact layer identity, geometry-appropriate spatial operation, query record, and distance semantics | **Gate C** | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** |
+| **T8** | Integrate four verified sources through normal orchestration | T1, T5–T7, T2 | Concurrent-query tests, bounded deadlines, partial-failure isolation, and multi-match preservation | **Gate C** | **[#6](https://github.com/Thesis-Titans/hazardlens/issues/6)** |
+| **T9** | Implement required persistence and anonymous session history | Logical schema review | Migration tests, history retrieval, retention/expiry tests, and cross-session isolation tests | **Gate D** | **[#1](https://github.com/Thesis-Titans/hazardlens/issues/1)** / **[#13](https://github.com/Thesis-Titans/hazardlens/issues/13)** |
+| **T10** | Implement full location workflow (Search + Map fallback) | T2–T3, provider decision | Place search, coordinate/map fallback, validation, attribution, and provider-failure tests | **Gate D** | **[#5](https://github.com/Thesis-Titans/hazardlens/issues/5)** / **[#7](https://github.com/Thesis-Titans/hazardlens/issues/7)** |
+| **T11** | Add independent weather context | Core investigation API | Weather success and failure tests prove hazard evidence is completely unaffected | **Gate D** | **[#15](https://github.com/Thesis-Titans/hazardlens/issues/15)** |
+| **T12** | Implement API rate limits and privacy-safe diagnostics | API contracts | HTTP 429 tests, bounded behavior, and log review for secrets/raw IP exposure | **Gate D** | **[#17](https://github.com/Thesis-Titans/hazardlens/issues/17)** |
+| **T13** | Complete evidence provenance, attribution, and disclaimers | Evidence UI & contracts | Page-level review, disclaimer banner, and automated checks where practical | **Gate D** | **[#8](https://github.com/Thesis-Titans/hazardlens/issues/8)** |
+| **T14** | Complete accessibility and supported-browser acceptance | Main MVP workflows | Keyboard/focus/contrast checks, automated accessibility scan, and browser/device matrix | **Gate D** | **[#18](https://github.com/Thesis-Titans/hazardlens/issues/18)** |
+| **T15** | Demonstrate compatible-source extensibility (NFR-09) | T8 orchestration | A mock dataset is registered via adapter + registry configuration and queried without schema migration | **Gate D** | **[#19](https://github.com/Thesis-Titans/hazardlens/issues/19)** |
+| **T16** | Complete MVP release verification and readiness gates | T1–T15 | Requirement traceability, clean-checkout test, migrations, CI evidence, and team sign-off | **Gate E** | **[#12](https://github.com/Thesis-Titans/hazardlens/issues/12)** / **[#20](https://github.com/Thesis-Titans/hazardlens/issues/20)** |
+| **T17** | Begin gated AI implementation spike (if approved for release) | Gates B & C passing | Structured evidence grounding, schema validation, bounded tool use, fallback, and provenance tests | **Post-MVP** | **[#4](https://github.com/Thesis-Titans/hazardlens/issues/4)** |
+| **T18** | Implement comparison, printable report & polygon investigation | Explicit post-MVP planning | Separate scope and acceptance criteria; no dependency blocking core MVP | **Post-MVP** | **[#14](https://github.com/Thesis-Titans/hazardlens/issues/14)** / **[#16](https://github.com/Thesis-Titans/hazardlens/issues/16)** |
 
-- Requirement IDs and exact links/sections in the approved SRS.
-- One accountable assignee and a different reviewer.
-- Dependencies and a clear in-scope / out-of-scope boundary.
-- Acceptance criteria phrased as observable behavior.
-- Test commands and evidence required for closure.
-- A definition of done that includes docs and failure cases, not only the happy path.
+---
 
-**Branch and PR convention**
-- Branch: `feat/<issue-number>-short-name`, `fix/<issue-number>-short-name` or `docs/<short-name>`.
-- PR title references the issue, e.g. `feat(api): add first evidence vertical slice (#3)`.
-- PR body explains requirements covered, design decisions, test commands/results, source verification and known limitations.
-- Link PR to issue; request review from someone who did not author the change.
-- Do not merge with failing required checks or unresolved safety/data-integrity concerns.
-- Keep PRs focused and reviewable; split work rather than creating one large cross-stack PR.
+## 7. Team Responsibilities & Peer-Review Delegation Matrix
 
-## 7. Definition of Ready
+Every task pairs a Lead Implementer with an Independent Peer Reviewer across our three specialized tracks to ensure code review integrity (`Author != Reviewer`):
 
+| Track | Engineers | Primary Ownership |
+|---|---|---|
+| **Data & AI Infrastructure** | `@markalvincadangin`, `@vincenttamano` | FastAPI, PostGIS, ArcGIS/WMS adapters, AI Grounding Engine |
+| **Interactive GIS & Geolocation** | `@Justin-Ardena` | MapLibre GL map viewport, vector layers, pin reverse-geocoding |
+| **Product UI/UX & QA Testing** | `@lovelii-me`, `@faithbn` | Design system, comparison view, print reports, evidence card QA, accessibility |
+
+### Delegation Pairing Table
+
+| Task | Title | Lead Implementer | Independent Reviewer | Target Milestone |
+|:---:|---|:---:|:---:|---|
+| **T1** | MGB Flood verification | `@markalvincadangin` | `@vincenttamano` | Gate A & B |
+| **T2** | Evidence response contract | `@markalvincadangin` | `@vincenttamano` | Gate A & B |
+| **T3** | First vertical slice API & UI | `@vincenttamano` (API)<br>`@lovelii-me` (UI) | `@markalvincadangin` (API)<br>`@faithbn` (UI) | Gate A & B |
+| **T4** | Deterministic explanation | `@vincenttamano` | `@markalvincadangin` | Gate A & B |
+| **T5** | MGB Landslide verification | `@markalvincadangin` | `@vincenttamano` | Gate C |
+| **T6** | PHIVOLCS Liquefaction verification | `@vincenttamano` | `@markalvincadangin` | Gate C |
+| **T7** | PHIVOLCS Active Fault verification | `@Justin-Ardena` | `@markalvincadangin` | Gate C |
+| **T8** | Multi-source adapter orchestration | `@vincenttamano` | `@markalvincadangin` | Gate C |
+| **T9** | PostGIS schema & session history | `@vincenttamano` | `@markalvincadangin` | Gate D |
+| **T10** | Map viewer & geocoding search | `@Justin-Ardena` | `@lovelii-me` | Gate D |
+| **T11** | Weather failure isolation | `@markalvincadangin` | `@vincenttamano` | Gate D |
+| **T12** | API rate limits & safe diagnostics | `@vincenttamano` | `@markalvincadangin` | Gate D |
+| **T13** | Provenance, attribution & disclaimers | `@lovelii-me` | `@faithbn` | Gate D |
+| **T14** | Accessibility & browser acceptance | `@faithbn` | `@lovelii-me` | Gate D |
+| **T15** | NFR-09 compatible-source extensibility | `@markalvincadangin` | `@vincenttamano` | Gate D |
+| **T16** | MVP release verification & readiness | Whole Team | `@markalvincadangin` | Gate E |
+| **T17** | Gated AI evaluation spike | `@markalvincadangin` | `@vincenttamano` | Post-MVP |
+| **T18** | Comparison, report & polygon area | `@lovelii-me` / `@Justin-Ardena` | `@faithbn` | Post-MVP |
+
+---
+
+## 8. Standard Acceptance Criteria Structure
+
+All implementation issues must adhere to this standardized structure:
+
+```markdown
+## Purpose
+What user need or requirement does this task satisfy?
+
+## Scope
+- Included: [Specific bounded deliverables]
+- Excluded: [Explicitly out of scope]
+
+## Dependencies
+Which verified contract, decision, or earlier deliverable must exist first?
+
+## Team Delegation
+- Lead Implementer: @[username]
+- Independent Reviewer: @[username]
+
+## Acceptance Criteria
+- [ ] Observable expected behavior under normal operation
+- [ ] Explicit behavior for errors, timeouts, or empty results
+- [ ] Provenance, security, or accessibility requirements
+- [ ] Clear conditions for success and failure
+
+## Verification Evidence
+Required automated tests, reproducible test runs, or manual evidence.
+
+## Completion Rule
+Do not close until criteria pass and verifiable evidence is attached. Passing CI alone is insufficient.
+```
+
+---
+
+## 9. Definition of Ready & Definition of Done
+
+### Definition of Ready (DoR)
 An issue is ready to start only when:
 - Its requirement and approved SRS version are identified.
-- Acceptance criteria are testable.
-- External source, schema and API assumptions are stated.
+- Acceptance criteria are testable and cover failure/empty cases.
+- External source, schema, and API assumptions are stated.
 - Dependencies are complete or explicitly managed.
-- The assignee and reviewer are confirmed.
-- The work fits the sprint goal and the team's capacity.
+- The lead implementer and independent reviewer are confirmed.
 
-## 8. Definition of Done
-
-A feature is done only when all applicable items are true:
+### Definition of Done (DoD)
+A feature is done only when:
 - [ ] Acceptance criteria are met in code.
-- [ ] Unit/contract/integration tests cover success, empty and failure cases.
-- [ ] Tests are deterministic offline where external services are involved.
-- [ ] Lint, type checking and build/test CI pass.
-- [ ] API contracts and docs match actual behavior.
-- [ ] No secrets, default production credentials or unsafe configuration were introduced.
-- [ ] Attribution, source date/provenance and limitations are present where applicable.
-- [ ] UI states are accessible and do not imply unsupported certainty.
-- [ ] A reviewer other than the author has approved the change.
-- [ ] Verification record cites commands, results, date and commit/PR.
-- [ ] The issue is closed only after the reviewer confirms the acceptance evidence.
-
-## 9. Minimum verification evidence record
-
-For every source adapter, record: official service URL; exact layer ID; geometry type; spatial reference; query method and parameters; classification and date fields; attribution; query timestamp; sanitized sample response; known coverage; latency; timeout behavior; empty-result behavior; error behavior; fixture path; contract-test path.
-
-For every release candidate, record: commit SHA; environment/setup; migration result; test/lint/build commands and results; smoke-test path; browser/device notes; known defects; demo limitations.
-
-## 10. Immediate next actions
-
-1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register, schema reconciliation, official source verification notes and `docs/release-scope-and-task-matrix.md`); approve or request corrections before treating them as the team baseline.
-2. Ask the whole team to review the project-lead scope decisions recorded in `docs/decision-log.md` (FR-11/12/20 post-MVP; FR-13/21 MVP-required; AI gate; FR-02 sequencing; NFR-09 definition), then confirm or request changes. Keep formal team approval pending until recorded.
-3. Update the source-verification record to reflect PR #11's two captured MGB response fixtures while keeping repeatability, coverage and valid-empty semantics explicitly unverified.
-4. Review PR #11 as a limited preview slice; do not treat its mocked fixture tests as live-source verification or as delivery of the full investigation workflow.
-5. Review backlog items #13–#19, confirm dependencies and phase placement, and assign owners/reviewers only after capacity is agreed; keep AI gated until the first evidence slice and all four required sources are verified.
-
-**Project status after this plan:** planning artifact proposed; no feature is marked complete by this document. The next status update must be based on merged code and verification evidence, not this plan alone.
+- [ ] Unit/contract/integration tests cover success, empty, and failure cases.
+- [ ] Tests run deterministically offline using recorded fixtures.
+- [ ] Linting, type checking, and production build pass.
+- [ ] API contracts and documentation match actual behavior.
+- [ ] No secrets or raw IP addresses are introduced into storage or logs.
+- [ ] Attribution, source provenance, and limitations are displayed.
+- [ ] An independent reviewer other than the author has reviewed and approved the change.
+- [ ] Verification evidence is linked before closing the issue.
