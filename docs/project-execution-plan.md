@@ -55,23 +55,28 @@ Delivery is organized into six dependency-ordered gates rather than premature ca
 [ Gate 0: Planning, Governance & Delegation Baseline ]
                        │
                        ▼
-[ Gate A: First-Source Verification & Contract ]
+[ Gate A: First-Source Verification & Contract (#2) ]
                        │
                        ▼
-[ Gate B: First End-to-End Evidence Slice ]
+[ Gate B: First End-to-End Evidence Slice (#3) ]
                        │
                        ▼
-[ Gate C: Verify Complete Required Source Set ]
+[ Gate C: Verify Complete Required Source Set (#28, #6, #8) ]
                        │
                        ▼
-[ Gate D: Complete Remaining MVP Workflows & Safeguards ]
+[ Gate D: Remaining MVP Workflows & Safeguards (#5, #7, #13, #15, #17, #18, #19) ]
                        │
                        ▼
-[ Gate E: MVP Acceptance & Gated Extensions ]
+[ Gate E: MVP Acceptance & Release Verification (#20) ]
+
+Parallel architectural foundation: Issue #1 defines the schema and initial migration boundary
+needed before Gate D persistence (T9); it does not block the stateless Gate B slice.
 ```
 
 ### Gate 0 — Planning, Governance and Delegation Baseline
 Establish the shared delivery baseline, standardize all backlog issues, settle team invitations and role delegations, and ensure no additional implementation begins without clear acceptance criteria and independent reviewer pairings.
+
+**Task-map boundary:** Gate 0 is a governance prerequisite tracked by Issue #12, not one of delivery tasks T1–T18. Task T16 is exclusively the Gate E release-verification task tracked by Issue #20.
 
 **Exit criteria:**
 - Polished project execution plan, task matrix, and traceability baseline are accepted.
@@ -163,9 +168,9 @@ Confirm that the implementation matches team-approved requirements and that all 
 | **T2** | Finalize first-slice API and evidence response contract | T1 | Reviewed Pydantic schema, status definitions, provenance fields, and contract tests | **Gate B** | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** |
 | **T3** | Implement first investigation endpoint and evidence UI | T2 | Reproducible end-to-end test from coordinate input to rendered evidence card | **Gate B** | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** |
 | **T4** | Implement deterministic explanations and honest empty states | T2–T3 | Unit/UI tests proving explanations require no AI and do not invent findings | **Gate B** | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** |
-| **T5** | Verify MGB rain-induced landslide source | T1 procedure | Complete source evidence record, live query verification, and source-specific fixtures | **Gate C** | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** |
-| **T6** | Verify PHIVOLCS liquefaction source | T1 procedure | Exact layer identity, live query record, classifications, coverage, and failure semantics | **Gate C** | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** |
-| **T7** | Verify PHIVOLCS active-fault source | T1 procedure | Exact layer identity, geometry-appropriate spatial operation, query record, and distance semantics | **Gate C** | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** |
+| **T5** | Verify MGB rain-induced landslide source | T1 procedure | Complete source evidence record, live query verification, and source-specific fixtures | **Gate C** | **[#28](https://github.com/Thesis-Titans/hazardlens/issues/28)** |
+| **T6** | Verify PHIVOLCS liquefaction source | T1 procedure | Exact layer identity, live query record, classifications, coverage, and failure semantics | **Gate C** | **[#28](https://github.com/Thesis-Titans/hazardlens/issues/28)** |
+| **T7** | Verify PHIVOLCS active-fault source | T1 procedure | Exact layer identity, geometry-appropriate spatial operation, query record, and distance semantics | **Gate C** | **[#28](https://github.com/Thesis-Titans/hazardlens/issues/28)** |
 | **T8** | Integrate four verified sources through normal orchestration | T1, T5–T7, T2 | Concurrent-query tests, bounded deadlines, partial-failure isolation, and multi-match preservation | **Gate C** | **[#6](https://github.com/Thesis-Titans/hazardlens/issues/6)** |
 | **T9** | Implement required persistence and anonymous session history | Logical schema review | Migration tests, history retrieval, retention/expiry tests, and cross-session isolation tests | **Gate D** | **[#1](https://github.com/Thesis-Titans/hazardlens/issues/1)** / **[#13](https://github.com/Thesis-Titans/hazardlens/issues/13)** |
 | **T10** | Implement full location workflow (Search + Map fallback) | T2–T3, provider decision | Place search, coordinate/map fallback, validation, attribution, and provider-failure tests | **Gate D** | **[#5](https://github.com/Thesis-Titans/hazardlens/issues/5)** / **[#7](https://github.com/Thesis-Titans/hazardlens/issues/7)** |
@@ -174,7 +179,7 @@ Confirm that the implementation matches team-approved requirements and that all 
 | **T13** | Complete evidence provenance, attribution, and disclaimers | Evidence UI & contracts | Page-level review, disclaimer banner, and automated checks where practical | **Gate D** | **[#8](https://github.com/Thesis-Titans/hazardlens/issues/8)** |
 | **T14** | Complete accessibility and supported-browser acceptance | Main MVP workflows | Keyboard/focus/contrast checks, automated accessibility scan, and browser/device matrix | **Gate D** | **[#18](https://github.com/Thesis-Titans/hazardlens/issues/18)** |
 | **T15** | Demonstrate compatible-source extensibility (NFR-09) | T8 orchestration | A mock dataset is registered via adapter + registry configuration and queried without schema migration | **Gate D** | **[#19](https://github.com/Thesis-Titans/hazardlens/issues/19)** |
-| **T16** | Complete MVP release verification and readiness gates | T1–T15 | Requirement traceability, clean-checkout test, migrations, CI evidence, and team sign-off | **Gate E** | **[#12](https://github.com/Thesis-Titans/hazardlens/issues/12)** / **[#20](https://github.com/Thesis-Titans/hazardlens/issues/20)** |
+| **T16** | Complete MVP release verification and readiness gates | T1–T15 | Requirement traceability, clean-checkout test, migrations, CI evidence, and team sign-off | **Gate E** | **[#20](https://github.com/Thesis-Titans/hazardlens/issues/20)** |
 | **T17** | Begin gated AI implementation spike (if approved for release) | Gates B & C passing | Structured evidence grounding, schema validation, bounded tool use, fallback, and provenance tests | **Post-MVP** | **[#4](https://github.com/Thesis-Titans/hazardlens/issues/4)** |
 | **T18** | Implement comparison, printable report & polygon investigation | Explicit post-MVP planning | Separate scope and acceptance criteria; no dependency blocking core MVP | **Post-MVP** | **[#14](https://github.com/Thesis-Titans/hazardlens/issues/14)** / **[#16](https://github.com/Thesis-Titans/hazardlens/issues/16)** |
 
