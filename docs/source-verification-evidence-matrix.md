@@ -139,8 +139,8 @@ For each official source family, contributors must document a completed evidence
 
 ## 6. Verification Roadmap & Next Steps
 
-1. **Complete PR #11 Peer Review:**
-   - Review MGB flood preview implementation against the criteria in Section 3 and Section 4.
+1. **Review the merged PR #11 preview implementation:**
+   - Review the MGB flood preview implementation on `main` against the criteria in Sections 3 and 4. PR #11 is already merged; this review does not replace the pending live-source verification under Issue #2.
 2. **Issue #2 Execution (Live Source Connectivity):**
    - Conduct network-level connectivity and metadata verification for the PHIVOLCS Liquefaction and Active Fault endpoints.
    - Record positive and empty test coordinates for MGB Landslide Susceptibility.
