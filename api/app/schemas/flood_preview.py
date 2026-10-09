@@ -22,20 +22,38 @@ class FloodPreviewRequest(BaseModel):
         return round(value, 5)
 
 
+class SourceDate(BaseModel):
+    text: str
+    basis: str
+
+
 class FloodMatch(BaseModel):
     class_code: str
     class_label: str
+    distance_band_m: float | None = None
 
 
 class FloodEvidenceResult(BaseModel):
-    dataset_key: str = "mgb_detailed_flood"
-    dataset_name: str = "Detailed Flood Susceptibility"
-    agency: str = "Mines and Geosciences Bureau (MGB)"
-    source_url: str
+    dataset_key: str = "flood"
+    source_key: str = "mgb_detailed_flood"
     status: EvidenceStatus
+    result_type: str = "containment"
     matches: list[FloodMatch] = Field(default_factory=list)
+    source_date: SourceDate = Field(
+        default_factory=lambda: SourceDate(
+            text="Not stated in the published layer metadata",
+            basis="metadata_not_provided",
+        )
+    )
     retrieved_at: datetime
-    attribution: str = "Source: Mines and Geosciences Bureau (MGB), Detailed Flood Susceptibility."
+    origin: str = "live"
+    latency_ms: int = Field(ge=0)
+    raw: dict = Field(default_factory=dict)
+    source_url: str
+    agency: str = "Mines and Geosciences Bureau (MGB)"
+    attribution: str = (
+        "Source: Mines and Geosciences Bureau (MGB), Detailed Flood Susceptibility."
+    )
     message: str | None = None
 
 
