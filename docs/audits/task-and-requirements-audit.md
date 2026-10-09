@@ -1,10 +1,11 @@
 # HazardLens — Task-by-Task & Requirements Coverage Audit against SRS v3.1
 
-**Document Version:** 2.2 (Reconciled Working Audit)  
+**Document Version:** 2.3 (Reconciled Working Audit)  
 **Audit Date:** 9 October 2026  
 **Audited Commit:** `main` at [`3a50439`](https://github.com/Thesis-Titans/hazardlens/commit/3a50439)  
 **Repository Path:** [`docs/audits/task-and-requirements-audit.md`](docs/audits/task-and-requirements-audit.md)  
-**Document Status:** Reconciled working audit draft submitted for team review; formal baseline acceptance pending whole-team confirmation and Gate 0 closure.  
+**Pull Request:** [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) (open and unmerged; peer review explicitly requested from `@vincenttamano`)  
+**Document Status:** Working audit draft submitted for team review; formal baseline acceptance pending whole-team confirmation and Gate 0 closure.  
 **Specification Reference:** System Requirements Specification v3.1 (working specification reference aligned with ISO/IEC/IEEE 29148:2018 principles; formal whole-team approval pending kickoff)  
 **Governance Framework:** Section 8 Standard Issue Specification & Definition of Ready ([docs/agile-sprint-management-plan.md](../agile-sprint-management-plan.md))  
 **Project Board:** [HazardLens — Sprint Board (Project #1)](https://github.com/orgs/Thesis-Titans/projects/1)  
@@ -16,9 +17,9 @@
 ### Evidential Classifications
 To eliminate ambiguity, every finding, record, and status metric in this audit is classified using strict evidential distinctions:
 
-- **Reported:** A claim or entry recorded in tickets, PR summaries, or documentation without independent verification attached.
+- **Reported:** A claim, log snippet, or metric recorded in tickets, PR summaries, or local developer workstations without independent reproduction attached. *Specifically, local `./scripts/verify.sh all` execution passes are classified as Reported until an independent clean-checkout reproduction is executed by a teammate and logged.*
 - **Observed:** A live configuration, file state, or record directly inspected in GitHub or the active repository tree.
-- **Verified:** A technical result reproduced hermetically through automated test suites (`./scripts/verify.sh all`) or recorded test fixtures. For live external source queries, verification requires reproducible query records, offline mock/fixture replay, and recorded independent peer review (live source queries cannot themselves "pass offline").
+- **Verified:** A technical result reproduced hermetically through automated test suites or recorded test fixtures. For live external source queries, verification requires reproducible query records, offline mock/fixture replay, and recorded independent peer review (live source queries cannot themselves "pass offline").
 - **Approved:** A technical, architectural, or scope decision formally confirmed by authorized team members (e.g. recorded kickoff meeting minutes, approved ADR, or formal gate closure).
 
 ### Requirements Evaluation Model
@@ -28,10 +29,14 @@ Rather than compressing multiple concepts into hybrid labels, requirements are a
 3. **Verification:** Does reproducible acceptance evidence pass? (`Pending` / `Partial` / `Verified` / `Not Applicable Yet`)
 4. **Scope Decision:** What is the approved or proposed release placement? (`MVP-required (Working Direction)` / `Proposed Post-MVP (Team Approval Pending)`)
 
-### Working Baseline Assessment
+### Working Baseline Assessment & Gate 0 Scope Boundary
 > **Observed Assessment:** **Planning baseline substantially organized; final validation, whole-team confirmation, and Gate 0 closure pending.**
 > 
-> Standardized issue bodies and clean board configurations are valuable planning artifacts, but they do not prove that tasks are ready to execute or that the system is complete. Currently, only the FastAPI scaffold and the limited single-source MGB flood preview slice from PR #11 exist on `main`. Zero production multi-source orchestrators, PostGIS migrations, or final UI evidence components have been delivered. **Feature implementation remains strictly paused until Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)) is formally closed with documented exit evidence.**
+> Standardized issue bodies and clean board configurations are valuable planning artifacts, but they do not prove that tasks are ready to execute or that the system is complete. Currently, only the FastAPI scaffold and the limited single-source MGB flood preview slice from PR #11 exist on `main`. Zero production multi-source orchestrators, PostGIS migrations, or final UI evidence components have been delivered.
+> 
+> **Explicit Scope Boundary During Gate 0:**
+> - **Permitted Work:** Documentation corrections, issue specification refinements, planning and governance evidence collection, and peer reviews of documentation PRs (e.g. [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) and [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29)) are actively permitted.
+> - **Frozen Work:** Implementation of product features, hazard adapters, PostGIS migrations, and UI components remains **strictly paused** until Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)) is formally closed with documented exit evidence.
 
 ---
 
@@ -40,29 +45,61 @@ Rather than compressing multiple concepts into hybrid labels, requirements are a
 This version reflects the following confirmed repository and tracking reconciliations:
 
 1. **PR #27 Status (README Scope Reconciliation):**
-   - **Observed:** [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) is **OPEN and unmerged** (head commit `78c973c`), based on `main` at `3a50439`.
-   - **Action Taken:** Updated PR #27 title to *"docs: reconcile README feature scope with proposed MVP release matrix"* and requested review from `@vincenttamano`. The audit treats this as a proposed scope reconciliation awaiting independent peer review, not a change completed on `main`.
-2. **Issue #1 Metadata Alignment:**
-   - **Observed:** [Issue #1](https://github.com/Thesis-Titans/hazardlens/issues/1) previously had contradictory metadata (`gate-b` label, `[Gate A]` title, and `Gate D` text in body).
-   - **Action Taken:** Updated title to `[Gate A] Review logical schema and define MVP PostGIS migration boundary`, removed label `gate-b`, and applied label `gate-a`. Body text now clarifies that logical schema review begins in Gate A, while full persistence execution is completed in Gate D.
-3. **Decoupled Source Verification (Issues #2 & #28):**
-   - **Observed:** [Issue #2](https://github.com/Thesis-Titans/hazardlens/issues/2) previously combined Task T1 (Gate A MGB flood) with Tasks T5–T7 (Gate C remaining sources) with a completion rule requiring all four sources before closure, which blocked Gate B.
-   - **Action Taken:** Split the tasks:
-     - **[Issue #2](https://github.com/Thesis-Titans/hazardlens/issues/2):** Scoped strictly to Gate A / Task T1 (MGB Flood verification, repeatability, coverage rules, offline fixtures). Acceptance of Issue #2 satisfies Gate A exit criteria and unblocks Gate B ([Issue #3](https://github.com/Thesis-Titans/hazardlens/issues/3)).
-     - **[Issue #28](https://github.com/Thesis-Titans/hazardlens/issues/28):** Dedicated Gate C issue for Tasks T5 (MGB Landslide), T6 (PHIVOLCS Liquefaction), and T7 (PHIVOLCS Active Faults), mapped to Milestone 2 on Project #1.
-     - **Label Description Alignment:** Updated `gate-c` label description to *"Gate C — Remaining source contracts, orchestration & multi-source UI"* to accurately reflect all three issues carrying the label (Issues #28, #6, and #8).
-4. **Three Sequencing Concepts Disentangled:**
-   - **Gate Acceptance:** The exit conditions that must be evidenced to declare a delivery gate closed (e.g. Gate A requires Task T1 verified).
-   - **Issue Dependencies:** The technical deliverables that must exist before an issue can begin or close (e.g. Issue #3 depends on Issue #2; Issue #6 depends on Issues #3 and #28).
-   - **Provisional Sprint Horizons:** Planning fields on Project #1 (`Sprint 1` through `Sprint 4`) that provide a tentative forecast but do not authorize work, bypass gates, or establish committed calendar dates. Actual sprint cadence, capacity, and sprint length will be decided at team kickoff.
-5. **Geocoding Working Proposal Language:**
+   - **Observed:** [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) is **OPEN and unmerged** (head commit `78c973c`), based on `main` at `3a50439`. Requested reviewer is `@vincenttamano`.
+   - **Scope:** Proposed README alignment with the proposed MVP matrix; awaiting independent peer review.
+2. **PR #29 Status (Audit Baseline Publication):**
+   - **Observed:** [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) is **OPEN and unmerged**, based on `main` at `3a50439`.
+   - **Action Taken:** Individual reviewer `@vincenttamano` explicitly requested via GitHub API. Remains unmerged pending peer review.
+3. **Issue #1 Metadata Alignment:**
+   - **Observed:** [Issue #1](https://github.com/Thesis-Titans/hazardlens/issues/1) title and labels aligned to `[Gate A] Review logical schema and define MVP PostGIS migration boundary` (`gate-a` label applied; `gate-b` removed). Body text clarifies that logical schema review begins in Gate A, while physical migration execution is staged.
+4. **Decoupled Source Verification & Restored Paths (Issues #2 & #28):**
+   - **[Issue #2](https://github.com/Thesis-Titans/hazardlens/issues/2):** Scoped strictly to Gate A / Task T1 (MGB Flood verification, repeatability, coverage rules, offline fixtures). Acceptance unblocks Gate B ([Issue #3](https://github.com/Thesis-Titans/hazardlens/issues/3)).
+   - **[Issue #28](https://github.com/Thesis-Titans/hazardlens/issues/28):** Dedicated Gate C issue for Tasks T5 (MGB Landslide), T6 (PHIVOLCS Liquefaction), and T7 (PHIVOLCS Active Faults).
+   - **Path Restoration Verified:** Verified that the live issue body renders the exact paths: `api/tests/fixtures/` and the relative link to `docs/source-verification-evidence-matrix.md`.
+   - **Label Description Alignment:** `gate-c` description updated to *"Gate C — Remaining source contracts, orchestration & multi-source UI"* to encompass Issues #28, #6, and #8.
+5. **Three Sequencing Concepts Disentangled:**
+   - **Gate Acceptance:** Exit conditions that must be evidenced to declare a delivery gate closed (e.g. Gate A requires Task T1 verified).
+   - **Issue Dependencies:** The technical deliverables that must exist before an issue can begin or close. For example, source verification in [Issue #28](https://github.com/Thesis-Titans/hazardlens/issues/28) depends on the Gate A methodology from #2, but can proceed independently of the [Issue #3](https://github.com/Thesis-Titans/hazardlens/issues/3) vertical slice UI. Gate C integration ([Issue #6](https://github.com/Thesis-Titans/hazardlens/issues/6)) depends on both #3 and #28.
+   - **Provisional Sprint Horizons:** Planning fields on Project #1 (`Sprint 1` through `Sprint 4`) that provide a tentative forecast but do not authorize work, bypass gates, or establish committed calendar dates.
+6. **Geocoding Working Proposal Language:**
    - Reconciled all geocoding provider mentions to "working proposal; final selection pending team approval" (Geoapify working proposal; public Nominatim fallback; Photon/PSGC exploratory).
 
 ---
 
-## 3. Audit of 18 Selected Delivery Issues
+## 3. Audit of 18 Active Delivery and Governance Issues
 
-*Selection Rule: This table audits 100% of the active issues in the repository (18 of 18 open issues in `Thesis-Titans/hazardlens`), which correspond to all 18 delivery and governance tasks (Tasks T1–T18) mapped across Gates 0 through E and Post-MVP on Project #1.*
+*Selection Rule: This table audits 100% of the active issues in the repository (18 of 18 open issues in `Thesis-Titans/hazardlens`: [#1](https://github.com/Thesis-Titans/hazardlens/issues/1)–[#8](https://github.com/Thesis-Titans/hazardlens/issues/8), [#12](https://github.com/Thesis-Titans/hazardlens/issues/12)–[#20](https://github.com/Thesis-Titans/hazardlens/issues/20), and [#28](https://github.com/Thesis-Titans/hazardlens/issues/28)). Rather than an asserted 1-to-1 correspondence with single engineering tasks, these 18 issues collectively track the project's delivery, governance, architecture, and verification work, with some issues grouping multiple related tasks.*
+
+### Task-to-Issue Traceability Matrix (Tasks T1–T18 & Core Workstreams)
+
+| Task / Workstream | Description | Gate | Tracking Issue | Grouping & Scope Summary |
+|:---:|---|:---:|:---:|---|
+| **T1** | MGB Flood source verification & repeatability | Gate A | **[#2](https://github.com/Thesis-Titans/hazardlens/issues/2)** | Dedicated single-source verification issue |
+| **T2** | Investigation contract & response schema | Gate B | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** | Grouped under first vertical slice (Task T2 Contract) |
+| **T3** | Investigation API & Evidence card UI | Gate B | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** | Grouped under first vertical slice (Tasks T3 API & T3 UI) |
+| **T4** | Deterministic explanation logic | Gate B | **[#3](https://github.com/Thesis-Titans/hazardlens/issues/3)** | Grouped under first vertical slice (Task T4 Logic) |
+| **T5** | MGB Landslide source contract & fixtures | Gate C | **[#28](https://github.com/Thesis-Titans/hazardlens/issues/28)** | Grouped under remaining official hazard sources |
+| **T6** | PHIVOLCS Liquefaction contract & fixtures | Gate C | **[#28](https://github.com/Thesis-Titans/hazardlens/issues/28)** | Grouped under remaining official hazard sources |
+| **T7** | PHIVOLCS Active Faults proximity buffer & fixtures | Gate C | **[#28](https://github.com/Thesis-Titans/hazardlens/issues/28)** | Grouped under remaining official hazard sources |
+| **T8** | Multi-source concurrent orchestrator (bounded 10s) | Gate C | **[#6](https://github.com/Thesis-Titans/hazardlens/issues/6)** | Dedicated multi-source integration issue |
+| **T9** | Evidence card UI with official classifications | Gate C | **[#8](https://github.com/Thesis-Titans/hazardlens/issues/8)** | Dedicated multi-source UI evidence card issue |
+| **T10** | Philippine place search & coordinate fallback | Gate D | **[#7](https://github.com/Thesis-Titans/hazardlens/issues/7)** | Dedicated geocoding & fallback issue |
+| **T11** | Current weather card with failure isolation | Gate D | **[#15](https://github.com/Thesis-Titans/hazardlens/issues/15)** | Dedicated weather integration issue |
+| **T12** | Interactive map viewer (MapLibre) & picker | Gate D | **[#5](https://github.com/Thesis-Titans/hazardlens/issues/5)** | Dedicated map viewer & picker issue |
+| **T13** | Anonymous session persistence & history | Gate D | **[#13](https://github.com/Thesis-Titans/hazardlens/issues/13)** | Dedicated session & investigation history issue |
+| **T14** | Rate limits & privacy-safe diagnostics | Gate D | **[#17](https://github.com/Thesis-Titans/hazardlens/issues/17)** | Dedicated security & rate limiting issue |
+| **T15** | Accessibility audit & cross-browser support | Gate D | **[#18](https://github.com/Thesis-Titans/hazardlens/issues/18)** | Dedicated WCAG & cross-browser issue |
+| **T16** | Dataset extensibility verification spike | Gate D | **[#19](https://github.com/Thesis-Titans/hazardlens/issues/19)** | Dedicated NFR-09 measurable requirement issue |
+| **T17** | AI provider spike & tool-calling evaluation | Post-MVP | **[#4](https://github.com/Thesis-Titans/hazardlens/issues/4)** | Dedicated AI evaluation spike issue |
+| **T18** | Investigation comparison & printable report | Post-MVP | **[#14](https://github.com/Thesis-Titans/hazardlens/issues/14)** | Dedicated comparison & report issue |
+| *Governance* | Planning, governance & delegation baseline | Gate 0 | **[#12](https://github.com/Thesis-Titans/hazardlens/issues/12)** | Dedicated Gate 0 closure issue |
+| *Architecture* | Logical schema review & MVP migration boundary | Gate A | **[#1](https://github.com/Thesis-Titans/hazardlens/issues/1)** | Dedicated schema ADR & initial migration issue |
+| *Spike* | Area polygon validation & capability gates | Post-MVP | **[#16](https://github.com/Thesis-Titans/hazardlens/issues/16)** | Dedicated polygon validation spike issue |
+| *Verification*| Clean checkout reproduction & repository rules | Gate E | **[#20](https://github.com/Thesis-Titans/hazardlens/issues/20)** | Dedicated release verification issue |
+
+---
+
+### Audit of 18 Active Issues
 
 | Issue | Standardized Title | Gate & Prov. Sprint | Mapped SRS Reqs | Proposed Delegation (Team Kickoff Confirmation Pending) | Issue Dependency & Readiness Status | Outstanding Refinements & Exit Criteria |
 |:---:|---|:---:|---|---|:---:|---|
@@ -131,7 +168,7 @@ This version reflects the following confirmed repository and tracking reconcilia
 | **NFR-08** | Attribution and planning-data disclaimer banner on every page | Specified | Scaffold only (banner draft) | Pending (UI inspection across all pages outstanding) | MVP-required (Working Direction) |
 | **NFR-09** | Compatible dataset extensible via adapter + registry row without migration | Specified | Not started | Pending (mock adapter registration test outstanding) | MVP-required (Working Direction) |
 | **NFR-10** | Hermetic dependency pinning; shared API contracts | Specified | Scaffold only (pinned in lockfiles) | Partial (lockfiles pass verify.sh; TypeScript export pending) | MVP-required (Working Direction) |
-| **NFR-11** | Strictly no scraping, framing, or embedding of HazardHunterPH | Specified | Delivered (codified in AGENTS.md) | Verified (code inspection confirms zero scraping) | MVP-required (Working Direction) |
+| **NFR-11** | Strictly no scraping, framing, or embedding of HazardHunterPH | Specified | Scaffold only (policy codified in `AGENTS.md`) | Partial (codified in AGENTS.md; reproducible grep test & independent review pending) | MVP-required (Working Direction) |
 | **NFR-12** | Strict cross-session isolation; cannot access others' investigations | Specified | Not started | Pending (cross-session 404 security test outstanding) | MVP-required (Working Direction) |
 | **NFR-13** | Rate limits on expensive endpoints; HTTP 429 on exhaustion | Specified | Not started | Pending (burst request rate-limit test outstanding) | MVP-required (Working Direction) |
 | **NFR-14** | AI timeouts and fallback on transport/model error | Specified | Not started | Not applicable yet (gated behind core evidence) | Proposed Post-MVP (Team Approval Pending) |
