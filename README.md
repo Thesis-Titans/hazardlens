@@ -155,6 +155,7 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 - [Decision Log](docs/decision-log.md)
 - [Risk Register](docs/risk-register.md)
 - [Database Schema Reconciliation](docs/schema-reconciliation.md)
+- [Official Source Verification Notes](docs/source-verification-notes.md)
 
 ## Disclaimer
 
