@@ -155,11 +155,11 @@ npm run dev
 
 ## Team & Agile Project Management
 
-HazardLens is developed by **Thesis Titans** (West Visayas State University — BSIT Batch 2028) using lightweight Scrum and GitHub Flow.
+HazardLens is developed by **Thesis Titans** (West Visayas State University — BSIT Batch 2028) using a proposed lightweight Scrum-based Agile workflow and GitHub Flow; the sprint cadence and roles require whole-team confirmation.
 
 - **Organization:** [Thesis Titans](https://github.com/Thesis-Titans)
 - **Sprint Board:** [HazardLens — Sprint Board](https://github.com/orgs/Thesis-Titans/projects/1)
-- **Sprint Milestones:** [HazardLens Milestones](https://github.com/Thesis-Titans/hazardlens/milestones)
+- **Delivery Gate Milestones:** [HazardLens Milestones](https://github.com/Thesis-Titans/hazardlens/milestones)
 
 ### Team Tracks & Specializations
 
@@ -167,7 +167,7 @@ HazardLens is developed by **Thesis Titans** (West Visayas State University — 
 |---|---|---|
 | **Data & AI Infrastructure** | `@markalvincadangin`<br>`@vincenttamano` | FastAPI, PostGIS, ArcGIS/WMS adapters, AI Grounding Engine |
 | **Interactive GIS** | `@Justin-Ardena` | MapLibre GL map viewport, vector layers, pin reverse-geocoding |
-| **Product UI/UX & QA** | `@lovelii-me`<br>`@faithbn` | Design system, comparison view, print reports, evidence card QA |
+| **Product UI/UX & QA** | `@Lovelly143` (previously referenced as `@lovelii-me` in existing backlog text)<br>`@faithbn` | Design system, comparison view, print reports, evidence card QA |
 
 ## Standards Adopted
 
@@ -193,6 +193,7 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 - [Technical Architecture](docs/architecture.md)
 - [Verification Record](docs/verification.md)
 - [Project Execution Plan](docs/project-execution-plan.md)
+- [Agile and Sprint Management Plan](docs/agile-sprint-management-plan.md)
 - [Release Scope and Dependency-Aware Task Matrix](docs/release-scope-and-task-matrix.md)
 - [Project Setup Readiness Checklist](docs/project-readiness-checklist.md)
 - [Requirements Traceability](docs/requirements-traceability.md)

@@ -25,7 +25,7 @@
 | DEC-14 | Release classifications and dependency-aware work packages | Project lead selected the working classifications on 9 Oct 2026: FR-11/FR-12/FR-20 post-MVP; FR-13/FR-21 MVP-required; AI after the first evidence slice and verification of all four required sources. The first slice is source → API → evidence UI; FR-02 persistence/history is still required before MVP release. | **Project-lead working direction recorded; whole-team approval pending** | Whole team: confirm or request changes; keep SRS, traceability and matrix consistent. No deadline or teammate availability is inferred. |
 
 | DEC-16 | Weather provider and failure isolation | Use Open-Meteo as the working MVP weather provider, subject to confirming the current non-commercial-use terms, quota and attribution. Weather is supporting context only and is not hazard evidence. Use a configurable bounded timeout (initial default 3 seconds); on timeout, provider error or invalid payload, return a weather-specific `UNAVAILABLE` state without changing hazard results. | **Project-lead working direction; team confirmation and implementation tests pending** | Backend owner: verify current Open-Meteo terms, document attribution and response normalization; test success, timeout, malformed response and isolated provider failure. https://open-meteo.com/en/terms ; https://open-meteo.com/en/docs |
-| DEC-18 | Pre-execution gate, delegation matrix & issue standardization | Enforce Gate 0 (no implementation execution begins until planning, issue standardization, and delegations are settled). Establish 3-track 5-person delegation matrix with independent reviewer pairings (Author != Reviewer). All 17 issues standardized with Section 8 structure. | **Approved by project lead; enforced immediately** | Project lead + whole team: verify issue standardization, confirm delegation pairings, complete organization invites before opening implementation PRs. |
+| DEC-18 | Pre-execution gate, delegation matrix & issue standardization | Enforce Gate 0 (no implementation execution begins until planning, issue standardization, and delegations are settled). Establish 3-track 5-person delegation matrix with independent reviewer pairings (Author != Reviewer). All 17 issues standardized with Section 8 structure. | **Approved by project lead; enforced immediately** | Project lead + whole team: verify issue standardization, confirm delegation pairings, complete the two remaining organization invitations reported by the project lead before opening implementation PRs; verify the current organization roster and invitations. |
 
 ## DEC-17 — Project-lead approval of implementation recommendations (9 October 2026)
 
@@ -58,7 +58,7 @@ The project lead approved the following systematic governance and delegation rul
 2. **Three-Track, Five-Person Delegation Matrix:**
    - **Data & AI Infrastructure:** `@markalvincadangin` and `@vincenttamano` (FastAPI, PostGIS, adapters, evidence schemas, AI grounding engine).
    - **Interactive GIS & Geolocation:** `@Justin-Ardena` (MapLibre GL viewer, vector layers, reverse geocoding, fault proximity).
-   - **Product UI/UX & QA Testing:** `@lovelii-me` and `@faithbn` (Evidence card UI, design system, attribution, accessibility, responsive testing, test suite verification).
+   - **Product UI/UX & QA Testing:** `@Lovelly143` and `@faithbn` (Evidence card UI, design system, attribution, accessibility, responsive testing, test suite verification).
 3. **Independent Review Pairing Invariant (`Author != Reviewer`):**
    - Every task has a designated Lead Implementer and an Independent Reviewer from a complementary role.
    - Self-approval is strictly forbidden on all pull requests and acceptance criteria sign-offs.
@@ -76,3 +76,12 @@ For each decision, distinguish a user/project-lead preference from a team-approv
 Do not mark a decision team-approved until the team explicitly confirms it.
 
 For decisions that alter requirements, update the SRS and traceability matrix in the same review cycle. Do not treat comments in a PR as the only permanent record of a product decision.
+
+
+## DEC-19 — Agile and Sprint operating agreement (9 October 2026)
+
+**Status:** Proposed team working agreement; whole-team approval pending.
+
+HazardLens proposes a lightweight Scrum-based workflow with time-boxed Sprints and GitHub Flow. The delivery gates (Gate 0 and Gates A–E) remain dependency and acceptance controls, not Sprints. The team must confirm the Product Owner, facilitator, Sprint length, real deadline, and individual capacity before calendar dates or Sprint commitments are created. The proposed [Agile and Sprint Management Plan](agile-sprint-management-plan.md) defines Sprint Planning, regular progress inspection, Sprint Review, Retrospective, backlog quality guidance, and a project-specific Definition of Done. This proposal does not claim that the team is already fully practicing Scrum.
+
+**Next action:** Whole team reviews/amends the plan at kickoff, records the agreed accountabilities and cadence, then updates this decision's status. Until then, Gate 0 remains open and feature implementation remains paused.
