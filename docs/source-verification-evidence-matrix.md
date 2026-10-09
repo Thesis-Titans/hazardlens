@@ -84,7 +84,7 @@ Every adapter and investigation result must adhere strictly to the evidence stat
 
 ## 5. Source Evidence Record Template
 
-For each official source family, contributors must document a completed evidence record following this structure before marking Stage 3 or Stage 4 complete:
+For each official source family, contributors must document a completed evidence record following this structure before marking Stage 2, Stage 3, or Stage 4 complete:
 
 ```markdown
 ### Evidence Record: [Source Name]
