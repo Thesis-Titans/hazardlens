@@ -69,7 +69,7 @@ async def test_found_result_preserves_source_classification_and_rounds_coordinat
 
 
 @pytest.mark.asyncio
-async def test_successful_empty_response_is_no_evidence() -> None:
+async def test_empty_response_with_unverified_coverage_is_unavailable() -> None:
     fake_client = AsyncMock()
     fake_client.get.return_value = FakeResponse({"features": []})
 
@@ -80,8 +80,9 @@ async def test_successful_empty_response_is_no_evidence() -> None:
 
     assert response.status_code == 200
     result = response.json()["results"][0]
-    assert result["status"] == "NO_EVIDENCE"
+    assert result["status"] == "UNAVAILABLE"
     assert result["matches"] == []
+    assert "coverage" in result["message"]
 
 
 @pytest.mark.asyncio
