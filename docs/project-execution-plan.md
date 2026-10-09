@@ -46,7 +46,7 @@ Use the existing two-week milestones as planning boundaries, but confirm dates a
 **Goal:** prevent parallel work from implementing conflicting specifications.
 
 - Resolve D-01 through D-06.
-- Produce a requirements-to-code traceability table for MVP requirements: requirement ID, acceptance test, owning issue, code location, verification evidence and status.
+- Review the initial matrix in `docs/requirements-traceability.md`; resolve any requirement without an owning issue or acceptance evidence, and update it as work changes.
 - Confirm one accountable owner and a separate reviewer for every active issue.
 - Add issue dependencies and mark work that cannot start until the source/schema/geocoding decisions are resolved.
 - Confirm local setup and a reproducible CI baseline.
@@ -183,10 +183,10 @@ For every release candidate, record: commit SHA; environment/setup; migration re
 
 ## 10. Immediate next actions
 
-1. Review and approve this documentation PR (or request corrections); it aligns the front matter with the existing v3.1 revision-history entry. Then resolve remaining schema details, geocoding, source-query and health-check contradictions.
-2. GIS/backend owner verifies one source end-to-end and supplies a reviewed fixture plus source contract.
-3. Backend/frontend pair implements the first vertical slice against the shared contract.
-4. QA owner adds acceptance tests for match, empty result, unavailable source, unsupported source and invalid coordinates.
-5. Team reviews this plan, confirms availability and updates issue owners/dependencies before committing to sprint scope.
+1. Review the documentation and governance artifacts linked from `README.md` (execution plan, readiness checklist, traceability matrix, decision log, risk register and schema reconciliation); approve or request corrections before treating them as the team baseline.
+2. Confirm sprint capacity, issue owners/reviewers and repository rules; resolve the blocking decisions in `docs/decision-log.md` before migrations or geocoding work.
+3. GIS/backend owner verifies one source end-to-end and supplies a reviewed fixture plus source contract.
+4. Backend/frontend pair implements the first vertical slice against the shared contract; QA adds acceptance tests for match, valid empty result, unavailable source, unsupported source and invalid coordinates.
+5. Reconcile the remaining traceability gaps into focused issues before committing to sprint scope; keep AI and other advanced features deferred until the core slice passes.
 
 **Project status after this plan:** planning artifact proposed; no feature is marked complete by this document. The next status update must be based on merged code and verification evidence, not this plan alone.
