@@ -3,15 +3,23 @@
 
 .PHONY: all help verify verify-backend verify-frontend test test-backend lint lint-backend lint-frontend format format-check install dev-db dev-api dev-web docker-up docker-down docker-logs clean
 
-# Default Python runner: prefer uv if available, fallback to direct venv or system
 API_DIR = api
 WEB_DIR = web
-UV := $(shell command -v uv 2>/dev/null)
 
-ifeq ($(UV),)
-  PY_RUN =
-else
+# Python runner resolution matching scripts/verify.sh:
+# 1. uv run (if uv is installed and api/uv.lock exists)
+# 2. Project virtual environment (if api/.venv/bin/python exists)
+# 3. System / PATH executable (fallback)
+UV := $(shell command -v uv 2>/dev/null)
+HAVE_UV_LOCK := $(wildcard $(API_DIR)/uv.lock)
+HAVE_VENV := $(wildcard $(API_DIR)/.venv/bin/python)
+
+ifneq ($(and $(UV),$(HAVE_UV_LOCK)),)
   PY_RUN = uv run
+else ifneq ($(HAVE_VENV),)
+  PY_RUN = .venv/bin/python -m
+else
+  PY_RUN = python3 -m
 endif
 
 all: help
@@ -40,26 +48,18 @@ help:
 	@echo "  make clean            Clean local build caches and artifacts"
 	@echo "======================================================================"
 
-# --- Verification & Quality Assurance (AGENTS.md) ---
+# --- Verification Suite (AGENTS.md) ---
 
 verify:
-	@./scripts/verify.sh
+	@./scripts/verify.sh all
 
 verify-backend:
-	@echo ">>> [Backend] Linting..."
-	cd $(API_DIR) && $(PY_RUN) ruff check .
-	@echo ">>> [Backend] Format check..."
-	cd $(API_DIR) && $(PY_RUN) ruff format --check .
-	@echo ">>> [Backend] Tests..."
-	cd $(API_DIR) && $(PY_RUN) pytest -v
+	@./scripts/verify.sh backend
 
 verify-frontend:
-	@echo ">>> [Frontend] Linting..."
-	cd $(WEB_DIR) && npm run lint
-	@echo ">>> [Frontend] Type checking..."
-	cd $(WEB_DIR) && npx tsc --noEmit
-	@echo ">>> [Frontend] Production build..."
-	cd $(WEB_DIR) && npm run build
+	@./scripts/verify.sh frontend
+
+# --- Backend Testing & Quality ---
 
 test: test-backend
 
