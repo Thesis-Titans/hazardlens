@@ -34,6 +34,8 @@ While the flood preview adapter and mocked fixtures are in place, live-source re
 
 ## 3. Delivery Principles
 
+The team will use the proposed [Agile and Sprint Management Plan](agile-sprint-management-plan.md). Delivery gates below are dependency/acceptance gates, not Sprints; the team must confirm Sprint length, capacity, roles, and dates before making calendar commitments.
+
 1. **Evidence before AI:** Hazard facts and classifications come from official sources. AI is an optional explanation layer, never the authority.
 2. **One end-to-end slice before breadth:** First make one verified source work through API → normalized result → UI → tests.
 3. **Unknown is not safe:** Distinguish `FOUND`, `NO_EVIDENCE`, `OUTSIDE_COVERAGE`, `UNAVAILABLE`, and `UNSUPPORTED`. A timeout or source error must never become `NO_EVIDENCE`.
@@ -74,7 +76,7 @@ Establish the shared delivery baseline, standardize all backlog issues, settle t
 **Exit criteria:**
 - Polished project execution plan, task matrix, and traceability baseline are accepted.
 - All 17 active backlog issues are formatted using the Section 8 standard structure with explicit lead implementers and independent reviewers (`Author != Reviewer`).
-- Pending organization invitations are accepted so GitHub native assignees match the delegation matrix.
+- The two remaining organization invitations reported by the project lead are accepted and GitHub native assignees match the delegation matrix. The invitation count and current usernames must be verified in the organization before Gate 0 closes.
 - Verification commands from `AGENTS.md` pass hermetically on clean checkout:
   - Backend: `uv run ruff check .`, `uv run ruff format --check .`, `uv run pytest`
   - Frontend: `npm run lint`, `npx tsc --noEmit`, `npm run build`
@@ -186,7 +188,7 @@ Every task pairs a Lead Implementer with an Independent Peer Reviewer across our
 |---|---|---|
 | **Data & AI Infrastructure** | `@markalvincadangin`, `@vincenttamano` | FastAPI, PostGIS, ArcGIS/WMS adapters, AI Grounding Engine |
 | **Interactive GIS & Geolocation** | `@Justin-Ardena` | MapLibre GL map viewport, vector layers, pin reverse-geocoding |
-| **Product UI/UX & QA Testing** | `@lovelii-me`, `@faithbn` | Design system, comparison view, print reports, evidence card QA, accessibility |
+| **Product UI/UX & QA Testing** | `@Lovelly143`, `@faithbn` | Design system, comparison view, print reports, evidence card QA, accessibility |
 
 ### Delegation Pairing Table
 
