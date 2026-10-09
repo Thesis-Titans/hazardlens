@@ -11,11 +11,15 @@ from app.routers.flood_preview import get_http_client
 class FakeResponse:
     status_code = 200
 
-    def __init__(self, payload: dict) -> None:
+    def __init__(self, payload: dict, status_code: int = 200) -> None:
         self.payload = payload
+        self.status_code = status_code
 
     def raise_for_status(self) -> None:
-        return None
+        if self.status_code >= 400:
+            request = httpx.Request("GET", "https://example.test/source")
+            response = httpx.Response(self.status_code, request=request)
+            response.raise_for_status()
 
     def json(self) -> dict:
         return self.payload
@@ -88,7 +92,10 @@ async def test_empty_response_with_unverified_coverage_is_unavailable() -> None:
 @pytest.mark.asyncio
 async def test_upstream_timeout_is_unavailable_not_no_evidence() -> None:
     fake_client = AsyncMock()
-    fake_client.get.side_effect = httpx.ReadTimeout("upstream timeout")
+    fake_client.get.side_effect = [
+        httpx.ReadTimeout("upstream timeout"),
+        httpx.ReadTimeout("upstream timeout"),
+    ]
 
     response = await request_with_fake_client(
         fake_client,
@@ -99,6 +106,26 @@ async def test_upstream_timeout_is_unavailable_not_no_evidence() -> None:
     result = response.json()["results"][0]
     assert result["status"] == "UNAVAILABLE"
     assert result["matches"] == []
+    assert fake_client.get.await_count == 2
+
+
+@pytest.mark.asyncio
+async def test_upstream_server_error_is_retried_once() -> None:
+    fake_client = AsyncMock()
+    fake_client.get.side_effect = [
+        FakeResponse({"error": "temporarily unavailable"}, status_code=503),
+        FakeResponse({"features": [{"attributes": {"FloodSusc": "HF"}}]}),
+    ]
+
+    response = await request_with_fake_client(
+        fake_client,
+        {"latitude": 10.72, "longitude": 122.56},
+    )
+
+    assert response.status_code == 200
+    result = response.json()["results"][0]
+    assert result["status"] == "FOUND"
+    assert fake_client.get.await_count == 2
 
 
 @pytest.mark.asyncio
