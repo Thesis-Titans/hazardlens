@@ -29,6 +29,8 @@ For every failed or blocked item, record the reason and next action.
 
 ### 3.1 Hazard source connectivity
 
+The four required source families are MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction and PHIVOLCS active faults. Rows labelled “backup” below are only candidate secondary access paths/comparison layers; they do **not** replace verification of the named required source or count as a substitute source family. Any change to the required set needs explicit team approval.
+
 | Check | Target | Status | Evidence / notes |
 |---|---|---|---|
 | Flood query | MGB detailed flood | NOT_STARTED | |
@@ -88,7 +90,7 @@ Confirm whether the MGB detailed flood layer is materially different from the Ge
 | Point 1 | | | | |
 | Point 2 | | | | |
 
-The purpose is to decide whether both should remain in the source strategy or whether the backup is effectively the same dataset.
+The purpose is to understand whether the secondary layer is materially independent and useful for comparison/redundancy. This comparison does not authorize GeoRiskPH to replace the required MGB flood source. Any source-set change requires explicit team approval.
 
 ## 4. Supporting Service Verification
 
