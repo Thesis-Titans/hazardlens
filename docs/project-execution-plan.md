@@ -19,7 +19,7 @@ These are blocking product-contract questions. Record the agreed answer in the S
 
 | ID | Decision | Why it blocks work | Required resolution |
 |---|---|---|---|
-| D-01 | What is the canonical approved SRS version? | The SRS front matter says v3.0, but its revision history includes a v3.1 entry dated 9 Oct 2026; architecture/verification still say v3.0 and issue #1 refers to v3.1. | Project lead confirms the approved baseline and updates the SRS front matter, revision history, architecture, verification record and issue references consistently. |
+| D-01 | What is the canonical SRS version? | The checked-in SRS revision history records v3.1 dated 9 Oct 2026, but the front matter and architecture/verification headers still said v3.0. | Reconciled in this branch: SRS front matter, architecture and verification headers now identify v3.1. Issue #1 uses the exact §4.6 table names and all 14 listed tables. This is a documentation reconciliation; project lead/reviewer must still approve the PR before it becomes the team baseline. |
 | D-02 | What is the canonical schema? | Issue #1 lists `hazard_dataset` but the SRS data model uses `dataset`; the issue also omits SRS entities such as `location` and `comparison_investigation`. | Reconcile every table, key, relationship, retention rule and deletion behavior against the approved SRS before creating migrations. |
 | D-03 | What place-search provider and interaction are allowed? | Issue #7 proposes Nominatim autocomplete, while the SRS NFR-06 prohibits Nominatim autocomplete. | Choose a policy-compliant provider/interaction, document attribution, rate limits, caching and fallback. Do not implement Nominatim autocomplete against the public service. |
 | D-04 | Which exact source layers and query semantics are supported in MVP? | Source services can differ in geometry type, SRID, attributes, date/provenance and supported query operations. | Approve one exact layer per MVP hazard, source URL, layer ID, geometry/query method, classification field, source date and attribution. |
@@ -183,7 +183,7 @@ For every release candidate, record: commit SHA; environment/setup; migration re
 
 ## 10. Immediate next actions
 
-1. Project lead confirms the approved SRS version and resolves the schema, geocoding, source-query and health-check contradictions.
+1. Review and approve this documentation PR (or request corrections); it aligns the front matter with the existing v3.1 revision-history entry. Then resolve remaining schema details, geocoding, source-query and health-check contradictions.
 2. GIS/backend owner verifies one source end-to-end and supplies a reviewed fixture plus source contract.
 3. Backend/frontend pair implements the first vertical slice against the shared contract.
 4. QA owner adds acceptance tests for match, empty result, unavailable source, unsupported source and invalid coordinates.
