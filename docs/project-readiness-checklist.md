@@ -21,12 +21,13 @@ The project setup/organization phase (Gate 0) is complete when the team has expl
 | Health endpoint semantics | **Direction selected; contract pending** | Separate liveness and readiness. Optional external source health must be reported separately and must not make the API process appear dead. Specify bounded checks and test behavior. | Backend owner + project lead |
 | Requirements traceability | **Draft prepared; FR-10 mapped to #3** | Review `docs/requirements-traceability.md`; every SRS FR/NFR points to an issue or explicitly identified backlog gap and has verifiable acceptance evidence. | Project lead + QA |
 | Risks and decisions | **Draft prepared; DEC-18 added** | Review `docs/risk-register.md` and `docs/decision-log.md`; assign owners and due points at the team kickoff. | Whole team |
-| Issue quality | **Standardized to Section 8 format** | All 17 active backlog issues standardized with Purpose, Scope, Dependencies, Delegation, Acceptance Criteria, Verification Evidence, and Completion Rule. Confirmation of team member availability and organization invites pending. | Project lead + issue owners |
+| Issue quality | **Standardized to Section 8 format** | All 17 active backlog issues standardized with Purpose, Scope, Dependencies, Delegation, Acceptance Criteria, Verification Evidence, and Completion Rule. Team availability remains to be confirmed; the project lead reports that only two organization invitations remain pending. Verify the current organization roster and invitation list before Gate 0 closure. | Project lead + issue owners |
 | GitHub templates | **Merged on `main`** | Issue templates merged to `main` via PR #9 and active in repository. | Project lead |
 | Git and review workflow | **Documented; enforcement not verified** | CONTRIBUTING.md describes branch/PR/review rules. Confirm repository rules actually require PRs and CI before merge; documentation alone does not enforce settings. | Repository admin |
 | Local environment | **Not independently verified here** | A team member should follow README setup from a clean checkout, use a unique random `SECRET_KEY`, verify Docker Compose health, migration path and API/frontend startup; record OS and command results. | One backend + one frontend teammate |
 | CI baseline | **CI active and hermetic** | CI runs on `main` and PR branches verify backend Ruff lint/format check, 11 pytest tests, frontend ESLint, TypeScript tsc strict mode, and Vite production bundle build. This is branch CI evidence; it does not establish live-source repeatability or source coverage semantics. Add DB/PostGIS migration integration checks when migrations exist. | Backend + frontend owners |
-| Sprint capacity and dates | **Relative schedule selected; team confirmation required** | Keep phases relative. Confirm actual start/deadline, each student's availability, class/other commitments and sprint length before assigning calendar dates or due dates. | Whole team |
+| Agile/Sprint operating agreement | **Proposed; whole-team approval pending** | Review `docs/agile-sprint-management-plan.md`; confirm Product Owner/facilitator, Sprint length, team availability, and the Sprint Planning / progress inspection / Review / Retrospective cadence. Delivery gates are not Sprints. | Whole team |
+| Sprint capacity and dates | **Relative schedule selected; team confirmation required** | Keep phases relative. Confirm actual start/deadline, each student's availability, class/other commitments and sprint length before assigning calendar dates or due dates. Do not create calendar commitments before confirmation. | Whole team |
 | Board/milestones | **Milestones organized by Gates 0–E** | README links to the organization project and milestones. Board reflects Delivery Gates without arbitrary calendar dates. | Project lead / board owner |
 
 ## Recommended kickoff (30–45 minutes)
@@ -34,7 +35,7 @@ The project setup/organization phase (Gate 0) is complete when the team has expl
 1. Confirm the project goal and the core-versus-advanced boundary.
 2. Review and decide the open items in `docs/decision-log.md`.
 3. Review the schema reconciliation before anyone writes a migration.
-4. Confirm issue owners, reviewers, blockers and the first sprint goal.
+4. Review the Agile/Sprint Management Plan; confirm the Sprint length, facilitator, available capacity, issue owners/reviewers, blockers and the first Sprint Goal.
 5. Confirm the repository rules and run the clean-checkout setup.
 6. Record decisions in GitHub/this repository; do not leave decisions only in chat.
 
@@ -44,7 +45,8 @@ The project setup/organization phase (Gate 0) is complete when the team has expl
 - Use `BLOCKED` when a decision, access, dependency or upstream behavior prevents work.
 - Use `PARTIAL` when only a limited slice has been verified.
 - Use `NOT VERIFIED` rather than guessing.
-- Revisit this checklist at the start of each sprint and whenever the SRS or source contract changes.
+- Revisit this checklist at the start of each Sprint and whenever the SRS or source contract changes.
+- Use the current GitHub login `@Lovelly143` for the teammate previously referenced as `@lovelii-me` in project notes; the project lead reports that two other organization invitations remain pending. Verify live organization state before marking invitation work complete.
 
 
 ## Additional tracked gates
