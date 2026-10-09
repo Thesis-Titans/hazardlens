@@ -42,6 +42,8 @@ The user selected option A for each of the seven setup decisions. These choices 
 
 Use relative phases and decision gates first. Do not assign or imply calendar dates from the current milestone labels. Confirm the actual project deadline, each student's availability, the sprint length and dependency-aware capacity with the team before creating or revising due dates. If the agreed timeline is unrealistic, reduce optional scope before weakening source verification, tests or review.
 
+**Known workflow mismatch to resolve at team planning:** issue #4 is still labelled and placed in the Sprint 1 milestone even though this plan defers AI/provider work until after the core evidence slice is verified. Do not start the AI spike on the strength of the current milestone alone. At kickoff, confirm the sequence and then align issue #4's milestone/labels with the approved plan; do not invent a replacement date.
+
 ### Phase 0 — Align contracts and unblock the team (relative phase; duration to confirm)
 
 **Goal:** prevent parallel work from implementing conflicting specifications.
