@@ -26,6 +26,26 @@
 
 | DEC-16 | Weather provider and failure isolation | Use Open-Meteo as the working MVP weather provider, subject to confirming the current non-commercial-use terms, quota and attribution. Weather is supporting context only and is not hazard evidence. Use a configurable bounded timeout (initial default 3 seconds); on timeout, provider error or invalid payload, return a weather-specific `UNAVAILABLE` state without changing hazard results. | **Project-lead working direction; team confirmation and implementation tests pending** | Backend owner: verify current Open-Meteo terms, document attribution and response normalization; test success, timeout, malformed response and isolated provider failure. https://open-meteo.com/en/terms ; https://open-meteo.com/en/docs |
 
+## DEC-17 — Project-lead approval of implementation recommendations (9 October 2026)
+
+**Decision owner:** Mark (project lead)  
+**Status:** Approved by the project lead; whole-team confirmation remains pending. This approval does not represent approval by the other team members or make the SRS baseline canonical.
+
+The project lead approved the following working recommendations for planning and implementation:
+
+- **Database and migrations (DEC-02):** Keep the 14-entity logical model as the design reference and implement physical migrations incrementally. Before each migration, document and review types, nullability, constraints, indexes, geometry/SRID, retention, and deletion behavior. Test migrations against a clean PostgreSQL/PostGIS database.
+- **Evidence semantics (DEC-03):** Preserve the statuses `FOUND`, `NO_EVIDENCE`, `OUTSIDE_COVERAGE`, `UNAVAILABLE`, and `UNSUPPORTED`. A failed or malformed query is not `NO_EVIDENCE`; only use `OUTSIDE_COVERAGE` when a defensible coverage rule exists.
+- **Location search (DEC-04):** Keep Geoapify as the working place-search selection, subject to verification of current quota, terms, attribution, and API-key restrictions. Preserve coordinate/map fallback when geocoding is unavailable. Team confirmation and configuration tests remain required.
+- **Health contracts (DEC-07):** Separate process-only `GET /health/live` from bounded `GET /health/ready`. Return 503 from readiness only when a required internal dependency prevents core service. Track upstream source/weather health separately; do not expose secrets or stack traces.
+- **Weather (DEC-16):** Keep Open-Meteo as the working MVP provider, subject to verification of current terms, quota, and attribution. Use a configurable initial 3-second timeout. Provider errors, timeouts, and malformed payloads must yield weather-specific `UNAVAILABLE` without changing or suppressing hazard findings.
+- **Source verification:** Independently verify all four required hazard source families and record service/layer identity, spatial operation and CRS, fields/classifications, attribution, timestamps, sanitized samples, coverage semantics, and timeout/empty/error behavior. Captured fixtures prove only the captured responses, not current service availability or complete coverage.
+- **Vertical-slice sequencing (DEC-05/DEC-08):** First prove one verified source → normalized API → evidence UI with deterministic offline tests. Then integrate all four required sources. AI remains gated until the first slice and all four required sources are verified. FR-02 history/persistence is still required before MVP release.
+- **NFR-09 extensibility:** Verify a compatible mock dataset can be registered through one adapter plus registry configuration/rows and queried through normal orchestration without a schema migration. If a source's semantics do not fit the normalized model, conduct an explicit schema review rather than forcing compatibility.
+
+**Rationale:** This sequencing prioritizes trustworthy hazard evidence, bounded failures, source provenance, and testable extensibility while avoiding premature schema work and optional-feature expansion.
+
+**Required follow-up:** The whole team must confirm or request changes. Keep formal team approval pending until that confirmation is recorded. Update the SRS, traceability matrix, task matrix, and relevant contracts together if the team changes any requirement or release classification.
+
 ## How to close a decision
 
 For each decision, distinguish a user/project-lead preference from a team-approved decision. Record:
