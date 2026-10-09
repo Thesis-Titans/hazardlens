@@ -188,7 +188,7 @@ The target source configuration is:
 | Liquefaction | GeoRiskPH liquefaction | Identify on same service |
 | Active fault | PHIVOLCS ActiveFault identify | GeoRiskPH ActiveFault WMS |
 
-The four listed datasets are the target. If one cannot be made to work after its backup is tested, the SRS permits replacing it with tsunami or earthquake-induced landslide so the project can still ship four working hazard datasets.
+The four listed datasets are mandatory for the proposed MVP: MGB flood susceptibility, MGB rain-induced landslide susceptibility, PHIVOLCS liquefaction, and PHIVOLCS active faults. Do not substitute tsunami, earthquake-induced landslide, or another dataset to satisfy the four-source count without an explicit team-approved scope change recorded in the decision log and SRS. If a required source cannot be verified or integrated, record the blocker and its evidence; do not silently redefine the required-source set.
 
 ## 8. Spatial Processing
 
