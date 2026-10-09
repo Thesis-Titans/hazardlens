@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 from unittest.mock import AsyncMock
 
 import httpx
@@ -6,6 +8,8 @@ from httpx import ASGITransport, AsyncClient
 
 from app.main import app
 from app.routers.flood_preview import get_http_client
+
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
 class FakeResponse:
@@ -221,3 +225,52 @@ async def test_full_query_page_is_not_presented_as_complete() -> None:
     assert result["matches"] == []
     assert result["raw"]["returned_feature_count"] == 20
     assert result["raw"]["result_limit"] == 20
+
+
+@pytest.mark.asyncio
+async def test_live_fixture_iloilo_flood_found() -> None:
+    fixture_path = FIXTURES_DIR / "mgb_flood_iloilo_mf.json"
+    with fixture_path.open() as f:
+        fixture_payload = json.load(f)
+
+    fake_client = AsyncMock()
+    fake_client.get.return_value = FakeResponse(fixture_payload)
+
+    response = await request_with_fake_client(
+        fake_client,
+        {"latitude": 10.7202, "longitude": 122.5621},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    result = body["results"][0]
+    assert result["status"] == "FOUND"
+    assert result["matches"] == [
+        {
+            "class_code": "MF",
+            "class_label": "Moderate Susceptibility to Flooding",
+            "distance_band_m": None,
+        }
+    ]
+    assert result["raw"]["returned_feature_count"] == 1
+
+
+@pytest.mark.asyncio
+async def test_live_fixture_sea_empty_unavailable() -> None:
+    fixture_path = FIXTURES_DIR / "mgb_flood_sea_empty.json"
+    with fixture_path.open() as f:
+        fixture_payload = json.load(f)
+
+    fake_client = AsyncMock()
+    fake_client.get.return_value = FakeResponse(fixture_payload)
+
+    response = await request_with_fake_client(
+        fake_client,
+        {"latitude": 10.5000, "longitude": 122.8000},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    result = body["results"][0]
+    assert result["status"] == "UNAVAILABLE"
+    assert result["matches"] == []
