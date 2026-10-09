@@ -18,6 +18,7 @@
 | DEC-08 | AI and advanced features | AI/provider work is deferred until the first evidence vertical slice is verified; required core source integrations come before MVP sign-off. | **Selected direction; team confirmation required** | Project lead + team: preserve the gate unless an explicit scope change is recorded. |
 | DEC-09 | Team roles and capacity | Proposed role tracks are not confirmed assignments; current GitHub issue assignments do not prove current availability or reviewer independence. | **Open** | Whole team: confirm owners, availability and a different reviewer for every active issue. |
 | DEC-10 | Schedule | Plan in relative phases first; do not invent dates before the real deadline, availability and capacity are confirmed. | **Selected planning rule; calendar schedule open** | Whole team: confirm deadline, sprint length, class/other commitments and realistic capacity before due dates are created. |
+| DEC-11 | Official source candidates | Official metadata has been reviewed for MGB flood/landslide and PHIVOLCS liquefaction/active-fault candidate layers; the active-fault candidate page returned an application error on direct access. | **Metadata research only; live behavior unverified** | GIS/source owner + QA: use docs/source-verification-notes.md, verify the chosen exact layer and execute live test queries before integration. |
 
 ## How to close a decision
 
