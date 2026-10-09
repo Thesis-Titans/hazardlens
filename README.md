@@ -117,7 +117,28 @@ The application will be available at:
 - **API:** http://localhost:8000
 - **API docs:** http://localhost:8000/docs
 
-### Development
+### Development & Verification Commands
+
+HazardLens provides a root [Makefile](Makefile) and [scripts/verify.sh](scripts/verify.sh) to unify developer and CI workflows matching [AGENTS.md](AGENTS.md):
+
+```bash
+# Run full verification suite before pushing (backend lint, format check, tests; frontend lint, typecheck, build)
+make verify
+
+# Run individual verification targets
+make verify-backend   # ruff check, ruff format --check, pytest
+make verify-frontend  # eslint, tsc --noEmit, npm run build
+
+# Auto-format Python backend code
+make format
+
+# Local development services
+make dev-db           # Start PostGIS container
+make dev-api          # Start FastAPI dev server on port 8000
+make dev-web          # Start Vite dev server on port 5173
+```
+
+Manual development workflow:
 
 ```bash
 # Backend
