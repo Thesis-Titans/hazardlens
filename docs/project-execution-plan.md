@@ -51,7 +51,7 @@ The team will use the proposed [Agile and Sprint Management Plan](agile-sprint-m
 
 Delivery is organized into six dependency-ordered gates rather than premature calendar dates:
 
-```
+```text
 [ Gate 0: Planning, Governance & Delegation Baseline ]
                        │
                        ▼
@@ -74,11 +74,13 @@ needed before Gate D persistence (T9); it does not block the stateless Gate B sl
 ```
 
 ### Gate 0 — Planning, Governance and Delegation Baseline
+
 Establish the shared delivery baseline, standardize all backlog issues, settle team invitations and role delegations, and ensure no additional implementation begins without clear acceptance criteria and independent reviewer pairings.
 
 **Task-map boundary:** Gate 0 is a governance prerequisite tracked by Issue #12, not one of delivery tasks T1–T18. Task T16 is exclusively the Gate E release-verification task tracked by Issue #20.
 
 **Exit criteria:**
+
 - Polished project execution plan, task matrix, and traceability baseline are accepted.
 - All 17 active delivery and foundation backlog issues (Issues #1–#8, #13–#20, and #28, which excludes the Gate 0 Issue #12 governance prerequisite itself, for 18 total active issues across the repository) are formatted using the Section 8 standard structure with explicit lead implementers and independent reviewers (`Author != Reviewer`).
 - The two remaining organization invitations reported by the project lead are accepted and GitHub native assignees match the delegation matrix. The invitation count and current usernames must be verified in the organization before Gate 0 closes.
@@ -88,9 +90,11 @@ Establish the shared delivery baseline, standardize all backlog issues, settle t
 - **No additional feature implementation work shall begin until Gate 0 is formally closed.** (PR #11's merged MGB flood preview code is recognized as a limited preview slice; full investigation orchestration, live repeatability, and remaining sources remain pending under Gates A, B, and C).
 
 ### Gate A — First-Source Verification and Contract
+
 Verify the chosen first source (MGB Flood Susceptibility) for the intended point-query operation, record request/response evidence, and establish how the application represents matches, empty results, errors, and truncation.
 
 **Exit criteria:**
+
 - Exact service and layer identity, geometry, CRS, query parameters, fields, and class definitions are recorded in `docs/source-verification-evidence-matrix.md`.
 - Fresh request evidence includes timestamp, parameters, HTTP status, latency, and sanitized response.
 - Query behavior is independently repeated across test sessions.
@@ -98,9 +102,11 @@ Verify the chosen first source (MGB Flood Susceptibility) for the intended point
 - Deterministic tests cover success, empty response, timeout, malformed payload, and truncation.
 
 ### Gate B — First End-to-End Evidence Slice
+
 Complete the first usable workflow through the API and UI using the verified source contract from Gate A, keeping the slice small enough to test end-to-end.
 
 **Exit criteria:**
+
 - Coordinates can be submitted through the initial input path.
 - API returns a documented, normalized evidence contract matching SRS v3.1.
 - Frontend UI renders the source result, original classification, provenance, and limitations.
@@ -111,9 +117,11 @@ Complete the first usable workflow through the API and UI using the verified sou
 - *Persistence is not required for this first slice.*
 
 ### Gate C — Verify Complete Required Source Set
+
 Independently verify and integrate all four mandatory source families through the agreed orchestration and normalization contract.
 
 **Exit criteria:**
+
 - MGB flood and rain-induced landslide layers are verified.
 - PHIVOLCS liquefaction and active-fault layers are verified.
 - Each source has evidence for geometry, CRS, fields, classification, spatial operation, attribution, source-date limitations, and failure behavior.
@@ -123,9 +131,11 @@ Independently verify and integrate all four mandatory source families through th
 - Integration tests exercise successful and failed source combinations.
 
 ### Gate D — Complete Remaining MVP Workflows and Safeguards
+
 Deliver required product behavior that was intentionally excluded from the first slice.
 
 **Exit criteria:**
+
 - Investigation history and anonymous session isolation work with required persistence, 30-day retention, and cross-session access denial.
 - Place search and map/coordinate fallback support the agreed location workflow without public Nominatim autocomplete.
 - Weather is displayed separately from hazard evidence, with bounded timeout and failure isolation.
@@ -136,9 +146,11 @@ Deliver required product behavior that was intentionally excluded from the first
 - Required PostGIS migrations and session-isolation behavior have automated verification.
 
 ### Gate E — MVP Acceptance and Gated Extensions
+
 Confirm that the implementation matches team-approved requirements and that all MVP acceptance evidence is traceable.
 
 **Exit criteria:**
+
 - Every MVP requirement maps to a completed task and reproducible acceptance evidence in `docs/requirements-traceability.md`.
 - Clean-checkout setup, migrations, frontend/backend startup, and CI pass hermetically.
 - Source provenance, known gaps, and limitations are documented accurately.
@@ -259,7 +271,9 @@ Do not close until criteria pass and verifiable evidence is attached. Passing CI
 ## 9. Definition of Ready & Definition of Done
 
 ### Definition of Ready (DoR)
+
 An issue is ready to start only when:
+
 - Its requirement and approved SRS version are identified.
 - Acceptance criteria are testable and cover failure/empty cases.
 - External source, schema, and API assumptions are stated.
@@ -267,7 +281,9 @@ An issue is ready to start only when:
 - The lead implementer and independent reviewer are confirmed.
 
 ### Definition of Done (DoD)
+
 A feature is done only when:
+
 - [ ] Acceptance criteria are met in code.
 - [ ] Unit/contract/integration tests cover success, empty, and failure cases.
 - [ ] Tests run deterministically offline using recorded fixtures.

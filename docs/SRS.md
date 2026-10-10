@@ -217,6 +217,7 @@ Three access methods cover all datasets. Each adapter returns the same normalize
 ```
 
 A single evidence result represents the query evaluation for one dataset source.
+
 - **Invariant:** `FOUND` requires a non-empty `matches` array (up to a configurable cap, default 20). All other statuses (`NO_EVIDENCE`, `OUTSIDE_COVERAGE`, `UNAVAILABLE`, `UNSUPPORTED`) require an empty `matches: []` array.
 - **Deterministic ordering:** Matches are ordered deterministically (first by `class_code`, then by `distance_band_m` ascending) to ensure stable evidence hashes for AI prompt caching.
 - **Coverage extent:** The service's coverage extent is stored per source. A point outside it returns `OUTSIDE_COVERAGE` without a network call. Source dates are stored as text plus a basis, because services publish dates as integers or free text.

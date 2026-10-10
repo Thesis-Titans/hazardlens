@@ -3,7 +3,7 @@
 **Document Version:** 2.7 (Authoritative Reconciled Post-Merge Baseline Audit)  
 **Audit Date:** 10 October 2026  
 **Audited Commit:** `main` at [`4f005bf`](https://github.com/Thesis-Titans/hazardlens/commit/4f005bfc149e45ddc87123acdbae2128c15d429e) (supersedes pre-merge commit `3a50439`)  
-**Repository Path:** [`docs/audits/task-and-requirements-audit.md`](docs/audits/task-and-requirements-audit.md)  
+**Repository Path:** [`docs/audits/task-and-requirements-audit.md`](task-and-requirements-audit.md)  
 **Pull Request References:** Supporting documentation PRs [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) (commit [`f7e7ea8`](https://github.com/Thesis-Titans/hazardlens/commit/f7e7ea8811afdc92195ffdc4c01a5d60686cfc69)) and [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) (commit [`4f005bf`](https://github.com/Thesis-Titans/hazardlens/commit/4f005bfc149e45ddc87123acdbae2128c15d429e)) merged to `main`; this audit v2.7 submitted under follow-up documentation PR  
 **Canonical Plan Reference:** Project Execution Plan §§3, 6, 7 ([docs/project-execution-plan.md](../project-execution-plan.md))  
 **Document Status:** Reconciled baseline documentation reflecting merged `main` at `4f005bf`; implementation freeze remains strictly active pending Gate 0 formal closure on [Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12).  
@@ -16,6 +16,7 @@
 ## 1. Executive Evaluation & Evidential Framework
 
 ### Evidential Classifications
+
 To eliminate ambiguity, every finding, record, and status metric in this audit is classified using strict evidential distinctions:
 
 - **Reported:** A claim, log snippet, or metric recorded in tickets, PR summaries, or local developer workstations without independent reproduction attached. *Specifically, local `./scripts/verify.sh all` execution passes and CI run conclusions are classified as Reported until an independent clean-checkout reproduction is executed by a teammate and logged on [Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12).*
@@ -24,18 +25,22 @@ To eliminate ambiguity, every finding, record, and status metric in this audit i
 - **Approved:** A technical, architectural, or scope decision formally confirmed by authorized team members (e.g. recorded kickoff meeting minutes, approved ADR, or formal gate closure).
 
 ### Requirements Evaluation Model
+
 Rather than compressing multiple concepts into hybrid labels, requirements are audited across four separate, orthogonal dimensions:
+
 1. **Specification:** Is the functional intent, boundary, and constraint documented without ambiguity? (`Specified` indicates documented requirement intent in SRS v3.1, not team approval / `Needs Clarification`)
 2. **Implementation:** What code exists in `main`? (`Not Started` / `Scaffold Only` / `Preview Slice Only` / `Delivered`)
 3. **Verification:** Does reproducible acceptance evidence pass? (`Pending` / `Partial` / `Verified` / `Not Applicable Yet`)
 4. **Scope Decision:** What is the approved or proposed release placement? (`MVP-required (Working Direction)` remains strictly distinct from an approved release decision until confirmed at kickoff / `Proposed Post-MVP (Team Approval Pending)`)
 
 ### Working Baseline Assessment & Gate 0 Scope Boundary
+>
 > **Observed Assessment:** **Planning baseline substantially organized; final validation, whole-team confirmation, and Gate 0 closure pending.**
-> 
+>
 > Standardized issue bodies and clean board configurations are valuable planning artifacts, but they do not prove that tasks are ready to execute or that the system is complete. Currently, only the FastAPI scaffold and the limited single-source MGB flood preview slice from PR #11 exist on `main`. Zero production multi-source orchestrators, PostGIS migrations, or final UI evidence components have been delivered.
-> 
+>
 > **Explicit Scope Boundary During Gate 0:**
+>
 > - **Permitted Work:** Documentation corrections, issue specification refinements, planning and governance evidence collection, and peer reviews of documentation PRs (e.g. merged [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27), merged [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29), and follow-up audit alignment PRs) are actively permitted.
 > - **Frozen Work:** Implementation of product features, hazard adapters, PostGIS migrations, and UI components remains **strictly paused** until Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)) is formally closed with documented exit evidence.
 
@@ -110,6 +115,7 @@ This version reflects the following confirmed repository and tracking reconcilia
 
 *Counting & Selection Rule:*  
 The repository contains **18 total active (open) issues** in `Thesis-Titans/hazardlens`. These break down into:
+
 - **1 Governance Prerequisite Issue:** [Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12) (Gate 0 baseline release gate).
 - **17 Active Backlog Delivery & Foundation Issues:** Issues [#1](https://github.com/Thesis-Titans/hazardlens/issues/1)–[#8](https://github.com/Thesis-Titans/hazardlens/issues/8), [#13](https://github.com/Thesis-Titans/hazardlens/issues/13)–[#20](https://github.com/Thesis-Titans/hazardlens/issues/20), and [#28](https://github.com/Thesis-Titans/hazardlens/issues/28).
 
@@ -196,6 +202,7 @@ The repository contains **18 total active (open) issues** in `Thesis-Titans/haza
 ## 5. Authoritative 14-Entity Schema Inventory and Migration Boundary
 
 ### Reconciliation against SRS §4.6
+
 The data architecture inventory consists of **exactly 14 relational entities** defined in SRS §4.6. To prevent premature schema dead ends or empty migrations, physical migration is staged into core MVP and deferred boundaries:
 
 | Entity | SRS §4.6 Definition & Key Columns | Boundary Placement | Tracking Issue | Mapped PEP Task |
@@ -246,6 +253,7 @@ erDiagram
 *(Note: `GEOCODE_CACHE` is an independent query cache table without foreign-key dependencies to `session` or `investigation`; its records expire after 30 days under NFR-06).*
 
 ### Schema Authority Status
+
 - The 9-table boundary is a **working engineering proposal** documented in `docs/schema-reconciliation.md` and [Issue #1](https://github.com/Thesis-Titans/hazardlens/issues/1).
 - Exact SQL types, spatial SRID constraints, composite indexes, cascading rules, and physical migration scripts remain **pending the schema ADR, independent review, and automated migration tests**.
 - No physical migration is described as delivered until the migration scripts exist in `api/alembic/versions/`, execute cleanly against PostGIS, and have been verified via automated test suites.

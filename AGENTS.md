@@ -19,32 +19,102 @@ This file defines the conventions and constraints that all contributors and AI c
 
 ## Folder Layout
 
-### Backend
+### 1. Current Repository Layout (Active Baseline Scaffold)
+
+The following structure represents the actual files present on the current `main` baseline:
+
+```text
+hazardlens/
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   ├── feature_request.md
+│   │   ├── task.md
+│   │   └── config.yml
+│   ├── workflows/
+│   │   └── ci.yml
+│   ├── CODEOWNERS
+│   └── PULL_REQUEST_TEMPLATE.md
+├── api/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── config.py
+│   │   ├── adapters/
+│   │   │   └── mgb_flood.py
+│   │   ├── routers/
+│   │   │   └── flood_preview.py
+│   │   └── schemas/
+│   │       └── flood_preview.py
+│   ├── tests/
+│   │   ├── fixtures/
+│   │   │   ├── mgb_flood_iloilo_mf.json
+│   │   │   └── mgb_flood_sea_empty.json
+│   │   ├── test_flood_preview.py
+│   │   └── test_health.py
+│   ├── pyproject.toml
+│   └── uv.lock
+├── web/
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   └── robots.txt
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   ├── index.css
+│   │   └── vite-env.d.ts
+│   ├── package.json
+│   └── vite.config.ts
+├── docs/
+│   ├── audits/
+│   │   └── task-and-requirements-audit.md
+│   ├── SRS.md
+│   ├── architecture.md
+│   ├── project-execution-plan.md
+│   ├── release-scope-and-task-matrix.md
+│   ├── requirements-traceability.md
+│   ├── project-readiness-checklist.md
+│   ├── agile-sprint-management-plan.md
+│   ├── decision-log.md
+│   ├── risk-register.md
+│   ├── schema-reconciliation.md
+│   ├── source-verification-notes.md
+│   ├── source-verification-evidence-matrix.md
+│   └── verification.md
+├── scripts/
+│   └── verify.sh
+├── Makefile
+├── docker-compose.yml
+└── README.md
+```
+
+### 2. Intended Feature Layout (Planned Implementation Modules)
+
+Modules to be created incrementally as the corresponding delivery work packages begin (do not speculative create empty modules prematurely):
 
 ```text
 api/app/
 ├── main.py
 ├── config.py
 ├── routers/
-│   ├── investigations.py
-│   ├── locations.py
-│   ├── datasets.py
-│   ├── comparison.py
-│   ├── reports.py
-│   └── ai.py
+│   ├── investigations.py      # Gate B (Task T3.1)
+│   ├── locations.py           # Gate D (Task T10)
+│   ├── datasets.py            # Gate C (Task T8)
+│   ├── comparison.py          # Post-MVP (Task T18)
+│   ├── reports.py             # Post-MVP (Task T18)
+│   └── ai.py                  # Post-MVP (Task T17)
 ├── services/
 │   ├── investigation.py
 │   ├── evidence.py
 │   ├── comparison.py
 │   ├── report.py
-│   ├── weather.py
+│   ├── weather.py             # Gate D (Task T11)
 │   └── ai.py
 ├── adapters/
-│   ├── arcgis_query.py
-│   ├── arcgis_identify.py
-│   ├── wms_feature_info.py
-│   ├── open_meteo.py
-│   └── geocoder.py
+│   ├── arcgis_query.py        # Gates A & C
+│   ├── arcgis_identify.py     # Gate C (PHIVOLCS Active Fault)
+│   ├── wms_feature_info.py    # Backup / secondary
+│   ├── open_meteo.py          # Gate D (Task T11)
+│   └── geocoder.py            # Gate D (Task T10)
 ├── ai/
 │   ├── base.py
 │   ├── gemini.py
@@ -52,32 +122,28 @@ api/app/
 │   ├── ollama.py
 │   └── tools.py
 ├── db/
-│   ├── models.py
-│   └── session.py
+│   ├── models.py              # Gate D (Task T9)
+│   └── session.py             # Gate D (Task T9)
 ├── schemas/
 └── domain/
-```
 
-### Frontend
-
-```text
 web/
-├── public/          static assets (favicon, robots.txt)
+├── public/
 └── src/
-    ├── api/            generated API client and shared types
-├── components/     reusable UI components
-├── features/
-│   ├── search/     place search
-│   ├── map/        map and selection
-│   ├── evidence/   evidence cards and explanations
-│   ├── weather/    current weather
-│   ├── history/    investigation history
-│   ├── comparison/ comparison interface
-│   ├── report/     print/report view
-│   └── ai/         AI explanation and chat
-├── pages/
-├── hooks/
-└── lib/            configuration and formatting helpers
+    ├── api/                   # Generated API client and types
+    ├── components/            # Reusable UI components
+    ├── features/
+    │   ├── search/            # Gate D: Place search
+    │   ├── map/               # Gate D: MapLibre canvas & coordinate fallback
+    │   ├── evidence/          # Gates B & C: Evidence cards & explanations
+    │   ├── weather/           # Gate D: Weather context
+    │   ├── history/           # Gate D: Investigation history
+    │   ├── comparison/        # Post-MVP: Side-by-side comparison
+    │   ├── report/            # Post-MVP: Print/report view
+    │   └── ai/                # Post-MVP: AI explanation & grounded chat
+    ├── pages/
+    ├── hooks/
+    └── lib/                   # Formatters, query client, config helpers
 ```
 
 ## Evidence Statuses
@@ -114,15 +180,16 @@ Every evidence result uses exactly one of these statuses:
 AI agents and contributors must run these exact commands to verify code changes before submitting PRs:
 
 ### Backend (`cd api`)
+
 - **Linting:** `ruff check .`
 - **Formatting check:** `ruff format --check .`
 - **Unit and contract tests:** `pytest`
 
 ### Frontend (`cd web`)
+
 - **Linting:** `npm run lint`
 - **TypeScript type checking:** `npx tsc --noEmit`
 - **Production bundle build:** `npm run build`
-
 
 ## AI Safety Rules — Never Do
 
@@ -149,7 +216,8 @@ These rules are non-negotiable. Every contributor and AI agent must enforce them
 
 HazardLens uses AI coding assistants as a development force multiplier. All AI coding assistants working in this repository must operate strictly within these boundaries (aligned with [CONTRIBUTING.md](CONTRIBUTING.md)):
 
-### Agents May:
+### Agents May
+
 - Inspect code, documentation, and tests across the repository.
 - Implement assigned GitHub issues and their acceptance criteria.
 - Write, update, and run unit, integration, and contract tests.
@@ -157,7 +225,8 @@ HazardLens uses AI coding assistants as a development force multiplier. All AI c
 - Update relevant documentation and comments.
 - Assist in debugging failing tests and build errors.
 
-### Agents Must NOT Independently:
+### Agents Must NOT Independently
+
 - Push or merge directly to `main`.
 - Redesign architecture or alter SRS requirements without explicit human approval.
 - Change hazard-data semantics, evidence statuses, or status transition rules.
@@ -168,7 +237,8 @@ HazardLens uses AI coding assistants as a development force multiplier. All AI c
 - Add external infrastructure (e.g., Redis, Kafka, Celery, microservices).
 - Expose or commit secrets or API keys.
 
-### Human Responsibility:
+### Human Responsibility
+
 - Humans own all core decisions: requirements, architecture, data meaning, source selection, database semantics, security, AI safety, and merge approval.
 - AI-generated code is subject to the same review standards and testing rigor as human-written code.
 - The AI agent is an implementation multiplier, not the project decision-maker.
@@ -180,4 +250,3 @@ HazardLens uses AI coding assistants as a development force multiplier. All AI c
 - One feature per branch, one small pull request, tests required.
 - Humans review every merge.
 - Humans own decisions: statuses, source choices, AI safety rules, and anything that touches data meaning.
-

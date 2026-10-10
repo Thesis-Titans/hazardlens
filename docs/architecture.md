@@ -301,7 +301,6 @@ PostgreSQL/PostGIS stores:
 
 The application does not require a national copy of the government hazard geometries.
 
-
 ## 11. Caching
 
 | Data | Cache strategy |
@@ -334,13 +333,13 @@ AI is an optional secondary layer over deterministic evidence retrieval.
 
 ### AI capabilities
 
-**Advanced**
+#### Advanced
 
 - structured evidence explanation;
 - evidence-grounded chat;
 - natural-language lookup through bounded tool calling.
 
-**Stretch**
+#### Stretch
 
 - image-assisted contextual explanation.
 

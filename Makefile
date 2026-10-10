@@ -1,7 +1,7 @@
 # HazardLens Root Makefile
 # Provides standardized baseline developer and CI workflows matching AGENTS.md
 
-.PHONY: all help verify verify-backend verify-frontend test test-backend lint lint-backend lint-frontend format format-check install dev-db dev-api dev-web docker-up docker-down docker-logs clean
+.PHONY: all help verify verify-backend verify-frontend verify-docs test test-backend lint lint-backend lint-frontend format format-check install dev-db dev-api dev-web docker-up docker-down docker-logs clean
 
 API_DIR = api
 WEB_DIR = web
@@ -28,9 +28,10 @@ help:
 	@echo "======================================================================"
 	@echo "                     HazardLens Developer Commands                    "
 	@echo "======================================================================"
-	@echo "  make verify           Run full AGENTS.md verification suite (backend + frontend)"
+	@echo "  make verify           Run full verification suite (backend + frontend + docs)"
 	@echo "  make verify-backend   Run backend ruff check, ruff format --check, and pytest"
 	@echo "  make verify-frontend  Run frontend eslint, tsc --noEmit, and npm run build"
+	@echo "  make verify-docs      Run markdownlint and document link integrity checks"
 	@echo ""
 	@echo "  make test             Run backend pytest suite"
 	@echo "  make lint             Run both backend and frontend linters"
@@ -58,6 +59,9 @@ verify-backend:
 
 verify-frontend:
 	@./scripts/verify.sh frontend
+
+verify-docs:
+	@./scripts/verify.sh docs
 
 # --- Backend Testing & Quality ---
 

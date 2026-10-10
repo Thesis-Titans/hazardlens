@@ -68,6 +68,7 @@ The project lead approved the following systematic governance and delegation rul
 ## How to close a decision
 
 For each decision, distinguish a user/project-lead preference from a team-approved decision. Record:
+
 - agreed outcome and alternatives rejected;
 - decision owner and date;
 - evidence/source consulted;
@@ -76,7 +77,6 @@ For each decision, distinguish a user/project-lead preference from a team-approv
 Do not mark a decision team-approved until the team explicitly confirms it.
 
 For decisions that alter requirements, update the SRS and traceability matrix in the same review cycle. Do not treat comments in a PR as the only permanent record of a product decision.
-
 
 ## DEC-19 — Agile and Sprint operating agreement (9 October 2026)
 

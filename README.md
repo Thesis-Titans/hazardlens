@@ -202,6 +202,19 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 - [Official Source Verification Notes](docs/source-verification-notes.md)
 - [Official Source Verification Evidence Matrix](docs/source-verification-evidence-matrix.md)
 
+## Documentation Authority & Hierarchy
+
+To prevent ambiguity when resolving discrepancies across planning and technical files, HazardLens enforces an explicit source-of-truth hierarchy (detailed in [CONTRIBUTING.md](CONTRIBUTING.md#documentation-authority-and-conflict-resolution)):
+
+1. **Requirements:** [`docs/SRS.md`](docs/SRS.md) (canonical requirements & constraints)
+2. **Decisions:** [`docs/decision-log.md`](docs/decision-log.md) (decision rationale; does not override SRS)
+3. **Scope & Tasks:** [`docs/release-scope-and-task-matrix.md`](docs/release-scope-and-task-matrix.md) (MVP vs Post-MVP task boundary)
+4. **Execution Plan:** [`docs/project-execution-plan.md`](docs/project-execution-plan.md) (delivery gates and sequencing)
+5. **Traceability:** [`docs/requirements-traceability.md`](docs/requirements-traceability.md) (requirement to evidence mapping)
+6. **Architecture & Schema:** [`docs/architecture.md`](docs/architecture.md) & [`docs/schema-reconciliation.md`](docs/schema-reconciliation.md) (technical design)
+7. **Verification & Evidence:** [`docs/verification.md`](docs/verification.md) & [`docs/source-verification-evidence-matrix.md`](docs/source-verification-evidence-matrix.md) (test results & fixtures)
+8. **Audits & Readiness:** [`docs/project-readiness-checklist.md`](docs/project-readiness-checklist.md) & [`docs/audits/`](docs/audits/task-and-requirements-audit.md) (commit-specific audits)
+
 ## Disclaimer
 
 HazardLens is a web-systems technology practice project, not an official hazard assessment. The planned application may display data from government services after integrations and source behavior are verified. The current prototype does not yet provide live hazard results. Absence of evidence does not mean absence of hazard or indicate safety.

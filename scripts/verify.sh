@@ -59,6 +59,12 @@ check_frontend() {
     echo -e "${GREEN}✓ Frontend production build passed${NC}"
 }
 
+check_docs() {
+    echo -e "\n${BOLD}>>> [Docs] Documentation: Markdownlint & Link Integrity${NC}"
+    python3 "${REPO_ROOT}/scripts/check_docs.py"
+    echo -e "${GREEN}✓ Documentation checks passed${NC}"
+}
+
 TARGET="${1:-all}"
 
 echo -e "${BOLD}${CYAN}====================================================${NC}"
@@ -72,12 +78,16 @@ case "${TARGET}" in
     frontend)
         check_frontend
         ;;
+    docs)
+        check_docs
+        ;;
     all)
         check_backend
         check_frontend
+        check_docs
         ;;
     *)
-        echo -e "${RED}Unknown target: ${TARGET}. Usage: $0 [all|backend|frontend]${NC}" >&2
+        echo -e "${RED}Unknown target: ${TARGET}. Usage: $0 [all|backend|frontend|docs]${NC}" >&2
         exit 1
         ;;
 esac

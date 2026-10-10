@@ -351,7 +351,7 @@ Recorded data must be clearly labelled in the application when used.
 
 ## 16. Release Verification Gates
 
-The release gate follows the team-approved requirement classifications in `docs/release-scope-and-task-matrix.md`. Until the team approves that matrix, FR-11–FR-13 remain unresolved because SRS v3.1 currently labels them Core. Do not use the conditional checklist below to silently remove a current Core requirement from scope.
+The release verification gates follow the working release classifications defined in `docs/release-scope-and-task-matrix.md` and `docs/SRS.md` (project-lead working direction; formal whole-team confirmation pending Gate 0 kickoff). Under this proposed baseline, FR-13 (weather) and FR-21 (weather failure isolation) are MVP-required, while FR-11 (comparison), FR-12 (printable report), FR-20 (polygon investigation), and FR-15–FR-19 (AI features) are designated Post-MVP. Final whole-team scope sign-off is required at kickoff before these boundaries are formally frozen.
 
 ### 16.1 Candidate MVP gate
 
@@ -362,6 +362,7 @@ The release gate follows the team-approved requirement classifications in `docs/
 - [ ] Database migrations work from a clean environment if persistence is in the approved MVP.
 - [ ] Session ownership, expiry and deletion are tested if FR-02 remains MVP-required.
 - [ ] Evidence UI works when map tiles or geocoding are unavailable.
+- [ ] Current weather card displays independent weather context; weather failure or timeout returns `UNAVAILABLE` without delaying or altering hazard evidence (FR-13 and FR-21).
 - [ ] Rate limits, URL restrictions, CORS, secret handling and privacy-safe diagnostics are verified.
 - [ ] Accessibility and supported-browser checks are recorded.
 - [ ] Clean-checkout setup, pinned dependencies, build/tests and release limitations are documented.
@@ -371,7 +372,6 @@ The release gate follows the team-approved requirement classifications in `docs/
 
 - [ ] Comparison works without ranking locations (FR-11).
 - [ ] Print report includes provenance and limitations (FR-12).
-- [ ] Weather failure does not alter hazard results (FR-13 and FR-21).
 - [ ] AI explanation, grounded chat, bounded tool calling, provenance and fallback pass the applicable tests (FR-15–FR-19 and NFR-14–NFR-15).
 - [ ] Polygon validation and source capability gates pass (FR-20).
 

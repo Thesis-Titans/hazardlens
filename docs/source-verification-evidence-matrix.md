@@ -12,9 +12,10 @@
 
 ## 1. Purpose and Scope
 
-This matrix tracks the verification lifecycle of the four mandatory Philippine government hazard data sources required for the HazardLens Minimum Viable Product (MVP). 
+This matrix tracks the verification lifecycle of the four mandatory Philippine government hazard data sources required for the HazardLens Minimum Viable Product (MVP).
 
 Per `AGENTS.md` and SRS v3.1, before an official source can be integrated into the multi-source orchestration pipeline:
+
 1. Its service identity, spatial operation, and coordinate reference system (CRS) must be confirmed.
 2. Live queries must be observed and proven repeatable from an authorized environment.
 3. Empty-result and boundary semantics must be established.
@@ -28,7 +29,7 @@ Secondary or backup access paths (such as GeoRiskPH WMS/identify endpoints) are 
 
 To prevent conflating metadata inspection with live query reliability, every source is evaluated against four distinct, non-interchangeable milestones:
 
-```
+```text
 [ Stage 1: Metadata Verified ]
                │
                ▼

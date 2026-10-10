@@ -21,7 +21,8 @@ The goal is simple: keep `main` stable, keep changes reviewable, and let five pe
 * [13. AI-Assisted Development](#13-ai-assisted-development)
 * [14. Definition of Done](#14-definition-of-done)
 * [15. Releases and Tags](#15-releases-and-tags)
-* [16. Decision Authority](#16-decision-authority)
+* [16. Decision Authority & Documentation Hierarchy](#16-decision-authority--documentation-hierarchy)
+* [17. Documentation Standards & Controlled Metadata](#17-documentation-standards--controlled-metadata)
 
 ---
 
@@ -93,7 +94,7 @@ The repository may use GitHub Issues and GitHub Projects for planning. The proje
 
 GitHub Issues are used for meaningful work, including features, bugs, technical tasks, and changes that need discussion. GitHub issue templates should be used where available.
 
-### Create an issue before work when the change is:
+### Create an issue before work when the change is
 
 * a new feature;
 * a bug requiring investigation;
@@ -325,9 +326,10 @@ Use repository-managed templates for:
 ```text
 .github/
 ├── ISSUE_TEMPLATE/
-│   ├── feature.md
-│   ├── bug.md
-│   └── task.md
+│   ├── bug_report.md
+│   ├── feature_request.md
+│   ├── task.md
+│   └── config.yml
 └── PULL_REQUEST_TEMPLATE.md
 ```
 
@@ -580,7 +582,9 @@ GitHub Releases may be used for demo/final milestones. No release automation is 
 
 ---
 
-## 16. Decision Authority
+## 16. Decision Authority & Documentation Hierarchy
+
+### Decision authority
 
 Humans own decisions about:
 
@@ -596,6 +600,48 @@ Humans own decisions about:
 AI coding agents assist with implementation but do not have decision authority over these areas.
 
 When a team member is unsure, prefer the smallest change that satisfies the existing requirement and acceptance criteria. Do not introduce new architecture merely because a more elaborate solution is possible.
+
+### Documentation authority and conflict resolution
+
+To eliminate ambiguity when cross-document inconsistencies arise, the repository enforces an explicit source-of-truth hierarchy:
+
+1. **System Requirements Specification (`docs/SRS.md`):** Canonical functional and non-functional requirements, unique IDs (FR-xx, NFR-xx), and system constraints (ISO/IEC/IEEE 29148:2018).
+2. **Decision Log (`docs/decision-log.md`):** Formal records of architectural, engineering, and scope decisions, rationale, owners, and approval status. Decisions explain and refine implementation; they cannot silently override the SRS without an approved specification update.
+3. **Release Scope and Task Matrix (`docs/release-scope-and-task-matrix.md`):** Authoritative mapping of approved requirement IDs to release classification (MVP-required vs Post-MVP), dependencies, and delivery tasks.
+4. **Project Execution Plan (`docs/project-execution-plan.md`):** Defines work-package sequence, delivery gates (Gates 0 through E), role delegation proposals, and gate exit criteria.
+5. **Requirements Traceability (`docs/requirements-traceability.md`):** Maps each requirement to tracking issues and verifiable acceptance evidence.
+6. **Architecture and Schema Documents (`docs/architecture.md`, `docs/schema-reconciliation.md`):** Describe how requirements are realized technically (ISO/IEC/IEEE 42010:2022); they cannot unilaterally alter requirements or scope.
+7. **Verification and Source-Evidence Records (`docs/verification.md`, `docs/source-verification-evidence-matrix.md`):** Living records of reproducible evidence, captured fixtures, and test results. They document observed and verified technical facts, not aspirations.
+8. **Readiness Checklist and Audits (`docs/project-readiness-checklist.md`, `docs/audits/`):** Summarize outstanding work, gate prerequisites, and findings evaluated against a stated commit hash.
+
+**Conflict resolution rule:** If an implementation detail or discussion reveals a conflict between documents, contributors must follow the higher-ranking document in this hierarchy, log the discrepancy in `docs/decision-log.md`, and obtain team approval before changing behavior.
+
+---
+
+## 17. Documentation Standards & Controlled Metadata
+
+### Metadata block for controlled documents
+
+Controlled planning and governance documents should include a standardized metadata header:
+
+```markdown
+# Document Title
+
+**Status:** Proposed | Working Direction | Approved | Superseded  
+**Owner:** Accountable role or team member  
+**Baseline:** Target commit hash or approved specification version  
+**Last Reviewed:** YYYY-MM-DD  
+**Approval Record:** Link to meeting minutes, decision log entry, or issue  
+```
+
+### Markdown conventions
+
+* **Headings:** One H1 per document; logical H2/H3 nesting; sentence case for new headings.
+* **Formatting:** UTF-8 encoding, LF line endings, final newline.
+* **Lists and tables:** Use `-` for unordered lists, numbered lists for sequential workflows. Use tables for multi-attribute comparisons and matrices.
+* **Code blocks:** Always specify the syntax language (`bash`, `python`, `typescript`, `json`, `text`).
+* **Dates:** Use ISO 8601 (`YYYY-MM-DD`).
+* **Controlled status labels:** Distinguish *Reported* (claimed), *Observed* (inspected live), *Verified* (hermetically reproduced with evidence), and *Approved* (formally signed off).
 
 ---
 

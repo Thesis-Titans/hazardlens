@@ -1,0 +1,25 @@
+{
+  "config": {
+    "default": true,
+    "MD013": false, // Line length (off for technical tables and URLs)
+    "MD024": {
+      "siblings_only": true // Multiple headings with same content allowed across different sections
+    },
+    "MD033": false, // Inline HTML allowed (breaks, badges, details)
+    "MD034": false, // Bare URLs allowed (e.g. localhost endpoints)
+    "MD041": false, // First line heading requirement disabled (frontmatter/metadata blocks)
+    "MD060": false  // Table pipe spacing style flexible across markdown tables
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    "node_modules/**",
+    ".venv/**",
+    "api/.venv/**",
+    "web/node_modules/**",
+    "dist/**",
+    "web/dist/**",
+    ".git/**"
+  ]
+}

@@ -30,6 +30,24 @@ The project setup/organization phase (Gate 0, Issue #12) is complete when the te
 | Sprint capacity and dates | **Relative schedule selected; team confirmation required** | Keep phases relative. Confirm actual start/deadline, each student's availability, class/other commitments and sprint length before assigning calendar dates or due dates. Do not create calendar commitments before confirmation. | Whole team |
 | Board/milestones | **Milestones organized by Gates 0–E** | README links to the organization project and milestones. Board reflects Delivery Gates without arbitrary calendar dates. | Project lead / board owner |
 
+## Execution-Baseline Freeze Checklist (Gate 0 Exit Readiness)
+
+To formally freeze the execution baseline and close Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)), the following 11 items must be completed with verifiable evidence recorded (not merely informal agreement):
+
+| Category | Readiness Item | Status | Verification Evidence / Required Action |
+|---|---|:---:|---|
+| **Documents** | Correct stale audit commit & PR status | **READY (PR #30)** | Audited commit updated to `4f005bf`, PRs #27 & #29 recorded merged in `docs/audits/task-and-requirements-audit.md` v2.7. |
+| **Documents** | Reconcile FR-11, FR-12, FR-13 & FR-21 scope wording | **READY (PR #30)** | Reconciled across `docs/SRS.md`, `docs/release-scope-and-task-matrix.md`, and `docs/verification.md`: weather is MVP-required; comparison/report are Post-MVP. |
+| **Documents** | Publish source-of-truth hierarchy & approval rules | **READY (PR #30)** | Codified 8-tier hierarchy and conflict-resolution rules in `CONTRIBUTING.md` §16 and `README.md`. |
+| **Structure** | Align AGENTS.md with actual and intended layouts | **READY (PR #30)** | `AGENTS.md` explicitly separates current scaffold baseline from intended feature layout; tree indentation fixed. |
+| **Structure** | Consolidate overlapping issue templates | **READY (PR #30)** | Removed redundant `bug.md` and `feature.md`; retained `bug_report.md`, `feature_request.md`, `task.md`, and `config.yml`. |
+| **Formatting** | Agree on Markdown, metadata, date & status conventions | **READY (PR #30)** | Documented standard metadata blocks, ISO dates, and controlled statuses in `CONTRIBUTING.md` §17. |
+| **Formatting** | Add editor configuration, markdown lint & link checks | **READY (PR #30)** | Checked in `.editorconfig`, `.markdownlint-cli2.jsonc`, `scripts/check_docs.py`, and `make verify-docs`. |
+| **Validation** | Validate document links & requirements traceability | **READY (PR #30)** | All 51 relative Markdown links verified; 6-column NFR table header fixed in `docs/requirements-traceability.md`. |
+| **Validation** | Independently clone main & run verification workflow | **PENDING** | Independent teammate must clone clean checkout of `main`, run `make verify`, and log results on Issue #12. |
+| **Governance** | Whole team approves scope, roles, capacity & review rules | **PENDING** | Hold team kickoff meeting; confirm sprint cadence, student capacity, role pairings, and scope boundaries. |
+| **Governance** | Record approved baseline commit & close Gate 0 | **PENDING** | Record formal Gate 0 sign-off by `@vincenttamano` on Issue #12 with approved baseline commit hash. |
+
 ## Recommended kickoff (30–45 minutes)
 
 1. Confirm the project goal and the core-versus-advanced boundary.
@@ -47,7 +65,6 @@ The project setup/organization phase (Gate 0, Issue #12) is complete when the te
 - Use `NOT VERIFIED` rather than guessing.
 - Revisit this checklist at the start of each Sprint and whenever the SRS or source contract changes.
 - Use the current GitHub login `@Lovelly143` for the teammate previously referenced as `@lovelii-me` in project notes; the project lead reports that two other organization invitations remain pending. Verify live organization state before marking invitation work complete.
-
 
 ## Additional tracked gates
 
