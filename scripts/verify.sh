@@ -60,7 +60,8 @@ check_frontend() {
 }
 
 check_docs() {
-    echo -e "\n${BOLD}>>> [7/7] Documentation: Markdownlint & Link Integrity${NC}"
+    echo -e "\n${BOLD}>>> [7/7] Documentation: Checker Tests, Markdownlint & Link Integrity${NC}"
+    (cd "${REPO_ROOT}" && python3 -m unittest discover -s scripts/tests -v)
     python3 "${REPO_ROOT}/scripts/check_docs.py"
     echo -e "${GREEN}✓ Documentation checks passed${NC}"
 }
