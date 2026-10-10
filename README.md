@@ -202,18 +202,18 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 - [Official Source Verification Notes](docs/source-verification-notes.md)
 - [Official Source Verification Evidence Matrix](docs/source-verification-evidence-matrix.md)
 
-## Documentation Authority & Hierarchy
+## Documentation Authority & Governance by Domain
 
-To prevent ambiguity when resolving discrepancies across planning and technical files, HazardLens enforces an explicit source-of-truth hierarchy (detailed in [CONTRIBUTING.md](CONTRIBUTING.md#documentation-authority-and-conflict-resolution)):
+To prevent ambiguity when resolving discrepancies across planning and technical files, HazardLens governs authority strictly by domain (detailed in [CONTRIBUTING.md](CONTRIBUTING.md#documentation-authority-by-domain)):
 
-1. **Requirements:** [`docs/SRS.md`](docs/SRS.md) (canonical requirements & constraints)
-2. **Decisions:** [`docs/decision-log.md`](docs/decision-log.md) (decision rationale; does not override SRS)
-3. **Scope & Tasks:** [`docs/release-scope-and-task-matrix.md`](docs/release-scope-and-task-matrix.md) (MVP vs Post-MVP task boundary)
-4. **Execution Plan:** [`docs/project-execution-plan.md`](docs/project-execution-plan.md) (delivery gates and sequencing)
-5. **Traceability:** [`docs/requirements-traceability.md`](docs/requirements-traceability.md) (requirement to evidence mapping)
-6. **Architecture & Schema:** [`docs/architecture.md`](docs/architecture.md) & [`docs/schema-reconciliation.md`](docs/schema-reconciliation.md) (technical design)
-7. **Verification & Evidence:** [`docs/verification.md`](docs/verification.md) & [`docs/source-verification-evidence-matrix.md`](docs/source-verification-evidence-matrix.md) (test results & fixtures)
-8. **Audits & Readiness:** [`docs/project-readiness-checklist.md`](docs/project-readiness-checklist.md) & [`docs/audits/`](docs/audits/task-and-requirements-audit.md) (commit-specific audits)
+- **Requirements & Constraints:** [`docs/SRS.md`](docs/SRS.md) (governs requirements, IDs, and constraints)
+- **Decisions & Rationale:** [`docs/decision-log.md`](docs/decision-log.md) (governs trade-offs & approvals; cannot override SRS)
+- **Release Placement:** [`docs/release-scope-and-task-matrix.md`](docs/release-scope-and-task-matrix.md) (governs MVP vs Post-MVP boundaries)
+- **Delivery Sequence & Gates:** [`docs/project-execution-plan.md`](docs/project-execution-plan.md) (governs gate prerequisites and exit criteria)
+- **Traceability:** [`docs/requirements-traceability.md`](docs/requirements-traceability.md) (governs requirement-to-evidence mappings)
+- **Technical Design:** [`docs/architecture.md`](docs/architecture.md) & [`docs/schema-reconciliation.md`](docs/schema-reconciliation.md) (governs technical architecture & schemas)
+- **Empirical Evidence & Fixtures:** [`docs/verification.md`](docs/verification.md) & [`docs/source-verification-evidence-matrix.md`](docs/source-verification-evidence-matrix.md) (governs observed test results & proof; cannot be overridden by planning documents)
+- **Baseline Health & Audits:** [`docs/project-readiness-checklist.md`](docs/project-readiness-checklist.md) & [`docs/audits/`](docs/audits/task-and-requirements-audit.md) (governs commit-specific audit findings)
 
 ## Disclaimer
 

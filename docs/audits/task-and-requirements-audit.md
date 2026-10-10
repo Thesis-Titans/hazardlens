@@ -284,7 +284,7 @@ Gate 0 must not be closed on assumptions or informal PR merges. Closure of Gate 
   An independent teammate (e.g. `@vincenttamano` or `@faithbn`) clones fresh from `main`, executes the exact verification commands, and logs execution evidence on Issue [#12](https://github.com/Thesis-Titans/hazardlens/issues/12):
   - Backend: `ruff check .`, `ruff format --check .`, `pytest`
   - Frontend: `npm run lint`, `npx tsc --noEmit`, `npm run build`  
-  *(Note: `./scripts/verify.sh all` executes these exact 6 phases hermetically; execution must be independently reproduced on a clean checkout).*
+  *(Note: `./scripts/verify.sh all` executes 7 verification phases: these 6 code checks plus documentation lint and link integrity; execution must be independently reproduced on a clean checkout).*
 - [ ] **8. Strict Feature Freeze Maintained:**  
   No product feature implementation code is merged or executed until Issue [#12](https://github.com/Thesis-Titans/hazardlens/issues/12) is formally signed off by `@vincenttamano` and closed.
 

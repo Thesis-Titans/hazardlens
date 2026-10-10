@@ -601,20 +601,24 @@ AI coding agents assist with implementation but do not have decision authority o
 
 When a team member is unsure, prefer the smallest change that satisfies the existing requirement and acceptance criteria. Do not introduce new architecture merely because a more elaborate solution is possible.
 
-### Documentation authority and conflict resolution
+### Documentation authority by domain
 
-To eliminate ambiguity when cross-document inconsistencies arise, the repository enforces an explicit source-of-truth hierarchy:
+To eliminate ambiguity when cross-document inconsistencies arise, authority is governed strictly by domain:
 
-1. **System Requirements Specification (`docs/SRS.md`):** Canonical functional and non-functional requirements, unique IDs (FR-xx, NFR-xx), and system constraints (ISO/IEC/IEEE 29148:2018).
-2. **Decision Log (`docs/decision-log.md`):** Formal records of architectural, engineering, and scope decisions, rationale, owners, and approval status. Decisions explain and refine implementation; they cannot silently override the SRS without an approved specification update.
-3. **Release Scope and Task Matrix (`docs/release-scope-and-task-matrix.md`):** Authoritative mapping of approved requirement IDs to release classification (MVP-required vs Post-MVP), dependencies, and delivery tasks.
-4. **Project Execution Plan (`docs/project-execution-plan.md`):** Defines work-package sequence, delivery gates (Gates 0 through E), role delegation proposals, and gate exit criteria.
-5. **Requirements Traceability (`docs/requirements-traceability.md`):** Maps each requirement to tracking issues and verifiable acceptance evidence.
-6. **Architecture and Schema Documents (`docs/architecture.md`, `docs/schema-reconciliation.md`):** Describe how requirements are realized technically (ISO/IEC/IEEE 42010:2022); they cannot unilaterally alter requirements or scope.
-7. **Verification and Source-Evidence Records (`docs/verification.md`, `docs/source-verification-evidence-matrix.md`):** Living records of reproducible evidence, captured fixtures, and test results. They document observed and verified technical facts, not aspirations.
-8. **Readiness Checklist and Audits (`docs/project-readiness-checklist.md`, `docs/audits/`):** Summarize outstanding work, gate prerequisites, and findings evaluated against a stated commit hash.
+* **Requirements & Constraints (`docs/SRS.md`):** Authoritative for functional intent, non-functional constraints, and requirement IDs (ISO/IEC/IEEE 29148:2018).
+* **Decisions & Rationale (`docs/decision-log.md`):** Authoritative for approved trade-offs, architecture decisions, and agreed deviations. A decision explains or amends implementation; it cannot silently alter the SRS without an explicit update to the specification.
+* **Release Placement & Dependencies (`docs/release-scope-and-task-matrix.md`):** Authoritative for feature release boundaries (MVP-required vs Post-MVP) and cross-requirement dependencies once approved by the team.
+* **Delivery Sequence & Gate Criteria (`docs/project-execution-plan.md`):** Authoritative for work-package order, gate prerequisites, and ownership proposals. Subordinate to the approved SRS and scope matrix.
+* **Traceability (`docs/requirements-traceability.md`):** Authoritative for mapping requirements to delivery issues and acceptance evidence.
+* **Technical Design (`docs/architecture.md`, `docs/schema-reconciliation.md`):** Authoritative for architectural viewpoints and logical schemas (ISO/IEC/IEEE 42010:2022); cannot redefine requirement semantics.
+* **Empirical Results & Test Evidence (`docs/verification.md`, `docs/source-verification-evidence-matrix.md`):** Authoritative for observed test results, captured fixtures, and source verification facts. A planning or design document cannot override an observed test failure or claim verification without empirical proof.
+* **Baseline Health & Audits (`docs/project-readiness-checklist.md`, `docs/audits/`):** Authoritative for evaluating outstanding readiness work and findings evaluated against a stated commit hash.
 
-**Conflict resolution rule:** If an implementation detail or discussion reveals a conflict between documents, contributors must follow the higher-ranking document in this hierarchy, log the discrepancy in `docs/decision-log.md`, and obtain team approval before changing behavior.
+**Conflict resolution rule:** When an implementation detail or cross-document conflict is discovered, contributors must not assume one document unilaterally overrides another across domains. Instead:
+
+1. Defer to the authoritative document for that specific domain.
+2. Record the discrepancy in `docs/decision-log.md`.
+3. Obtain team review and approval before proceeding with code changes.
 
 ---
 
