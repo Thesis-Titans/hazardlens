@@ -56,7 +56,9 @@ The following are candidate official datasets for integration; their live queryi
 | AI | Gemini, OpenRouter, Ollama |
 | Packaging | Docker Compose |
 
-## Project Structure
+## Planned Project Structure
+
+The tree below is the intended module layout, not a claim that every listed directory or module exists in the current scaffold. See [`AGENTS.md`](AGENTS.md) for the actual repository layout at the current baseline.
 
 ```text
 hazardlens/
@@ -121,12 +123,13 @@ The application will be available at:
 HazardLens provides a root [Makefile](Makefile) and [scripts/verify.sh](scripts/verify.sh) to unify developer and CI workflows matching [AGENTS.md](AGENTS.md):
 
 ```bash
-# Run full verification suite before pushing (backend lint, format check, tests; frontend lint, typecheck, build)
+# Run all verification: 3 backend checks, 3 frontend checks, and documentation checks
 make verify
 
 # Run individual verification targets
 make verify-backend   # ruff check, ruff format --check, pytest
 make verify-frontend  # eslint, tsc --noEmit, npm run build
+make verify-docs      # Markdown lint, checker tests, and local link/anchor integrity
 
 # Auto-format Python backend code
 make format
@@ -148,7 +151,7 @@ uvicorn app.main:app --reload
 
 # Frontend
 cd web
-npm install
+npm ci
 npm run dev
 ```
 
@@ -201,6 +204,19 @@ For team workflow rules, pull request expectations, and AI agent boundaries, see
 - [Database Schema Reconciliation](docs/schema-reconciliation.md)
 - [Official Source Verification Notes](docs/source-verification-notes.md)
 - [Official Source Verification Evidence Matrix](docs/source-verification-evidence-matrix.md)
+
+## Documentation Authority & Governance by Domain
+
+To prevent ambiguity when resolving discrepancies across planning and technical files, HazardLens governs authority strictly by domain (detailed in [CONTRIBUTING.md](CONTRIBUTING.md#documentation-authority-by-domain)):
+
+- **Requirements & Constraints:** [`docs/SRS.md`](docs/SRS.md) (governs requirements, IDs, and constraints)
+- **Decisions & Rationale:** [`docs/decision-log.md`](docs/decision-log.md) (governs trade-offs & approvals; cannot override SRS)
+- **Release Placement:** [`docs/release-scope-and-task-matrix.md`](docs/release-scope-and-task-matrix.md) (governs MVP vs Post-MVP boundaries)
+- **Delivery Sequence & Gates:** [`docs/project-execution-plan.md`](docs/project-execution-plan.md) (governs gate prerequisites and exit criteria)
+- **Traceability:** [`docs/requirements-traceability.md`](docs/requirements-traceability.md) (governs requirement-to-evidence mappings)
+- **Technical Design:** [`docs/architecture.md`](docs/architecture.md) & [`docs/schema-reconciliation.md`](docs/schema-reconciliation.md) (governs technical architecture & schemas)
+- **Empirical Evidence & Fixtures:** [`docs/verification.md`](docs/verification.md) & [`docs/source-verification-evidence-matrix.md`](docs/source-verification-evidence-matrix.md) (governs observed test results & proof; cannot be overridden by planning documents)
+- **Baseline Health & Audits:** [`docs/project-readiness-checklist.md`](docs/project-readiness-checklist.md) & [`docs/audits/`](docs/audits/task-and-requirements-audit.md) (governs commit-specific audit findings)
 
 ## Disclaimer
 

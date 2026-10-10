@@ -32,31 +32,38 @@ run_backend() {
 }
 
 check_backend() {
-    echo -e "\n${BOLD}>>> [1/6] Backend: Linting (ruff check)${NC}"
+    echo -e "\n${BOLD}>>> [1/7] Backend: Linting (ruff check)${NC}"
     run_backend ruff check .
     echo -e "${GREEN}✓ Backend linting passed${NC}"
 
-    echo -e "\n${BOLD}>>> [2/6] Backend: Formatting Check (ruff format --check)${NC}"
+    echo -e "\n${BOLD}>>> [2/7] Backend: Formatting Check (ruff format --check)${NC}"
     run_backend ruff format --check .
     echo -e "${GREEN}✓ Backend formatting check passed${NC}"
 
-    echo -e "\n${BOLD}>>> [3/6] Backend: Unit & Contract Tests (pytest)${NC}"
+    echo -e "\n${BOLD}>>> [3/7] Backend: Unit & Contract Tests (pytest)${NC}"
     run_backend pytest -v
     echo -e "${GREEN}✓ Backend tests passed${NC}"
 }
 
 check_frontend() {
-    echo -e "\n${BOLD}>>> [4/6] Frontend: Linting (npm run lint)${NC}"
+    echo -e "\n${BOLD}>>> [4/7] Frontend: Linting (npm run lint)${NC}"
     (cd "${WEB_DIR}" && npm run lint)
     echo -e "${GREEN}✓ Frontend linting passed${NC}"
 
-    echo -e "\n${BOLD}>>> [5/6] Frontend: Type Check (npx tsc --noEmit)${NC}"
+    echo -e "\n${BOLD}>>> [5/7] Frontend: Type Check (npx tsc --noEmit)${NC}"
     (cd "${WEB_DIR}" && npx tsc --noEmit)
     echo -e "${GREEN}✓ Frontend type check passed${NC}"
 
-    echo -e "\n${BOLD}>>> [6/6] Frontend: Production Bundle Build (npm run build)${NC}"
+    echo -e "\n${BOLD}>>> [6/7] Frontend: Production Bundle Build (npm run build)${NC}"
     (cd "${WEB_DIR}" && npm run build)
     echo -e "${GREEN}✓ Frontend production build passed${NC}"
+}
+
+check_docs() {
+    echo -e "\n${BOLD}>>> [7/7] Documentation: Checker Tests, Markdownlint & Link Integrity${NC}"
+    (cd "${REPO_ROOT}" && python3 -m unittest discover -s scripts/tests -v)
+    python3 "${REPO_ROOT}/scripts/check_docs.py"
+    echo -e "${GREEN}✓ Documentation checks passed${NC}"
 }
 
 TARGET="${1:-all}"
@@ -72,12 +79,16 @@ case "${TARGET}" in
     frontend)
         check_frontend
         ;;
+    docs)
+        check_docs
+        ;;
     all)
         check_backend
         check_frontend
+        check_docs
         ;;
     *)
-        echo -e "${RED}Unknown target: ${TARGET}. Usage: $0 [all|backend|frontend]${NC}" >&2
+        echo -e "${RED}Unknown target: ${TARGET}. Usage: $0 [all|backend|frontend|docs]${NC}" >&2
         exit 1
         ;;
 esac

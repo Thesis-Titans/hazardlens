@@ -21,14 +21,32 @@ The project setup/organization phase (Gate 0, Issue #12) is complete when the te
 | Health endpoint semantics | **Direction selected; contract pending** | Separate liveness and readiness. Optional external source health must be reported separately and must not make the API process appear dead. Specify bounded checks and test behavior. | Backend owner + project lead |
 | Requirements traceability | **Draft prepared; FR-10 mapped to #3** | Review `docs/requirements-traceability.md`; every SRS FR/NFR points to an issue or explicitly identified backlog gap and has verifiable acceptance evidence. | Project lead + QA |
 | Risks and decisions | **Draft prepared; DEC-18 added** | Review `docs/risk-register.md` and `docs/decision-log.md`; assign owners and due points at the team kickoff. | Whole team |
-| Issue quality | **Standardized to Section 8 format** | All 17 active backlog issues standardized with Purpose, Scope, Dependencies, Delegation, Acceptance Criteria, Verification Evidence, and Completion Rule. Team availability remains to be confirmed; the project lead reports that only two organization invitations remain pending. Verify the current organization roster and invitation list before Gate 0 closure. | Project lead + issue owners |
+| Issue quality | **Standardized to Section 8 format** | All 17 active delivery and foundation backlog issues (#1–#8, #13–#20, #28; excluding Gate 0 Issue #12 itself, giving 18 total active issues across the repository) standardized with Purpose, Scope, Dependencies, Delegation, Acceptance Criteria, Verification Evidence, and Completion Rule. Team availability remains to be confirmed; the project lead reports that only two organization invitations remain pending. Verify the current organization roster and invitation list before Gate 0 closure. | Project lead + issue owners |
 | GitHub templates | **Merged on `main`** | Issue templates merged to `main` via PR #9 and active in repository. | Project lead |
-| Git and review workflow | **Verified active on `main`** | Verified via GitHub REST API (`/branches/main/protection`): 1 approving review required (`required_approving_review_count = 1`), strict status checks requiring `backend` and `frontend` CI jobs, force pushes and branch deletions disabled. Recorded on Issue #12. Formal team sign-off pending kickoff. | Repository admin |
+| Git and review workflow | **Verified active on `main`** | Verified via repository admin REST API (`/branches/main/protection`): 1 approving review required (`required_approving_review_count = 1`), strict status checks requiring `backend` and `frontend` CI jobs, force pushes and branch deletions disabled. Recorded on Issue #12. (Note: GitHub restricts the protection API to repository administrators; non-admin API tokens return HTTP 403). Formal team sign-off pending kickoff. | Repository admin |
 | Local environment | **Not independently verified here** | A team member should follow README setup from a clean checkout, use a unique random `SECRET_KEY`, verify Docker Compose health, migration path and API/frontend startup; record OS and command results. | One backend + one frontend teammate |
 | CI baseline | **CI active and hermetic** | CI runs on `main` and PR branches verify backend Ruff lint/format check, 11 pytest tests, frontend ESLint, TypeScript tsc strict mode, and Vite production bundle build. This is branch CI evidence; it does not establish live-source repeatability or source coverage semantics. Add DB/PostGIS migration integration checks when migrations exist. | Backend + frontend owners |
 | Agile/Sprint operating agreement | **Proposed; whole-team approval pending** | Review `docs/agile-sprint-management-plan.md`; confirm Product Owner/facilitator, Sprint length, team availability, and the Sprint Planning / progress inspection / Review / Retrospective cadence. Delivery gates are not Sprints. | Whole team |
 | Sprint capacity and dates | **Relative schedule selected; team confirmation required** | Keep phases relative. Confirm actual start/deadline, each student's availability, class/other commitments and sprint length before assigning calendar dates or due dates. Do not create calendar commitments before confirmation. | Whole team |
 | Board/milestones | **Milestones organized by Gates 0–E** | README links to the organization project and milestones. Board reflects Delivery Gates without arbitrary calendar dates. | Project lead / board owner |
+
+## Execution-Baseline Freeze Checklist (Gate 0 Exit Readiness)
+
+To formally freeze the execution baseline and close Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)), the following 11 items must be completed with verifiable evidence recorded (not merely informal agreement):
+
+| Category | Readiness Item | Status | Verification Evidence / Required Action |
+|---|---|:---:|---|
+| **Documents** | Correct stale audit commit & PR status | **READY (PR #30)** | Audited commit updated to `4f005bf`, PRs #27 & #29 recorded merged in `docs/audits/task-and-requirements-audit.md` v2.7. |
+| **Documents** | Reconcile FR-11, FR-12, FR-13 & FR-21 scope wording | **READY (PR #30)** | Reconciled across `docs/SRS.md`, `docs/release-scope-and-task-matrix.md`, and `docs/verification.md`: weather is MVP-required; comparison/report are Post-MVP. |
+| **Documents** | Publish source-of-truth hierarchy & approval rules | **READY (PR #30)** | Codified 8-tier hierarchy and conflict-resolution rules in `CONTRIBUTING.md` §16 and `README.md`. |
+| **Structure** | Align AGENTS.md with actual and intended layouts | **READY (PR #30)** | `AGENTS.md` explicitly separates current scaffold baseline from intended feature layout; tree indentation fixed. |
+| **Structure** | Consolidate overlapping issue templates | **READY (PR #30)** | Removed redundant `bug.md` and `feature.md`; retained `bug_report.md`, `feature_request.md`, `task.md`, and `config.yml`. |
+| **Formatting** | Agree on Markdown, metadata, date & status conventions | **READY (PR #30)** | Documented standard metadata blocks, ISO dates, and controlled statuses in `CONTRIBUTING.md` §17. |
+| **Formatting** | Add editor configuration, markdown lint & link checks | **READY (PR #30)** | Checked in `.editorconfig`, `.markdownlint-cli2.jsonc`, `scripts/check_docs.py`, and `make verify-docs`. |
+| **Validation** | Validate document links & requirements traceability | **READY (PR #30)** | All 51 relative Markdown links verified; 6-column NFR table header fixed in `docs/requirements-traceability.md`. |
+| **Validation** | Independently clone main & run verification workflow | **PENDING** | Independent teammate must clone clean checkout of `main`, run `make verify`, and log results on Issue #12. |
+| **Governance** | Whole team approves scope, roles, capacity & review rules | **PENDING** | Hold team kickoff meeting; confirm sprint cadence, student capacity, role pairings, and scope boundaries. |
+| **Governance** | Record approved baseline commit & close Gate 0 | **PENDING** | Record formal Gate 0 sign-off by `@vincenttamano` on Issue #12 with approved baseline commit hash. |
 
 ## Recommended kickoff (30–45 minutes)
 
@@ -47,7 +65,6 @@ The project setup/organization phase (Gate 0, Issue #12) is complete when the te
 - Use `NOT VERIFIED` rather than guessing.
 - Revisit this checklist at the start of each Sprint and whenever the SRS or source contract changes.
 - Use the current GitHub login `@Lovelly143` for the teammate previously referenced as `@lovelii-me` in project notes; the project lead reports that two other organization invitations remain pending. Verify live organization state before marking invitation work complete.
-
 
 ## Additional tracked gates
 

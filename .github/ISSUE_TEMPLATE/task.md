@@ -19,14 +19,16 @@ What concrete outcome should this task deliver?
 ## Scope
 
 ### In scope
-- 
+
+-
 
 ### Out of scope
-- 
+
+-
 
 ## Dependencies / blockers
 
-- 
+-
 
 ## Acceptance criteria
 

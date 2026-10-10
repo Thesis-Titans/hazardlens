@@ -38,7 +38,6 @@ This note separates official metadata research, captured live-response evidence,
 - PHIVOLCS Liquefaction layer metadata: https://gisweb.phivolcs.dost.gov.ph/arcgis/rest/services/PHIVOLCS/Liquefaction_ohas/FeatureServer/0
 - Public Nominatim usage policy (separate geocoding dependency): https://operations.osmfoundation.org/policies/nominatim/
 
-
 ## Review 12 metadata refresh — 9 October 2026
 
 This is a documentation/metadata recheck, **not** a completed live feature-query verification.

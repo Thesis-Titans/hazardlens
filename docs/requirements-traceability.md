@@ -9,7 +9,7 @@
 ## Functional requirements
 
 | Requirement | Proposed release classification | Short intent | Issue / work item | Current evidence status | Verification needed |
-|---|---|---|---|---|
+|---|---|---|---|---|---|
 | FR-01 | MVP-required | Select location by search or map; validate and round coordinates | #3, #5, #7, #11 | **PARTIAL** — PR #11 validates/rounds coordinates for the flood preview only; place search and map selection are not delivered. | API validation tests plus map/search-to-investigation acceptance test. |
 | FR-02 | MVP-required | Persist each investigation and show session history | #1, #3, #13 | **NOT VERIFIED** | PostGIS migration, persistence integration test, session history and expiry test. |
 | FR-03 | MVP-required | Query active datasets concurrently under a deadline; isolate failures | #3, #6 | **NOT VERIFIED** — single-source preview is not multi-source orchestration. | Concurrent service test proving one upstream failure does not suppress other results and total deadline is bounded. |
@@ -34,8 +34,8 @@
 
 ## Non-functional requirements
 
-| Requirement | Short intent | Issue / work item | Current evidence status | Verification needed |
-|---|---|---|---|---|
+| Requirement | Proposed release classification | Short intent | Issue / work item | Current evidence status | Verification needed |
+|---|---|---|---|---|---|
 | NFR-01 | MVP-required | Cached lookup under 1s; live lookup bounded by deadline | #3, #6 | **NOT VERIFIED** | Repeatable latency test with cache hit and bounded upstream timeout. |
 | NFR-02 | MVP-required | Upstream timeout and one retry on timeout/5xx; no retry on 4xx | #2, #28, #6, #11 | **PARTIAL** — preview implements retry behavior; all adapters are not implemented. | Adapter contract tests for timeout, 5xx retry and 4xx no-retry across each source. |
 | NFR-03 | MVP-required | Upstream URLs from configuration/registry; no browser-supplied URLs/SQL/tools | #6 | **NOT VERIFIED** | API security tests and code review for SSRF/arbitrary query inputs. |

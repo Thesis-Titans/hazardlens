@@ -134,6 +134,7 @@ The order allows source research and schema review to run in parallel, but integ
 ## 7. Definition of planning readiness
 
 Planning is ready for committed scheduling only when:
+
 - the SRS is explicitly approved or returned with named changes;
 - each FR/NFR has a proposed release classification accepted by the team, or is explicitly unresolved;
 - no required-source substitution is implicit;

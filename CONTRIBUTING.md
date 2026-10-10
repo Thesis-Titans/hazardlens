@@ -21,7 +21,8 @@ The goal is simple: keep `main` stable, keep changes reviewable, and let five pe
 * [13. AI-Assisted Development](#13-ai-assisted-development)
 * [14. Definition of Done](#14-definition-of-done)
 * [15. Releases and Tags](#15-releases-and-tags)
-* [16. Decision Authority](#16-decision-authority)
+* [16. Decision Authority & Documentation Hierarchy](#16-decision-authority--documentation-hierarchy)
+* [17. Documentation Standards & Controlled Metadata](#17-documentation-standards--controlled-metadata)
 
 ---
 
@@ -93,7 +94,7 @@ The repository may use GitHub Issues and GitHub Projects for planning. The proje
 
 GitHub Issues are used for meaningful work, including features, bugs, technical tasks, and changes that need discussion. GitHub issue templates should be used where available.
 
-### Create an issue before work when the change is:
+### Create an issue before work when the change is
 
 * a new feature;
 * a bug requiring investigation;
@@ -325,9 +326,10 @@ Use repository-managed templates for:
 ```text
 .github/
 ├── ISSUE_TEMPLATE/
-│   ├── feature.md
-│   ├── bug.md
-│   └── task.md
+│   ├── bug_report.md
+│   ├── feature_request.md
+│   ├── task.md
+│   └── config.yml
 └── PULL_REQUEST_TEMPLATE.md
 ```
 
@@ -580,7 +582,9 @@ GitHub Releases may be used for demo/final milestones. No release automation is 
 
 ---
 
-## 16. Decision Authority
+## 16. Decision Authority & Documentation Hierarchy
+
+### Decision authority
 
 Humans own decisions about:
 
@@ -596,6 +600,52 @@ Humans own decisions about:
 AI coding agents assist with implementation but do not have decision authority over these areas.
 
 When a team member is unsure, prefer the smallest change that satisfies the existing requirement and acceptance criteria. Do not introduce new architecture merely because a more elaborate solution is possible.
+
+### Documentation authority by domain
+
+To eliminate ambiguity when cross-document inconsistencies arise, authority is governed strictly by domain:
+
+* **Requirements & Constraints (`docs/SRS.md`):** Authoritative for functional intent, non-functional constraints, and requirement IDs (ISO/IEC/IEEE 29148:2018).
+* **Decisions & Rationale (`docs/decision-log.md`):** Authoritative for approved trade-offs, architecture decisions, and agreed deviations. A decision explains or amends implementation; it cannot silently alter the SRS without an explicit update to the specification.
+* **Release Placement & Dependencies (`docs/release-scope-and-task-matrix.md`):** Authoritative for feature release boundaries (MVP-required vs Post-MVP) and cross-requirement dependencies once approved by the team.
+* **Delivery Sequence & Gate Criteria (`docs/project-execution-plan.md`):** Authoritative for work-package order, gate prerequisites, and ownership proposals. Subordinate to the approved SRS and scope matrix.
+* **Traceability (`docs/requirements-traceability.md`):** Authoritative for mapping requirements to delivery issues and acceptance evidence.
+* **Technical Design (`docs/architecture.md`, `docs/schema-reconciliation.md`):** Authoritative for architectural viewpoints and logical schemas (ISO/IEC/IEEE 42010:2022); cannot redefine requirement semantics.
+* **Empirical Results & Test Evidence (`docs/verification.md`, `docs/source-verification-evidence-matrix.md`):** Authoritative for observed test results, captured fixtures, and source verification facts. A planning or design document cannot override an observed test failure or claim verification without empirical proof.
+* **Baseline Health & Audits (`docs/project-readiness-checklist.md`, `docs/audits/`):** Authoritative for evaluating outstanding readiness work and findings evaluated against a stated commit hash.
+
+**Conflict resolution rule:** When an implementation detail or cross-document conflict is discovered, contributors must not assume one document unilaterally overrides another across domains. Instead:
+
+1. Defer to the authoritative document for that specific domain.
+2. Record the discrepancy in `docs/decision-log.md`.
+3. Obtain team review and approval before proceeding with code changes.
+
+---
+
+## 17. Documentation Standards & Controlled Metadata
+
+### Metadata block for controlled documents
+
+Controlled planning and governance documents should include a standardized metadata header:
+
+```markdown
+# Document Title
+
+**Status:** Proposed | Working Direction | Approved | Superseded  
+**Owner:** Accountable role or team member  
+**Baseline:** Target commit hash or approved specification version  
+**Last Reviewed:** YYYY-MM-DD  
+**Approval Record:** Link to meeting minutes, decision log entry, or issue  
+```
+
+### Markdown conventions
+
+* **Headings:** One H1 per document; logical H2/H3 nesting; sentence case for new headings.
+* **Formatting:** UTF-8 encoding, LF line endings, final newline.
+* **Lists and tables:** Use `-` for unordered lists, numbered lists for sequential workflows. Use tables for multi-attribute comparisons and matrices.
+* **Code blocks:** Always specify the syntax language (`bash`, `python`, `typescript`, `json`, `text`).
+* **Dates:** Use ISO 8601 (`YYYY-MM-DD`).
+* **Controlled status labels:** Distinguish *Reported* (claimed), *Observed* (inspected live), *Verified* (hermetically reproduced with evidence), and *Approved* (formally signed off).
 
 ---
 
