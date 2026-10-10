@@ -1,222 +1,312 @@
 #!/usr/bin/env python3
-"""
-HazardLens Documentation & Link Integrity Checker.
+"""Check common local Markdown links/anchors and lint Markdown with locked tooling.
 
-Validates:
-1. Relative document links: file targets exist and section anchors (#heading)
-   resolve to actual headings or HTML anchors in the target Markdown file.
-   (External HTTP/HTTPS links are excluded to preserve offline test determinism).
-2. Markdown syntax and formatting via pinned markdownlint-cli2 (fails closed if
-   tooling is missing, unless --skip-lint is explicitly passed).
+This is a focused repository integrity check, not a full CommonMark validator.
+It checks relative inline/reference links, heading anchors, and explicit HTML
+id/name anchors. It does not fetch external destinations.
 """
 
 import argparse
-import os
 import re
-import shutil
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+EXCLUDED_DIRS = {"node_modules", ".venv", "dist", ".git", ".pytest_cache"}
+BACKTICK = chr(96)
 
-def slugify_heading(heading_text: str) -> set[str]:
-    """
-    Generate candidate GitHub-compatible anchor slugs for a Markdown heading.
-    Returns a set of candidates to tolerate minor punctuation/hyphen variants.
-    """
-    raw = re.sub(r"^#+\s*", "", heading_text).strip()
-    # Strip inline markdown symbols
-    clean = re.sub(r"[`*_{}\[\]()]", "", raw).lower()
-    # Remove characters that are not alphanumeric, whitespace, or hyphen
-    clean_chars = re.sub(r"[^\w\s-]", "", clean)
-    candidates = set()
-    # Candidate 1: each whitespace converted to hyphen (preserves double hyphens from removed symbols e.g. " & ")
-    slug1 = re.sub(r"\s", "-", clean_chars)
-    candidates.add(slug1)
-    candidates.add(slug1.strip("-"))
-    # Candidate 2: collapsed whitespace
-    slug2 = re.sub(r"\s+", "-", clean_chars)
-    candidates.add(slug2)
-    candidates.add(slug2.strip("-"))
-    # Candidate 3: collapsed hyphens
-    slug3 = re.sub(r"-+", "-", slug1)
-    candidates.add(slug3)
-    candidates.add(slug3.strip("-"))
-    return candidates
+
+def strip_fenced_code(content: str) -> str:
+    """Blank fenced code blocks so examples are not treated as document syntax."""
+    output = []
+    fence_char = None
+    fence_size = 0
+    for line in content.splitlines():
+        stripped = line.lstrip(" ")
+        indent = len(line) - len(stripped)
+        marker = stripped[0] if stripped else ""
+        run = len(stripped) - len(stripped.lstrip(marker)) if marker in (BACKTICK, "~") else 0
+        if fence_char is None and indent <= 3 and marker in (BACKTICK, "~") and run >= 3:
+            fence_char, fence_size = marker, run
+            output.append("")
+            continue
+        if fence_char is not None:
+            close = stripped.strip()
+            close_char = close[0] if close else ""
+            close_run = len(close) - len(close.lstrip(close_char)) if close_char in (BACKTICK, "~") else 0
+            if indent <= 3 and close_char == fence_char and close_run >= fence_size and close[close_run:].strip() == "":
+                fence_char, fence_size = None, 0
+            output.append("")
+            continue
+        output.append(line)
+    return "\n".join(output)
+
+
+def slugify_heading(heading_text: str) -> str:
+    """Create a single deterministic GitHub-style base slug."""
+    text = re.sub(r"^#{1,6}\s+", "", heading_text.strip())
+    text = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", text)
+    text = re.sub(re.escape(BACKTICK) + r"[*_~]", "", text).lower()
+    text = re.sub(r"[^\w\- ]", "", text, flags=re.UNICODE)
+    return re.sub(r"\s+", "-", text.strip())
+
 
 def extract_file_anchors(file_path: Path) -> set[str]:
-    """Collect all valid anchor IDs and heading slugs in a Markdown file."""
-    anchors = set()
+    """Collect heading slugs (including duplicate suffixes) and HTML id/name values."""
     try:
-        content = file_path.read_text(encoding="utf-8")
-    except Exception as e:
-        print(f"Warning: could not read {file_path}: {e}", file=sys.stderr)
-        return anchors
+        content = strip_fenced_code(file_path.read_text(encoding="utf-8"))
+    except OSError as exc:
+        print(f"Warning: could not read {file_path}: {exc}", file=sys.stderr)
+        return set()
 
+    anchors = set()
+    seen_slugs = {}
+    heading_pattern = re.compile(r"^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$")
+    html_anchor_pattern = re.compile(
+        r"""<[a-zA-Z][^>]*?\b(?:id|name)\s*=\s*["']([^"']+)["'][^>]*>""",
+        re.IGNORECASE,
+    )
     for line in content.splitlines():
-        line_stripped = line.strip()
-        # Headings
-        if line_stripped.startswith("#"):
-            anchors.update(slugify_heading(line_stripped))
-        # Explicit HTML anchors e.g. <a id="..."> or <a name="...">
-        for m in re.finditer(r'<[a-zA-Z0-9]+[^>]+(?:id|name)=["\']([^"\']+)["\']', line_stripped):
-            anchors.add(m.group(1).lower())
+        heading = heading_pattern.match(line)
+        if heading:
+            slug = slugify_heading("# " + heading.group(1))
+            occurrence = seen_slugs.get(slug, 0)
+            seen_slugs[slug] = occurrence + 1
+            anchors.add(slug if occurrence == 0 else f"{slug}-{occurrence}")
+        for match in html_anchor_pattern.finditer(line):
+            anchors.add(unquote(match.group(1)).casefold())
     return anchors
 
-def check_relative_links():
-    md_files = list(REPO_ROOT.glob("**/*.md"))
-    # Exclude build, cache, and third-party directories
-    md_files = [
-        f for f in md_files
-        if not any(x in f.parts for x in ["node_modules", ".venv", "dist", ".git", ".pytest_cache"])
-    ]
 
-    # Pre-parse anchors for all repo markdown files
+def _normalise_reference(label: str) -> str:
+    return " ".join(label.split()).casefold()
+
+
+def _matching_bracket(text: str, start: int):
+    """Find a closing square bracket, allowing nested brackets and escapes."""
+    depth = 0
+    i = start
+    while i < len(text):
+        if text[i] == "\\":
+            i += 2
+            continue
+        if text[i] == BACKTICK:
+            run = len(text[i:]) - len(text[i:].lstrip(BACKTICK))
+            marker = BACKTICK * run
+            end = text.find(marker, i + run)
+            if end >= 0:
+                i = end + run
+                continue
+        if text[i] == "[":
+            depth += 1
+        elif text[i] == "]":
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    return None
+
+
+def _parse_inline_destination(text: str, open_paren: int):
+    """Parse an inline destination with balanced parentheses."""
+    i = open_paren + 1
+    while i < len(text) and text[i].isspace():
+        i += 1
+    if i >= len(text):
+        return None
+    if text[i] == "<":
+        end = text.find(">", i + 1)
+        if end < 0:
+            return None
+        destination = text[i + 1:end]
+        close = text.find(")", end + 1)
+        return (destination, close) if close >= 0 else None
+
+    start = i
+    depth = 0
+    while i < len(text):
+        char = text[i]
+        if char == "\\":
+            i += 2
+            continue
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            if depth == 0:
+                return text[start:i], i
+            depth -= 1
+        elif char.isspace() and depth == 0:
+            close = text.find(")", i + 1)
+            return (text[start:i], close) if close >= 0 else None
+        i += 1
+    return None
+
+
+def extract_markdown_links(content: str) -> list[str]:
+    """Extract destinations from inline links and common reference-style links."""
+    content = strip_fenced_code(content)
+    definitions = {}
+    definition_pattern = re.compile(
+        r"""^\s{0,3}\[([^\]]+)\]:\s*(?:<([^>]+)>|(\S+))""",
+        re.MULTILINE,
+    )
+    for match in definition_pattern.finditer(content):
+        definitions[_normalise_reference(match.group(1))] = match.group(2) or match.group(3)
+    content = definition_pattern.sub("", content)
+
+    links = []
+    i = 0
+    while i < len(content):
+        if content[i] == BACKTICK:
+            run = len(content[i:]) - len(content[i:].lstrip(BACKTICK))
+            marker = BACKTICK * run
+            end = content.find(marker, i + run)
+            if end >= 0:
+                i = end + run
+                continue
+        if content[i] != "[" or (i > 0 and content[i - 1] == "\\"):
+            i += 1
+            continue
+        label_end = _matching_bracket(content, i)
+        if label_end is None:
+            i += 1
+            continue
+        label = content[i + 1:label_end]
+        next_index = label_end + 1
+        if next_index < len(content) and content[next_index] == "(":
+            parsed = _parse_inline_destination(content, next_index)
+            if parsed:
+                destination, end = parsed
+                if destination:
+                    links.append(destination)
+                i = end + 1
+                continue
+        elif next_index < len(content) and content[next_index] == "[":
+            ref_end = _matching_bracket(content, next_index)
+            if ref_end is not None:
+                ref_label = content[next_index + 1:ref_end] or label
+                destination = definitions.get(_normalise_reference(ref_label))
+                if destination:
+                    links.append(destination)
+                i = ref_end + 1
+                continue
+        else:
+            destination = definitions.get(_normalise_reference(label))
+            if destination:
+                links.append(destination)
+        i = label_end + 1
+    return links
+
+
+def _is_external(destination: str) -> bool:
+    lowered = destination.strip().lower()
+    return lowered.startswith(("http://", "https://", "mailto:", "tel:", "ftp:", "data:", "//"))
+
+
+def check_relative_links() -> bool:
+    md_files = sorted(
+        f for f in REPO_ROOT.glob("**/*.md")
+        if not any(part in EXCLUDED_DIRS for part in f.parts)
+    )
     file_anchors = {f.resolve(): extract_file_anchors(f) for f in md_files}
-
-    link_pattern = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
     broken_files = []
     broken_anchors = []
     total_links = 0
     total_anchors = 0
 
-    for f in sorted(md_files):
-        content = f.read_text(encoding="utf-8")
-        for match in link_pattern.finditer(content):
-            text, url = match.groups()
-            url = url.strip()
-
-            # Skip external protocols
-            if url.startswith(("http://", "https://", "mailto:", "tel:", "ftp:")):
+    for source in md_files:
+        content = source.read_text(encoding="utf-8")
+        for destination in extract_markdown_links(content):
+            destination = destination.strip()
+            if not destination or _is_external(destination):
                 continue
-
             total_links += 1
-            parts = url.split("#", 1)
-            target_file_str = parts[0]
-            anchor = parts[1] if len(parts) > 1 else None
+            parts = destination.split("#", 1)
+            target_text = unquote(parts[0])
+            anchor = unquote(parts[1]).casefold() if len(parts) > 1 else None
+            target = (source.parent / target_text).resolve() if target_text else source.resolve()
 
-            # Determine target file
-            if target_file_str:
-                target_file = (f.parent / target_file_str).resolve()
-            else:
-                target_file = f.resolve()
-
-            # 1. Validate target file existence
-            if not target_file.exists():
-                broken_files.append((str(f.relative_to(REPO_ROOT)), url, str(target_file)))
+            if not target.exists():
+                broken_files.append((str(source.relative_to(REPO_ROOT)), destination))
                 continue
-
-            # 2. Validate anchor if present and target is a Markdown file
-            if anchor and target_file.suffix.lower() == ".md":
+            if anchor and target.suffix.lower() == ".md":
                 total_anchors += 1
-                norm_anchor = anchor.lower().strip()
-                known_anchors = file_anchors.get(target_file, set())
-                # If target wasn't pre-parsed, parse it on demand
-                if not known_anchors and target_file.exists():
-                    known_anchors = extract_file_anchors(target_file)
-                    file_anchors[target_file] = known_anchors
-
-                if norm_anchor not in known_anchors:
-                    broken_anchors.append((
-                        str(f.relative_to(REPO_ROOT)),
-                        url,
-                        anchor,
-                        str(target_file.relative_to(REPO_ROOT))
-                    ))
+                known = file_anchors.get(target)
+                if known is None:
+                    known = extract_file_anchors(target)
+                    file_anchors[target] = known
+                if anchor not in known:
+                    broken_anchors.append((str(source.relative_to(REPO_ROOT)), destination, anchor))
 
     print(
-        f"Checked {total_links} relative Markdown links "
-        f"({total_anchors} anchor targets) across {len(md_files)} files."
+        f"Scanned {len(md_files)} Markdown files; checked {total_links} local inline/reference links "
+        f"and {total_anchors} Markdown anchor targets."
     )
-    print("Note: External HTTP/HTTPS links are excluded to maintain offline test determinism.")
-
-    has_errors = False
+    print("External destinations are not fetched or validated.")
     if broken_files:
-        has_errors = True
-        print(f"\nERROR: Found {len(broken_files)} broken relative file link(s):", file=sys.stderr)
-        for src, url, full in broken_files:
-            print(f"  - In {src}: link '{url}' -> target '{full}' not found", file=sys.stderr)
-
+        print(f"\nERROR: {len(broken_files)} broken local file link(s):", file=sys.stderr)
+        for source, destination in broken_files:
+            print(f"  - {source}: {destination}", file=sys.stderr)
     if broken_anchors:
-        has_errors = True
-        print(f"\nERROR: Found {len(broken_anchors)} unresolved section anchor(s):", file=sys.stderr)
-        for src, url, anchor, tgt in broken_anchors:
-            print(f"  - In {src}: anchor '#{anchor}' not found in target '{tgt}' (link: '{url}')", file=sys.stderr)
+        print(f"\nERROR: {len(broken_anchors)} unresolved Markdown anchor(s):", file=sys.stderr)
+        for source, destination, anchor in broken_anchors:
+            print(f"  - {source}: #{anchor} (link: {destination})", file=sys.stderr)
+    if broken_files or broken_anchors:
+        return False
+    print("✓ Local Markdown paths and supported anchors resolved.")
+    return True
 
-    if not has_errors:
-        print("✓ All relative document paths and section anchors verified successfully.")
-        return True
-    return False
 
-def resolve_markdownlint():
-    """
-    Find pinned local markdownlint-cli2 binary, PATH executable, or npx.
-    Prefers local pinned binary in web/node_modules/.bin for offline hermetic execution.
-    """
-    local_bin = REPO_ROOT / "web" / "node_modules" / ".bin" / "markdownlint-cli2"
-    if local_bin.is_file() and os.access(local_bin, os.X_OK):
-        return [str(local_bin)]
-
-    path_bin = shutil.which("markdownlint-cli2")
-    if path_bin:
-        return [path_bin]
-
-    npx_bin = shutil.which("npx")
-    if npx_bin:
-        return [npx_bin, "markdownlint-cli2"]
-
-    return None
-
-def run_markdownlint(skip_lint: bool = False):
+def run_markdownlint(skip_lint: bool = False) -> bool:
     if skip_lint:
-        print("Note: Markdownlint skipped via --skip-lint flag.")
+        print("Note: Markdownlint skipped via explicit --skip-lint flag.")
         return True
-
-    cmd = resolve_markdownlint()
-    if not cmd:
+    local_bin = REPO_ROOT / "web" / "node_modules" / ".bin" / "markdownlint-cli2"
+    if not local_bin.is_file():
         print(
-            "\nERROR: markdownlint-cli2 executable not found.\n"
-            "Fail-closed policy: Markdown linting is required for verification.\n"
-            "To resolve: run 'npm --prefix web install' to install the pinned devDependency.\n"
-            "(For offline environments without node installed, pass --skip-lint to bypass).",
-            file=sys.stderr
+            "ERROR: locked markdownlint-cli2 is not installed. Run 'npm ci --prefix web' first. "
+            "No PATH/npx fallback is used because it could select an unpinned version.",
+            file=sys.stderr,
         )
         return False
-
-    tool_desc = " ".join(cmd)
     try:
-        res = subprocess.run(
-            cmd,
+        result = subprocess.run(
+            [str(local_bin)],
             cwd=str(REPO_ROOT),
             capture_output=True,
-            text=True
+            text=True,
+            check=False,
         )
-        if res.returncode == 0:
-            print(f"✓ Markdownlint checks passed via {tool_desc} (0 issues found).")
-            return True
-        else:
-            print(f"ERROR: Markdownlint reported issues via {tool_desc}:", file=sys.stderr)
-            if res.stdout:
-                print(res.stdout, file=sys.stderr)
-            if res.stderr:
-                print(res.stderr, file=sys.stderr)
-            return False
-    except Exception as e:
-        print(f"ERROR running markdownlint ({tool_desc}): {e}", file=sys.stderr)
+    except OSError as exc:
+        print(f"ERROR: unable to execute locked markdownlint-cli2: {exc}", file=sys.stderr)
         return False
+    if result.returncode == 0:
+        print("✓ Markdownlint checks passed (0 issues found).")
+        return True
+    print("ERROR: Markdownlint reported issues:", file=sys.stderr)
+    if result.stdout:
+        print(result.stdout, file=sys.stderr)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr)
+    return False
 
-def main():
-    parser = argparse.ArgumentParser(description="HazardLens Documentation and Link Integrity Checker")
-    parser.add_argument("--skip-lint", action="store_true", help="Skip markdownlint-cli2 check (offline fallback)")
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--skip-lint",
+        action="store_true",
+        help="Skip Markdown linting explicitly; local link checks still run.",
+    )
     args = parser.parse_args()
-
-    print(">>> [Docs Verification] Checking relative paths, section anchors, and Markdown standards...")
+    print(">>> Checking local Markdown links, anchors, and formatting...")
     links_ok = check_relative_links()
     lint_ok = run_markdownlint(skip_lint=args.skip_lint)
-
     if not (links_ok and lint_ok):
-        sys.exit(1)
+        raise SystemExit(1)
+
 
 if __name__ == "__main__":
     main()
