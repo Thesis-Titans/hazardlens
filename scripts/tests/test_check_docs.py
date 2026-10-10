@@ -1,8 +1,10 @@
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-from check_docs import extract_file_anchors, extract_markdown_links, slugify_heading
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from check_docs import extract_file_anchors, extract_markdown_links, normalise_anchor, slugify_heading
 
 
 class MarkdownCheckerTests(unittest.TestCase):
@@ -28,6 +30,9 @@ class MarkdownCheckerTests(unittest.TestCase):
             path = Path(directory) / "target.md"
             path.write_text("# Scope\n# Scope\n# Scope\n", encoding="utf-8")
             self.assertEqual(extract_file_anchors(path), {"scope", "scope-1", "scope-2"})
+
+    def test_url_encoded_anchor_fragment(self):
+        self.assertEqual(normalise_anchor("Custom%20Anchor"), "custom anchor")
 
     def test_explicit_html_anchor(self):
         with tempfile.TemporaryDirectory() as directory:
