@@ -1,12 +1,12 @@
 # HazardLens — Task-by-Task & Requirements Coverage Audit against SRS v3.1
 
-**Document Version:** 2.6 (Authoritative Reconciled Audit)  
-**Audit Date:** 9 October 2026  
-**Audited Commit:** `main` at [`3a50439`](https://github.com/Thesis-Titans/hazardlens/commit/3a50439)  
+**Document Version:** 2.7 (Authoritative Reconciled Post-Merge Baseline Audit)  
+**Audit Date:** 10 October 2026  
+**Audited Commit:** `main` at [`4f005bf`](https://github.com/Thesis-Titans/hazardlens/commit/4f005bfc149e45ddc87123acdbae2128c15d429e) (supersedes pre-merge commit `3a50439`)  
 **Repository Path:** [`docs/audits/task-and-requirements-audit.md`](docs/audits/task-and-requirements-audit.md)  
-**Pull Request:** [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) (open and unmerged; peer review requested from `@vincenttamano`)  
+**Pull Request References:** Supporting documentation PRs [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) (commit [`f7e7ea8`](https://github.com/Thesis-Titans/hazardlens/commit/f7e7ea8811afdc92195ffdc4c01a5d60686cfc69)) and [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) (commit [`4f005bf`](https://github.com/Thesis-Titans/hazardlens/commit/4f005bfc149e45ddc87123acdbae2128c15d429e)) merged to `main`; this audit v2.7 submitted under follow-up documentation PR  
 **Canonical Plan Reference:** Project Execution Plan §§3, 6, 7 ([docs/project-execution-plan.md](../project-execution-plan.md))  
-**Document Status:** Reconciled working audit draft submitted for team review; formal baseline acceptance pending whole-team confirmation and Gate 0 closure.  
+**Document Status:** Reconciled baseline documentation reflecting merged `main` at `4f005bf`; implementation freeze remains strictly active pending Gate 0 formal closure on [Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12).  
 **Specification Reference:** System Requirements Specification v3.1 (working specification reference aligned with ISO/IEC/IEEE 29148:2018 principles; formal whole-team approval pending kickoff)  
 **Governance Framework:** Section 8 Standard Issue Specification & Definition of Ready ([docs/agile-sprint-management-plan.md](../agile-sprint-management-plan.md))  
 **Project Board:** [HazardLens — Sprint Board (Project #1)](https://github.com/orgs/Thesis-Titans/projects/1)  
@@ -36,7 +36,7 @@ Rather than compressing multiple concepts into hybrid labels, requirements are a
 > Standardized issue bodies and clean board configurations are valuable planning artifacts, but they do not prove that tasks are ready to execute or that the system is complete. Currently, only the FastAPI scaffold and the limited single-source MGB flood preview slice from PR #11 exist on `main`. Zero production multi-source orchestrators, PostGIS migrations, or final UI evidence components have been delivered.
 > 
 > **Explicit Scope Boundary During Gate 0:**
-> - **Permitted Work:** Documentation corrections, issue specification refinements, planning and governance evidence collection, and peer reviews of documentation PRs (e.g. [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) and [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29)) are actively permitted.
+> - **Permitted Work:** Documentation corrections, issue specification refinements, planning and governance evidence collection, and peer reviews of documentation PRs (e.g. merged [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27), merged [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29), and follow-up audit alignment PRs) are actively permitted.
 > - **Frozen Work:** Implementation of product features, hazard adapters, PostGIS migrations, and UI components remains **strictly paused** until Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)) is formally closed with documented exit evidence.
 
 ---
@@ -46,8 +46,11 @@ Rather than compressing multiple concepts into hybrid labels, requirements are a
 This version reflects the following confirmed repository and tracking reconciliations:
 
 1. **Supporting Documentation PRs ([PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) & [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29)):**
-   - **Observed:** Both PRs are **OPEN and unmerged**, based on `main` at `3a50439`, with peer reviews requested from `@vincenttamano`.
-   - **Governance Role:** PR #27 (README scope alignment) and PR #29 (Task & requirements audit) serve as **useful supporting documentation alignments** that can be reviewed and merged during Gate 0. They do not constitute unilateral or unagreed additions to Issue #12's canonical exit criteria.
+   - **Observed:** Both supporting documentation PRs are **MERGED into `main`**:
+     - [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) merged at commit [`f7e7ea8`](https://github.com/Thesis-Titans/hazardlens/commit/f7e7ea8811afdc92195ffdc4c01a5d60686cfc69) (reconciling README feature scope with the proposed MVP release matrix).
+     - [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) merged at commit [`4f005bf`](https://github.com/Thesis-Titans/hazardlens/commit/4f005bfc149e45ddc87123acdbae2128c15d429e) (incorporating audit v2.6, PEP §6 synchronization, and Gate 0 / T16 separation).
+   - **Observed CI Baseline:** Main-branch GitHub Actions CI workflow run for commit `4f005bf` completed successfully (Run ID [`37930519380`](https://github.com/Thesis-Titans/hazardlens/actions/runs/37930519380)).
+   - **Governance Role:** Merging PR #27 and PR #29 successfully aligned documentation with the actual repository baseline during Gate 0. These merges do not substitute for or alter the canonical exit criteria of Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)), which remains open under a strict implementation freeze.
 2. **Canonical Project Execution Plan (PEP) Alignment (Tasks T1–T18):**
    - **Canonical Source of Truth:** `docs/project-execution-plan.md` §§3, 6, 7 governs task breakdown and delegation. Tasks T1–T18 in the audit are aligned in 100% lockstep with PEP §6:
      - Tasks T5, T6, T7 mapped to [Issue #28](https://github.com/Thesis-Titans/hazardlens/issues/28) (Gate C).
@@ -105,7 +108,12 @@ This version reflects the following confirmed repository and tracking reconcilia
 
 ### Audit of 18 Active Delivery and Governance Issues
 
-*Selection Rule: This table audits 100% of the active issues in the repository (18 of 18 open issues in `Thesis-Titans/hazardlens`).*
+*Counting & Selection Rule:*  
+The repository contains **18 total active (open) issues** in `Thesis-Titans/hazardlens`. These break down into:
+- **1 Governance Prerequisite Issue:** [Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12) (Gate 0 baseline release gate).
+- **17 Active Backlog Delivery & Foundation Issues:** Issues [#1](https://github.com/Thesis-Titans/hazardlens/issues/1)–[#8](https://github.com/Thesis-Titans/hazardlens/issues/8), [#13](https://github.com/Thesis-Titans/hazardlens/issues/13)–[#20](https://github.com/Thesis-Titans/hazardlens/issues/20), and [#28](https://github.com/Thesis-Titans/hazardlens/issues/28).
+
+*Note on Terminology Across Documents:* The Project Execution Plan §3 Gate 0 exit criteria and Project Readiness Checklist refer to **17 active backlog issues** because they count the delivery and foundation backlog items that must be formatted before implementation starts, intentionally excluding Gate 0 ([Issue #12](https://github.com/Thesis-Titans/hazardlens/issues/12)) itself. Both statements describe the exact same set of 18 total open issues (17 backlog delivery issues + 1 Gate 0 governance prerequisite = 18 total active issues). This table audits 100% of all 18 active issues.
 
 | Issue | Standardized Title | Gate & Prov. Sprint | Mapped PEP Tasks & SRS Reqs | Proposed Delegation (Kickoff Confirmation Pending) | Issue Dependency & Readiness Status | Outstanding Refinements & Exit Criteria |
 |:---:|---|:---:|---|---|:---:|---|
@@ -258,9 +266,10 @@ Gate 0 must not be closed on assumptions or informal PR merges. Closure of Gate 
 - [ ] **3. Task Delegation & Reviewer Distinctness Established:**  
   All 18 delivery tasks (T1–T18) have designated lead implementers and distinct independent reviewers (`Author != Reviewer`).
 - [ ] **4. Active Backlog Issues Standardized:**  
-  All 18 active delivery and governance issues conform to the Section 8 standard issue specification (Purpose, Scope, Dependencies, Delegation, Acceptance Criteria, Verification Evidence, Completion Rule). *Fully verified on live issues including [Issue #28](https://github.com/Thesis-Titans/hazardlens/issues/28).*
+  All 17 active delivery and foundation backlog issues (and 18 total active issues across the repository) conform to the Section 8 standard issue specification (Purpose, Scope, Dependencies, Delegation, Acceptance Criteria, Verification Evidence, Completion Rule). *Fully verified on live issues including [Issue #28](https://github.com/Thesis-Titans/hazardlens/issues/28).*
 - [ ] **5. Main Branch Protection Formally Verified:**  
-  Verified active on GitHub infrastructure via REST API (`GET /repos/Thesis-Titans/hazardlens/branches/main/protection`): 1 approving peer review required (`required_approving_review_count = 1`), strict status checks requiring `backend` and `frontend` CI jobs, force pushes and branch deletions disallowed. Formal verification recorded on Issue [#12](https://github.com/Thesis-Titans/hazardlens/issues/12).
+  Verified active on GitHub infrastructure via repository administrative REST API (`GET /repos/Thesis-Titans/hazardlens/branches/main/protection`): 1 approving peer review required (`required_approving_review_count = 1`), strict status checks requiring `backend` and `frontend` CI jobs, force pushes and branch deletions disallowed. Formal verification recorded on Issue [#12](https://github.com/Thesis-Titans/hazardlens/issues/12).  
+  *(Note on API Permission Boundary: GitHub REST API policy restricts branch protection queries to repository administrators; non-admin tokens receive HTTP 403 Forbidden. Full protection parameters and live verification evidence are preserved in Issue #12).*
 - [ ] **6. Organization Invitations Settled on Live Roster:**  
   Confirm `@Justin-Ardena` and the remaining collaborator accept write invitations on `Thesis-Titans`. Verify live organization roster and invitation list.
 - [ ] **7. Clean-Checkout Reproduction of AGENTS.md Verification Commands:**  
@@ -271,7 +280,7 @@ Gate 0 must not be closed on assumptions or informal PR merges. Closure of Gate 
 - [ ] **8. Strict Feature Freeze Maintained:**  
   No product feature implementation code is merged or executed until Issue [#12](https://github.com/Thesis-Titans/hazardlens/issues/12) is formally signed off by `@vincenttamano` and closed.
 
-*(Supporting Documentation PRs: Merging [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) and [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) aligns documentation with the working baseline during Gate 0, but does not alter Issue #12's exit criteria).*
+*(Supporting Documentation Status: [PR #27](https://github.com/Thesis-Titans/hazardlens/pull/27) and [PR #29](https://github.com/Thesis-Titans/hazardlens/pull/29) are merged on `main`; this audit v2.7 aligns audit metadata with merged commit `4f005bf`. Merging documentation alignments does not close Gate 0 or lift the implementation freeze; Gate 0 remains open until clean-checkout reproduction, team confirmations, and formal sign-off are recorded on Issue #12).*
 
 ---
 

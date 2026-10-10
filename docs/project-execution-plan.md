@@ -80,7 +80,7 @@ Establish the shared delivery baseline, standardize all backlog issues, settle t
 
 **Exit criteria:**
 - Polished project execution plan, task matrix, and traceability baseline are accepted.
-- All 17 active backlog issues are formatted using the Section 8 standard structure with explicit lead implementers and independent reviewers (`Author != Reviewer`).
+- All 17 active delivery and foundation backlog issues (Issues #1–#8, #13–#20, and #28, which excludes the Gate 0 Issue #12 governance prerequisite itself, for 18 total active issues across the repository) are formatted using the Section 8 standard structure with explicit lead implementers and independent reviewers (`Author != Reviewer`).
 - The two remaining organization invitations reported by the project lead are accepted and GitHub native assignees match the delegation matrix. The invitation count and current usernames must be verified in the organization before Gate 0 closes.
 - Verification commands from `AGENTS.md` pass hermetically on clean checkout:
   - Backend: `uv run ruff check .`, `uv run ruff format --check .`, `uv run pytest`
