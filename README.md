@@ -56,7 +56,9 @@ The following are candidate official datasets for integration; their live queryi
 | AI | Gemini, OpenRouter, Ollama |
 | Packaging | Docker Compose |
 
-## Project Structure
+## Planned Project Structure
+
+The tree below is the intended module layout, not a claim that every listed directory or module exists in the current scaffold. See [`AGENTS.md`](AGENTS.md) for the actual repository layout at the current baseline.
 
 ```text
 hazardlens/
@@ -121,12 +123,13 @@ The application will be available at:
 HazardLens provides a root [Makefile](Makefile) and [scripts/verify.sh](scripts/verify.sh) to unify developer and CI workflows matching [AGENTS.md](AGENTS.md):
 
 ```bash
-# Run full verification suite before pushing (backend lint, format check, tests; frontend lint, typecheck, build)
+# Run all verification: 3 backend checks, 3 frontend checks, and documentation checks
 make verify
 
 # Run individual verification targets
 make verify-backend   # ruff check, ruff format --check, pytest
 make verify-frontend  # eslint, tsc --noEmit, npm run build
+make verify-docs      # Markdown lint, checker tests, and local link/anchor integrity
 
 # Auto-format Python backend code
 make format
@@ -148,7 +151,7 @@ uvicorn app.main:app --reload
 
 # Frontend
 cd web
-npm install
+npm ci
 npm run dev
 ```
 
