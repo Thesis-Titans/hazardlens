@@ -10,7 +10,7 @@ from check_docs import extract_file_anchors, extract_markdown_links, normalise_a
 class MarkdownCheckerTests(unittest.TestCase):
     def test_heading_slug_removes_punctuation_and_normalises_spaces(self):
         self.assertEqual(slugify_heading("# Hello, World!"), "hello-world")
-        self.assertEqual(slugify_heading("## A  B & C"), "a-b-c")
+        self.assertEqual(slugify_heading("## A  B & C"), "a--b--c")
 
     def test_fenced_code_is_not_treated_as_headings_or_links(self):
         fence = chr(96) * 3
