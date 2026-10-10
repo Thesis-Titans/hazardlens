@@ -48,7 +48,7 @@ def slugify_heading(heading_text: str) -> str:
     """Create a single deterministic GitHub-style base slug."""
     text = re.sub(r"^#{1,6}\s+", "", heading_text.strip())
     text = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", text)
-    text = re.sub(re.escape(BACKTICK) + r"[*_~]", "", text).lower()
+    text = text.replace(BACKTICK, "").replace("*", "").replace("_", "").replace("~", "").lower()
     text = re.sub(r"[^\w\- ]", "", text, flags=re.UNICODE)
     return re.sub(r"\s+", "-", text.strip())
 
@@ -82,6 +82,11 @@ def extract_file_anchors(file_path: Path) -> set[str]:
 
 def _normalise_reference(label: str) -> str:
     return " ".join(label.split()).casefold()
+
+
+def normalise_anchor(anchor: str) -> str:
+    """Normalise a URL fragment, including percent-encoded characters."""
+    return unquote(anchor).casefold().strip()
 
 
 def _matching_bracket(text: str, start: int):
@@ -225,7 +230,7 @@ def check_relative_links() -> bool:
             total_links += 1
             parts = destination.split("#", 1)
             target_text = unquote(parts[0])
-            anchor = unquote(parts[1]).casefold() if len(parts) > 1 else None
+            anchor = normalise_anchor(parts[1]) if len(parts) > 1 else None
             target = (source.parent / target_text).resolve() if target_text else source.resolve()
 
             if not target.exists():
