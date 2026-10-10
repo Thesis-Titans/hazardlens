@@ -50,7 +50,7 @@ def slugify_heading(heading_text: str) -> str:
     text = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", text)
     text = text.replace(BACKTICK, "").replace("*", "").replace("_", "").replace("~", "").lower()
     text = re.sub(r"[^\w\- ]", "", text, flags=re.UNICODE)
-    return re.sub(r"\s+", "-", text.strip())
+    return re.sub(r"\s", "-", text.strip())
 
 
 def extract_file_anchors(file_path: Path) -> set[str]:
